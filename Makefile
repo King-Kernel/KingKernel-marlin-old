@@ -715,8 +715,6 @@ ifdef CONFIG_KCOV
   endif
 endif
 
-<<<<<<< HEAD
-=======
 ifeq ($(cc-name),clang)
 ifneq ($(CROSS_COMPILE),)
 CLANG_TARGET	:= -target $(notdir $(CROSS_COMPILE:%-=%))
@@ -747,8 +745,6 @@ else
 KBUILD_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
 KBUILD_CFLAGS += $(call cc-disable-warning, unused-const-variable)
 endif
-
->>>>>>> ff61702e1a15... UPSTREAM: kbuild: drop -Wno-unknown-warning-option from clang options
 ifdef CONFIG_FRAME_POINTER
 KBUILD_CFLAGS	+= -fno-omit-frame-pointer -fno-optimize-sibling-calls
 else
