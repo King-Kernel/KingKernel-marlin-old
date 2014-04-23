@@ -194,6 +194,13 @@ static inline int __atomic_add_unless(atomic_t *v, int a, int u)
 ATOMIC_OPS(add, +=, add)
 ATOMIC_OPS(sub, -=, sub)
 
+#define atomic_andnot atomic_andnot
+
+ATOMIC_OP(and, &=, and)
+ATOMIC_OP(andnot, &= ~, bic)
+ATOMIC_OP(or,  |=, orr)
+ATOMIC_OP(xor, ^=, eor)
+
 #undef ATOMIC_OPS
 #undef ATOMIC_OP_RETURN
 #undef ATOMIC_OP
