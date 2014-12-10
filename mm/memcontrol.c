@@ -2057,7 +2057,7 @@ void mem_cgroup_end_page_stat(struct mem_cgroup *memcg, bool *locked,
 			      unsigned long *flags)
 {
 	if (memcg && *locked)
-		spin_unlock_irqrestore(&memcg->move_lock, flags);
+		spin_unlock_irqrestore(&memcg->move_lock, *flags);
 
 	rcu_read_unlock();
 }
