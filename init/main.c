@@ -51,7 +51,6 @@
 #include <linux/mempolicy.h>
 #include <linux/key.h>
 #include <linux/buffer_head.h>
-#include <linux/page_cgroup.h>
 #include <linux/debug_locks.h>
 #include <linux/debugobjects.h>
 #include <linux/lockdep.h>
@@ -484,11 +483,6 @@ void __init __weak thread_stack_cache_init(void)
  */
 static void __init mm_init(void)
 {
-	/*
-	 * page_cgroup requires contiguous pages,
-	 * bigger than MAX_ORDER unless SPARSEMEM.
-	 */
-	page_cgroup_init_flatmem();
 	mem_init();
 	kmem_cache_init();
 	percpu_init_late();
@@ -629,7 +623,6 @@ asmlinkage __visible void __init start_kernel(void)
 		initrd_start = 0;
 	}
 #endif
-	page_cgroup_init();
 	debug_objects_mem_init();
 	kmemleak_init();
 	setup_per_cpu_pageset();
