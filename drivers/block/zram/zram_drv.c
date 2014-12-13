@@ -1065,19 +1065,21 @@ static void zram_slot_free_notify(struct block_device *bdev,
 static int zram_rw_page(struct block_device *bdev, sector_t sector,
 		       struct page *page, int rw)
 {
-	int offset, err = -EIO;
+	int offset, err;
 	u32 index;
 	struct zram *zram;
 	struct bio_vec bv;
 
 	zram = bdev->bd_disk->private_data;
-	if (unlikely(!zram_meta_get(zram)))
-		goto out;
-
 	if (!valid_io_request(zram, sector, PAGE_SIZE)) {
 		atomic64_inc(&zram->stats.invalid_io);
-		err = -EINVAL;
-		goto put_zram;
+		return -EINVAL;
+	}
+
+	down_read(&zram->init_lock);
+	if (unlikely(!init_done(zram))) {
+		err = -EIO;
+		goto out_unlock;
 	}
 
 	index = sector >> SECTORS_PER_PAGE_SHIFT;
@@ -1088,9 +1090,8 @@ static int zram_rw_page(struct block_device *bdev, sector_t sector,
 	bv.bv_offset = 0;
 
 	err = zram_bvec_rw(zram, &bv, index, offset, rw);
-put_zram:
-	zram_meta_put(zram);
-out:
+out_unlock:
+	up_read(&zram->init_lock);
 	/*
 	 * If I/O fails, just return error(ie, non-zero) without
 	 * calling page_endio.
