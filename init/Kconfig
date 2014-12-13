@@ -784,7 +784,7 @@ endchoice
 
 config RCU_EXPEDITE_BOOT
 	bool
-	default n
+	default y
 	help
 	  This option enables expedited grace periods at boot time,
 	  as if rcu_expedite_gp() had been invoked early in boot.
