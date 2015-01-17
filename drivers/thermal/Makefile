@@ -40,6 +40,7 @@ obj-$(CONFIG_INT340X_THERMAL)  += int340x_thermal/
 obj-$(CONFIG_ST_THERMAL)	+= st/
 obj-$(CONFIG_TEGRA_SOCTHERM)	+= tegra_soctherm.o
 obj-$(CONFIG_THERMAL_TSENS8974)	+= msm-tsens.o
+obj-$(CONFIG_INTELLI_THERMAL)	+= intelli/msm_thermal.o
 CFLAGS_msm-tsens.o := $(call cc-disable-warning, enum-conversion)
 obj-$(CONFIG_THERMAL_QPNP)	+= qpnp-temp-alarm.o
 obj-$(CONFIG_THERMAL_QPNP_ADC_TM)	+= qpnp-adc-tm.o
