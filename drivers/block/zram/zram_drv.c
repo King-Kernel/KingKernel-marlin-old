@@ -826,6 +826,8 @@ static void zram_reset_device(struct zram *zram)
 	/* Reset stats */
 	memset(&zram->stats, 0, sizeof(zram->stats));
 	zram->disksize = 0;
+	set_capacity(zram->disk, 0);
+
 	up_write(&zram->init_lock);
 }
 
@@ -920,7 +922,6 @@ static ssize_t reset_store(struct device *dev,
 	/* Make sure all pending I/O is finished */
 	fsync_bdev(bdev);
 	zram_reset_device(zram);
-	set_capacity(zram->disk, 0);
 
 	mutex_unlock(&bdev->bd_mutex);
 	revalidate_disk(zram->disk);
@@ -1228,9 +1229,10 @@ static void destroy_devices(unsigned int nr)
 
 		zram_reset_device(zram);
 
-		blk_cleanup_queue(zram->disk->queue);
 		del_gendisk(zram->disk);
 		put_disk(zram->disk);
+
+		blk_cleanup_queue(zram->queue);
 	}
 
 	kfree(zram_devices);
@@ -1267,9 +1269,7 @@ static int __init zram_init(void)
 			goto out_error;
 	}
 
-	show_mem_notifier_register(&zram_show_mem_notifier_block);
-	pr_info("Created %u device(s) ...\n", num_devices);
-
+	pr_info("Created %u device(s)\n", num_devices);
 	return 0;
 
 out_error:
@@ -1279,24 +1279,7 @@ out_error:
 
 static void __exit zram_exit(void)
 {
-	int i;
-	struct zram *zram;
-
-	for (i = 0; i < num_devices; i++) {
-		zram = &zram_devices[i];
-
-		destroy_device(zram);
-		/*
-		 * Shouldn't access zram->disk after destroy_device
-		 * because destroy_device already released zram->disk.
-		 */
-		zram_reset_device(zram);
-	}
-
-	unregister_blkdev(zram_major, "zram");
-
-	kfree(zram_devices);
-	pr_debug("Cleanup done!\n");
+	destroy_devices(num_devices);
 }
 
 module_init(zram_init);
