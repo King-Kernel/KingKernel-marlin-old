@@ -1220,10 +1220,9 @@ static void destroy_devices(unsigned int nr)
 
 		zram_reset_device(zram);
 
+		blk_cleanup_queue(zram->disk->queue);
 		del_gendisk(zram->disk);
 		put_disk(zram->disk);
-
-		blk_cleanup_queue(zram->queue);
 	}
 
 	kfree(zram_devices);
