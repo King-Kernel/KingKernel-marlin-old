@@ -52,12 +52,12 @@
 static DEFINE_MUTEX(mce_chrdev_read_mutex);
 
 #define rcu_dereference_check_mce(p) \
-	rcu_dereference_index_check((p), \
-			      rcu_read_lock_sched_held() || \
-			      lockdep_is_held(&mce_chrdev_read_mutex))
-
-/* sysfs synchronization */
-static DEFINE_MUTEX(mce_sysfs_mutex);
+({ \
+	RCU_LOCKDEP_WARN(!rcu_read_lock_sched_held() && \
+			 !lockdep_is_held(&mce_chrdev_read_mutex), \
+			 "suspicious rcu_dereference_check_mce() usage"); \
+	smp_load_acquire(&(p)); \
+})
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/mce.h>
