@@ -140,6 +140,7 @@ config CPU_FREQ_DEFAULT_GOV_SCHED
 	  cpu frequency using CPU utilization estimates from the
 	  scheduler.
 
+<<<<<<< HEAD
 config CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
 	bool "schedutil"
 	depends on SMP
@@ -149,6 +150,13 @@ config CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
 	  Use the 'schedutil' CPUFreq governor by default. If unsure,
 	  have a look at the help section of that governor. The fallback
 	  governor will be 'performance'.
+=======
+config CPU_FREQ_DEFAULT_GOV_BIOSHOCK
+	bool "BioShock"
+	select CPU_FREQ_GOV_BIOSHOCK
+	help
+	  Default governor of BioShock kernel
+>>>>>>> 0f622549abeb... BioShock Governor.
 endchoice
 
 config CPU_FREQ_GOV_PERFORMANCE
@@ -323,6 +331,29 @@ config CPUFREQ_DT
 	  systems which share clock and voltage across all CPUs.
 
 	  If in doubt, say N.
+
+config SUSPEND_BOOSTER
+	bool "Suspend booster for Samsung"
+	default y
+	help
+	  Samsung TN PowerManagement Feature.
+
+config CPU_FREQ_GOV_BIOSHOCK
+	tristate "'bioshock' cpufreq bioshock"
+	depends on CPU_FREQ
+	help
+	  'bioshock' - More aggressive version of conservative
+
+config SEC_DVFS
+	bool "DVFS job"
+	default n
+	depends on CPU_FREQ
+
+config CPUFREQ_LIMIT_MAX_FREQ
+	bool "Limit Max Freq"
+	depends on CPU_FREQ_GOV_INTELLIDEMAND
+	help
+		Limit Max Freq while screen is on for Intellidemand governor
 
 menu "x86 CPU frequency scaling drivers"
 depends on X86
