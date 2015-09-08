@@ -1724,7 +1724,6 @@ static void __zs_compact(struct zs_pool *pool, struct size_class *class)
 
 		BUG_ON(!is_first_page(src_page));
 
-
 		cc.index = 0;
 		cc.s_page = src_page;
 
@@ -1738,7 +1737,7 @@ static void __zs_compact(struct zs_pool *pool, struct size_class *class)
 				break;
 
 			putback_zspage(pool, class, dst_page);
-
+			nr_total_migrated += cc.nr_migrated;
 		}
 
 		/* Stop if we couldn't find slot */
