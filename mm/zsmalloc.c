@@ -1585,6 +1585,8 @@ struct zs_compact_control {
 	 /* Starting object index within @s_page which used for live object
 	  * in the subpage. */
 	int index;
+	/* How many of objects were migrated */
+	int nr_migrated;
 };
 
 static int migrate_zspage(struct zs_pool *pool, struct size_class *class,
@@ -1621,6 +1623,7 @@ static int migrate_zspage(struct zs_pool *pool, struct size_class *class,
 		record_obj(handle, free_obj);
 		unpin_tag(handle);
 		obj_free(pool, class, used_obj);
+		cc->nr_migrated++;
 	}
 
 	/* Remember last position in this iteration */
@@ -1712,13 +1715,13 @@ static unsigned long zs_can_compact(struct size_class *class)
 	return obj_wasted * get_pages_per_zspage(class->size);
 }
 
-static unsigned long __zs_compact(struct zs_pool *pool,
-				struct size_class *class)
+static void __zs_compact(struct zs_pool *pool, struct size_class *class)
 {
 	struct zs_compact_control cc;
 	struct page *src_page;
 	struct page *dst_page = NULL;
 
+	cc.nr_migrated = 0;
 	spin_lock(&class->lock);
 	while ((src_page = isolate_source_page(class))) {
 
@@ -1740,7 +1743,6 @@ static unsigned long __zs_compact(struct zs_pool *pool,
 				break;
 
 			putback_zspage(pool, class, dst_page);
-			nr_total_migrated += cc.nr_migrated;
 		}
 
 		/* Stop if we couldn't find slot */
@@ -1759,6 +1761,8 @@ static unsigned long __zs_compact(struct zs_pool *pool,
 	if (src_page)
 		putback_zspage(pool, class, src_page);
 
+	pool->stats.num_migrated += cc.nr_migrated;
+
 	spin_unlock(&class->lock);
 }
 
@@ -1776,7 +1780,7 @@ unsigned long zs_compact(struct zs_pool *pool)
 		__zs_compact(pool, class);
 	}
 
-	return pool->stats.pages_compacted;
+	return pool->stats.num_migrated;
 }
 EXPORT_SYMBOL_GPL(zs_compact);
 

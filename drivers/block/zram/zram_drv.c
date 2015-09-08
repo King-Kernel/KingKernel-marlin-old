@@ -443,24 +443,7 @@ static ssize_t mm_stat_show(struct device *dev,
 			zram->limit_pages << PAGE_SHIFT,
 			max_used << PAGE_SHIFT,
 			(u64)atomic64_read(&zram->stats.zero_pages),
-			pool_stats.pages_compacted);
-	up_read(&zram->init_lock);
-
-	return ret;
-}
-
-static ssize_t debug_stat_show(struct device *dev,
-		struct device_attribute *attr, char *buf)
-{
-	int version = 1;
-	struct zram *zram = dev_to_zram(dev);
-	ssize_t ret;
-
-	down_read(&zram->init_lock);
-	ret = scnprintf(buf, PAGE_SIZE,
-			"version: %d\n%8llu\n",
-			version,
-			(u64)atomic64_read(&zram->stats.writestall));
+			pool_stats.num_migrated);
 	up_read(&zram->init_lock);
 
 	return ret;
