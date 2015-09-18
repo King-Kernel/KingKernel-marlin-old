@@ -172,19 +172,23 @@ static inline void atomic_long_dec(atomic_long_t *l)
 	atomic_dec(v);
 }
 
-static inline void atomic_long_add(long i, atomic_long_t *l)
-{
-	atomic_t *v = (atomic_t *)l;
-
-	atomic_add(i, v);
+#define ATOMIC_LONG_OP(op)						\
+static inline void							\
+atomic_long_##op(long i, atomic_long_t *l)				\
+{									\
+	ATOMIC_LONG_PFX(_t) *v = (ATOMIC_LONG_PFX(_t) *)l;		\
+									\
+	ATOMIC_LONG_PFX(_##op)(i, v);					\
 }
 
-static inline void atomic_long_sub(long i, atomic_long_t *l)
-{
-	atomic_t *v = (atomic_t *)l;
+ATOMIC_LONG_OP(add)
+ATOMIC_LONG_OP(sub)
+ATOMIC_LONG_OP(and)
+ATOMIC_LONG_OP(or)
+ATOMIC_LONG_OP(xor)
+ATOMIC_LONG_OP(andnot)
 
-	atomic_sub(i, v);
-}
+#undef ATOMIC_LONG_OP
 
 static inline int atomic_long_sub_and_test(long i, atomic_long_t *l)
 {
