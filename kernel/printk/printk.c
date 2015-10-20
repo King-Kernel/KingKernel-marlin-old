@@ -531,6 +531,7 @@ int check_syslog_permissions(int type, bool from_file)
 ok:
 	return security_syslog(type);
 }
+EXPORT_SYMBOL_GPL(check_syslog_permissions);
 
 
 /* /dev/kmsg - userspace message inject/listen interface */

@@ -690,33 +690,30 @@ fail_out:
 	return err;
 }
 
-static int __exit ramoops_remove(struct platform_device *pdev)
+static int ramoops_remove(struct platform_device *pdev)
 {
-#if 0
-	/* TODO(kees): We cannot unload ramoops since pstore doesn't support
-	 * unregistering yet.
-	 */
 	struct ramoops_context *cxt = &oops_cxt;
 
-	iounmap(cxt->virt_addr);
-	release_mem_region(cxt->phys_addr, cxt->size);
+	pstore_unregister(&cxt->pstore);
 	cxt->max_dump_cnt = 0;
 
-	/* TODO(kees): When pstore supports unregistering, call it here. */
 	kfree(cxt->pstore.buf);
 	cxt->pstore.bufsize = 0;
 #if defined(CONFIG_HTC_DEBUG_BOOTLOADER_LOG)
 	bldr_log_release();
 #endif
 
+	persistent_ram_free(cxt->mprz);
+	persistent_ram_free(cxt->fprz);
+	persistent_ram_free(cxt->cprz);
+	ramoops_free_przs(cxt);
+
 	return 0;
-#endif
-	return -EBUSY;
 }
 
 static struct platform_driver ramoops_driver = {
 	.probe		= ramoops_probe,
-	.remove		= __exit_p(ramoops_remove),
+	.remove		= ramoops_remove,
 	.driver		= {
 		.name	= "ramoops",
 	},
