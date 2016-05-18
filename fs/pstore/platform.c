@@ -285,7 +285,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
 	u64		id;
 	unsigned int	part = 1;
 	unsigned long	flags = 0;
-	int		is_locked = 0;
+	int		is_locked;
 	int		ret;
 
 	why = get_reason_str(reason);
@@ -296,8 +296,10 @@ static void pstore_dump(struct kmsg_dumper *dumper,
 			pr_err("pstore dump routine blocked in %s path, may corrupt error record\n"
 				       , in_nmi() ? "NMI" : why);
 		}
-	} else
+	} else {
 		spin_lock_irqsave(&psinfo->buf_lock, flags);
+		is_locked = 1;
+	}
 	oopscount++;
 	while (total < kmsg_bytes) {
 		char *dst;
@@ -351,10 +353,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
 		total += total_len;
 		part++;
 	}
-	if (pstore_cannot_block_path(reason)) {
-		if (is_locked)
-			spin_unlock_irqrestore(&psinfo->buf_lock, flags);
-	} else
+	if (is_locked)
 		spin_unlock_irqrestore(&psinfo->buf_lock, flags);
 }
 
