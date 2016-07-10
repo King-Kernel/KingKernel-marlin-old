@@ -16,6 +16,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "cpufreq_governor.h"
 <<<<<<< HEAD
 #include <linux/display_state.h>
@@ -93,10 +94,14 @@ unsigned int boost_counter = 0;
 =======
 #include "cpufreq_governor.h"
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
+#include "cpufreq_governor.h"
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 #ifdef CONFIG_POWERSUSPEND
 #include <linux/powersuspend.h>
 #endif
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -115,6 +120,8 @@ unsigned int boost_counter = 0;
 >>>>>>> 7d019fa8484d... cpufreq: chill: Major cleanup, move changes from governor.h to chill.h
 =======
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(80)
 #define DEF_FREQUENCY_DOWN_THRESHOLD		(20)
@@ -125,6 +132,7 @@ unsigned int boost_counter = 0;
 
 static DEFINE_PER_CPU(struct cs_cpu_dbs_info_s, cs_cpu_dbs_info);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
@@ -138,6 +146,9 @@ static inline unsigned int get_freq_target(struct chill_dbs_tuners *chill_tuners
 =======
 static inline unsigned int get_freq_target(struct cs_dbs_tuners *cs_tuners,
 >>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
+=======
+static inline unsigned int get_freq_target(struct cs_dbs_tuners *cs_tuners,
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 static inline unsigned int get_freq_target(struct cs_dbs_tuners *cs_tuners,
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
@@ -170,6 +181,7 @@ static void cs_check_cpu(int cpu, unsigned int load)
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	/* Create display state boolean */
 	bool display_on = is_display_on();
 
@@ -181,6 +193,8 @@ static void cs_check_cpu(int cpu, unsigned int load)
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 	/*
 	 * break out if we 'cannot' reduce the speed as the user might
 	 * want freq_step to be zero
@@ -188,6 +202,7 @@ static void cs_check_cpu(int cpu, unsigned int load)
 	if (cs_tuners->freq_step == 0)
 		return;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 	/* Check for frequency decrease */
@@ -246,6 +261,8 @@ static void cs_check_cpu(int cpu, unsigned int load)
 =======
 =======
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 	/* Check for frequency increase */
 	if (load > cs_tuners->up_threshold) {
 
@@ -259,6 +276,7 @@ static void cs_check_cpu(int cpu, unsigned int load)
 			return;
 #endif
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 		dbs_info->requested_freq += get_freq_target(cs_tuners, policy);
@@ -279,6 +297,9 @@ static void cs_check_cpu(int cpu, unsigned int load)
 =======
 		dbs_info->requested_freq += get_freq_target(cs_tuners, policy);
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
+		dbs_info->requested_freq += get_freq_target(cs_tuners, policy);
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 
 		if (dbs_info->requested_freq > policy->max)
 			dbs_info->requested_freq = policy->max;
@@ -292,6 +313,7 @@ static void cs_check_cpu(int cpu, unsigned int load)
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if (load < cs_tuners->down_threshold) {
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
@@ -300,6 +322,9 @@ static void cs_check_cpu(int cpu, unsigned int load)
 =======
 	if (load < cs_tuners->down_threshold) {
 >>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
+=======
+	if (load < cs_tuners->down_threshold) {
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 	if (load < cs_tuners->down_threshold) {
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
@@ -315,10 +340,15 @@ static void cs_check_cpu(int cpu, unsigned int load)
 			dbs_info->requested_freq -= freq_target;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		else {
 			dbs_info->requested_freq = policy->min;
 			boost_counter = 0;
 		}
+=======
+		else
+			dbs_info->requested_freq = policy->min;
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 		else
 			dbs_info->requested_freq = policy->min;
@@ -332,6 +362,7 @@ static void cs_check_cpu(int cpu, unsigned int load)
 				CPUFREQ_RELATION_L);
 		return;
 	}
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -364,6 +395,8 @@ static void cs_check_cpu(int cpu, unsigned int load)
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 }
 
 static void cs_dbs_timer(struct work_struct *work)
@@ -381,6 +414,7 @@ static void cs_dbs_timer(struct work_struct *work)
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	unsigned int sampling_rate_suspended = cs_tuners->sampling_rate * cs_tuners->sleep_depth;
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
@@ -393,6 +427,9 @@ static void cs_dbs_timer(struct work_struct *work)
 =======
 	unsigned int sampling_rate_suspended = cs_tuners->sampling_rate * cs_tuners->sleep_depth;
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
+	unsigned int sampling_rate_suspended = cs_tuners->sampling_rate * cs_tuners->sleep_depth;
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 
 	mutex_lock(&core_dbs_info->cdbs.timer_mutex);
 
@@ -400,8 +437,11 @@ static void cs_dbs_timer(struct work_struct *work)
 		modify_all = false;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	else
 =======
+=======
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 #ifdef CONFIG_POWERSUSPEND
@@ -410,6 +450,9 @@ static void cs_dbs_timer(struct work_struct *work)
 	else
 #endif
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
@@ -510,6 +553,7 @@ static ssize_t store_down_threshold_suspended(struct dbs_data *dbs_data, const c
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	cs_tuners->down_threshold_suspended = input;
 =======
 	cs_tuners->down_threshold = input;
@@ -520,6 +564,9 @@ static ssize_t store_down_threshold_suspended(struct dbs_data *dbs_data, const c
 =======
 	cs_tuners->down_threshold = input;
 >>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
+=======
+	cs_tuners->down_threshold = input;
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 	cs_tuners->down_threshold = input;
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
@@ -583,7 +630,10 @@ static ssize_t store_freq_step(struct dbs_data *dbs_data, const char *buf,
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 static ssize_t store_sleep_depth(struct dbs_data *dbs_data, const char *buf,
 		size_t count)
 {
@@ -602,6 +652,7 @@ static ssize_t store_sleep_depth(struct dbs_data *dbs_data, const char *buf,
 	return count;
 }
 
+<<<<<<< HEAD
 >>>>>>> 7d019fa8484d... cpufreq: chill: Major cleanup, move changes from governor.h to chill.h
 static ssize_t store_boost_enabled(struct dbs_data *dbs_data, const char *buf,
 		size_t count)
@@ -700,6 +751,8 @@ show_store_one(chill, boost_count);
 	return count;
 }
 
+=======
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 show_store_one(cs, sampling_rate);
 show_store_one(cs, up_threshold);
 show_store_one(cs, down_threshold);
@@ -708,11 +761,14 @@ show_store_one(cs, ignore_nice_load);
 show_store_one(cs, freq_step);
 declare_show_sampling_rate_min(cs);
 show_store_one(cs, sleep_depth);
+<<<<<<< HEAD
 show_store_one(cs, boost_enabled);
 show_store_one(cs, boost_count);
 >>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
 =======
 show_store_one(cs, sleep_depth);
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 
 gov_sys_pol_attr_rw(sampling_rate);
@@ -724,6 +780,7 @@ gov_sys_pol_attr_rw(freq_step);
 gov_sys_pol_attr_ro(sampling_rate_min);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 gov_sys_pol_attr_rw(boost_enabled);
 gov_sys_pol_attr_rw(boost_count);
 
@@ -731,11 +788,16 @@ static struct attribute *dbs_attributes_gov_sys[] = {
 =======
 =======
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 gov_sys_pol_attr_rw(sleep_depth);
 
 static struct attribute *dbs_attributes_gov_sys[] = {
 	&sampling_rate_min_gov_sys.attr,
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
@@ -747,8 +809,12 @@ static struct attribute *dbs_attributes_gov_sys[] = {
 	&freq_step_gov_sys.attr,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	&boost_enabled_gov_sys.attr,
 	&boost_count_gov_sys.attr,
+=======
+	&sleep_depth_gov_sys.attr,
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 	&sleep_depth_gov_sys.attr,
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
@@ -766,6 +832,10 @@ static struct attribute_group cs_attr_group_gov_sys = {
 static struct attribute *dbs_attributes_gov_pol[] = {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+	&sampling_rate_min_gov_pol.attr,
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 	&sampling_rate_min_gov_pol.attr,
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
@@ -780,8 +850,12 @@ static struct attribute *dbs_attributes_gov_pol[] = {
 	&freq_step_gov_pol.attr,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	&boost_enabled_gov_pol.attr,
 	&boost_count_gov_pol.attr,
+=======
+	&sleep_depth_gov_pol.attr,
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 	&sleep_depth_gov_pol.attr,
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
@@ -798,6 +872,7 @@ static struct attribute_group cs_attr_group_gov_pol = {
 
 /************************** sysfs end ************************/
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -826,6 +901,9 @@ static int cs_init(struct dbs_data *dbs_data)
 =======
 static int cs_init(struct dbs_data *dbs_data)
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
+static int cs_init(struct dbs_data *dbs_data)
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 {
 	struct cs_dbs_tuners *tuners;
 
@@ -833,7 +911,11 @@ static int cs_init(struct dbs_data *dbs_data)
 	if (!tuners) {
 		pr_err("%s: kzalloc failed\n", __func__);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		return ERR_PTR(-ENOMEM);
+=======
+		return -ENOMEM;
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 		return -ENOMEM;
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
@@ -844,6 +926,7 @@ static int cs_init(struct dbs_data *dbs_data)
 	tuners->down_threshold_suspended = DEF_FREQUENCY_DOWN_THRESHOLD_SUSPENDED;
 	tuners->ignore_nice_load = 0;
 	tuners->freq_step = DEF_FREQUENCY_STEP;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 	tuners->boost_enabled = DEF_BOOST_ENABLED;
@@ -882,6 +965,9 @@ static int cs_init(struct dbs_data *dbs_data, struct cpufreq_policy *policy)
 =======
 	tuners->sleep_depth = DEF_SLEEP_DEPTH;
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
+	tuners->sleep_depth = DEF_SLEEP_DEPTH;
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 
 	dbs_data->tuners = tuners;
 	dbs_data->min_sampling_rate = DEF_SAMPLING_RATE;
@@ -892,7 +978,11 @@ static int cs_init(struct dbs_data *dbs_data, struct cpufreq_policy *policy)
 static void cs_exit(struct dbs_data *dbs_data)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	//nothing to do
+=======
+	kfree(dbs_data->tuners);
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 	kfree(dbs_data->tuners);
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
@@ -945,6 +1035,7 @@ static int __init cpufreq_gov_dbs_init(void)
 static void __exit cpufreq_gov_dbs_exit(void)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int cpu;
 
 	cpufreq_unregister_governor(&cpufreq_gov_chill);
@@ -952,6 +1043,9 @@ static void __exit cpufreq_gov_dbs_exit(void)
 		kfree(per_cpu(cached_tuners, cpu));
 		per_cpu(cached_tuners, cpu) = NULL;
 	}
+=======
+	cpufreq_unregister_governor(&cpufreq_gov_chill);
+>>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 	cpufreq_unregister_governor(&cpufreq_gov_chill);
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
