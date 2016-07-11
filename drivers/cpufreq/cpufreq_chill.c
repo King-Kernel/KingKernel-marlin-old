@@ -40,6 +40,10 @@
 #define CHILL_VERSION_MINOR			(9)
 >>>>>>> 3657ca1396f5... chill: Fix down_threshold_suspended sysfs input
 
+/* Chill version macros */
+#define CHILL_VERSION_MAJOR		(1)
+#define CHILL_VERSION_MINOR		(0)
+
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
 #define DEF_FREQUENCY_DOWN_THRESHOLD		(30)
