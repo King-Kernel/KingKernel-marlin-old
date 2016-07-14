@@ -93,7 +93,11 @@ unsigned int boost_counter = 0;
 =======
 /* Chill version macros */
 #define CHILL_VERSION_MAJOR			(1)
+<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(2)
+=======
+#define CHILL_VERSION_MINOR			(4)
+>>>>>>> 2486219a5e33... cpufreq: chill: use GOV_CHILL macro
 
 >>>>>>> 7d019fa8484d... cpufreq: chill: Major cleanup, move changes from governor.h to chill.h
 /* Chill governor macros */
@@ -755,7 +759,7 @@ static struct cs_ops chill_ops = {
 };
 
 static struct common_dbs_data chill_dbs_cdata = {
-	.governor = 1,
+	.governor = GOV_CHILL,
 	.attr_group_gov_sys = &chill_attr_group_gov_sys,
 	.attr_group_gov_pol = &chill_attr_group_gov_pol,
 	.get_cpu_cdbs = get_cpu_cdbs,
