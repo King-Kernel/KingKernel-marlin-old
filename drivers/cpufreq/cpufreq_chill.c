@@ -26,6 +26,7 @@
 #define CHILL_VERSION_MAJOR			(1)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(1)
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
 =======
@@ -49,13 +50,15 @@
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
 =======
 #define CHILL_VERSION_MINOR			(6)
+=======
+#define CHILL_VERSION_MINOR			(7)
+>>>>>>> 155574ee802... cpufreq: chill: Replace sleep_depth with true load ignorance
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
 #define DEF_FREQUENCY_DOWN_THRESHOLD		(30)
 #define DEF_FREQUENCY_DOWN_THRESHOLD_SUSPENDED	(20)
 #define DEF_FREQUENCY_STEP			(5)
-#define DEF_SLEEP_DEPTH				(2)
 #define DEF_SAMPLING_RATE			(20000)
 #define DEF_BOOST_ENABLED			(1)
 #define DEF_BOOST_COUNT				(7)
@@ -95,10 +98,16 @@ static void cs_check_cpu(int cpu, unsigned int load)
 
 #ifdef CONFIG_POWERSUSPEND
 	/* Once min frequency is reached while screen off, stop taking load samples*/
+<<<<<<< HEAD
 	if (power_suspended && policy->cur == policy->min)
 		return;
 #endif
 
+=======
+	if (power_suspended & policy->cur == policy->min)
+		return;
+#endif
+>>>>>>> 155574ee802... cpufreq: chill: Replace sleep_depth with true load ignorance
 	/*
 	 * break out if we 'cannot' reduce the speed as the user might
 	 * want freq_step to be zero
@@ -232,7 +241,11 @@ static void cs_dbs_timer(struct work_struct *work)
 
 	if (!need_load_eval(&core_dbs_info->cdbs, cs_tuners->sampling_rate))
 		modify_all = false;
+<<<<<<< HEAD
 		else
+=======
+	else
+>>>>>>> 155574ee802... cpufreq: chill: Replace sleep_depth with true load ignorance
 			dbs_check_cpu(dbs_data, cpu);
 
 	gov_queue_work(dbs_data, dbs_info->cdbs.cur_policy, delay, modify_all);
@@ -384,6 +397,7 @@ static ssize_t store_freq_step(struct dbs_data *dbs_data, const char *buf,
 	return count;
 }
 
+<<<<<<< HEAD
 static ssize_t store_boost_enabled(struct dbs_data *dbs_data, const char *buf,
 		size_t count)
 {
@@ -432,6 +446,8 @@ static ssize_t store_boost_count(struct dbs_data *dbs_data, const char *buf,
 	return count;
 }
 
+=======
+>>>>>>> 155574ee802... cpufreq: chill: Replace sleep_depth with true load ignorance
 static ssize_t store_boost_enabled(struct dbs_data *dbs_data, const char *buf,
 		size_t count)
 {
@@ -482,8 +498,11 @@ show_store_one(cs, freq_step);
 <<<<<<< HEAD
 =======
 declare_show_sampling_rate_min(cs);
+<<<<<<< HEAD
 show_store_one(cs, sleep_depth);
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
+=======
+>>>>>>> 155574ee802... cpufreq: chill: Replace sleep_depth with true load ignorance
 show_store_one(cs, boost_enabled);
 show_store_one(cs, boost_count);
 
@@ -496,8 +515,11 @@ gov_sys_pol_attr_rw(freq_step);
 <<<<<<< HEAD
 =======
 gov_sys_pol_attr_ro(sampling_rate_min);
+<<<<<<< HEAD
 gov_sys_pol_attr_rw(sleep_depth);
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
+=======
+>>>>>>> 155574ee802... cpufreq: chill: Replace sleep_depth with true load ignorance
 gov_sys_pol_attr_rw(boost_enabled);
 gov_sys_pol_attr_rw(boost_count);
 
@@ -509,9 +531,12 @@ static struct attribute *dbs_attributes_gov_sys[] = {
 	&ignore_nice_load_gov_sys.attr,
 	&freq_step_gov_sys.attr,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	&sleep_depth_gov_sys.attr,
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
+=======
+>>>>>>> 155574ee802... cpufreq: chill: Replace sleep_depth with true load ignorance
 	&boost_enabled_gov_sys.attr,
 	&boost_count_gov_sys.attr,
 	NULL
@@ -530,9 +555,12 @@ static struct attribute *dbs_attributes_gov_pol[] = {
 	&ignore_nice_load_gov_pol.attr,
 	&freq_step_gov_pol.attr,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	&sleep_depth_gov_pol.attr,
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
+=======
+>>>>>>> 155574ee802... cpufreq: chill: Replace sleep_depth with true load ignorance
 	&boost_enabled_gov_pol.attr,
 	&boost_count_gov_pol.attr,
 	NULL
@@ -561,9 +589,12 @@ static int cs_init(struct dbs_data *dbs_data)
 	tuners->ignore_nice_load = 0;
 	tuners->freq_step = DEF_FREQUENCY_STEP;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	tuners->sleep_depth = DEF_SLEEP_DEPTH;
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
+=======
+>>>>>>> 155574ee802... cpufreq: chill: Replace sleep_depth with true load ignorance
 	tuners->boost_enabled = DEF_BOOST_ENABLED;
 	tuners->boost_count = DEF_BOOST_COUNT;
 
