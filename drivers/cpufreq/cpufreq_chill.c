@@ -50,6 +50,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(10)
 =======
 <<<<<<< HEAD
@@ -175,6 +176,14 @@
 #define DEF_FREQUENCY_DOWN_THRESHOLD		(30)
 #define DEF_FREQUENCY_DOWN_THRESHOLD_SUSPENDED	(20)
 >>>>>>> parent of ef7fcfe5d6c2... cpufreq: chill: Impliment down_threshold_suspended
+=======
+#define CHILL_VERSION_MINOR			(0)
+
+/* Chill governor macros */
+#define DEF_FREQUENCY_UP_THRESHOLD		(85)
+#define DEF_FREQUENCY_DOWN_THRESHOLD		(35)
+#define DEF_FREQUENCY_DOWN_THRESHOLD_SUSPENDED	(45)
+>>>>>>> 7d4af2ffc39d... cpufreq: chill: Version 2.0
 #define DEF_FREQUENCY_STEP			(5)
 #define DEF_SLEEP_DEPTH				(2)
 #define DEF_SAMPLING_RATE			(20000)
@@ -184,11 +193,15 @@
 #define DEF_SLEEP_DEPTH				(1)
 #define DEF_SAMPLING_RATE			(20000)
 #define DEF_BOOST_ENABLED			(1)
+<<<<<<< HEAD
 #define DEF_BOOST_COUNT				(3)
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
 >>>>>>> parent of 6e125a322825... cpufreq: chill: Guard against 0 sleep depth and optimize defaults
 =======
 >>>>>>> parent of 62d732615bba... cpufreq: chill: Add boost option
+=======
+#define DEF_BOOST_COUNT				(8)
+>>>>>>> 7d4af2ffc39d... cpufreq: chill: Version 2.0
 
 static DEFINE_PER_CPU(struct cs_cpu_dbs_info_s, cs_cpu_dbs_info);
 
@@ -255,6 +268,7 @@ static void cs_check_cpu(int cpu, unsigned int load)
 	/* Once min frequency is reached while screen off, stop taking load samples*/
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if (!display_on && policy->cur == policy->min)
 =======
 <<<<<<< HEAD
@@ -276,6 +290,12 @@ static void cs_check_cpu(int cpu, unsigned int load)
 >>>>>>> parent of 906f7610a539... cpufreq: Add Chill cpu gov
 =======
 >>>>>>> parent of 68d5b64a0801... cpufreq: chill: Replace sleep_depth with true load ignorance
+=======
+	if (power_suspended && policy->cur == policy->min)
+		return;
+#endif
+
+>>>>>>> 7d4af2ffc39d... cpufreq: chill: Version 2.0
 	/*
 	 * break out if we 'cannot' reduce the speed as the user might
 	 * want freq_step to be zero
@@ -286,12 +306,15 @@ static void cs_check_cpu(int cpu, unsigned int load)
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 >>>>>>> parent of ab58cc58fec2... cpufreq: chill: Major cleanup, move changes from governor.h to chill.h
 =======
 >>>>>>> parent of 906f7610a539... cpufreq: Add Chill cpu gov
 =======
+=======
+>>>>>>> 7d4af2ffc39d... cpufreq: chill: Version 2.0
 #ifdef CONFIG_POWERSUSPEND
 >>>>>>> parent of 04b71cf58a83... cpufreq: chill: Use native display_state instead of PowerSuspend
 	/* Check for frequency decrease */
@@ -408,9 +431,12 @@ static void cs_check_cpu(int cpu, unsigned int load)
 #endif
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> parent of 906f7610a539... cpufreq: Add Chill cpu gov
 =======
 >>>>>>> parent of ef7fcfe5d6c2... cpufreq: chill: Impliment down_threshold_suspended
+=======
+>>>>>>> 7d4af2ffc39d... cpufreq: chill: Version 2.0
 
 	/* Check for frequency increase */
 	if (load > cs_tuners->up_threshold) {
@@ -443,12 +469,15 @@ static void cs_check_cpu(int cpu, unsigned int load)
 	}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 0153a72f931... cpufreq: chill: Impliment down_threshold_suspended
 >>>>>>> parent of 906f7610a539... cpufreq: Add Chill cpu gov
 =======
 >>>>>>> parent of ef7fcfe5d6c2... cpufreq: chill: Impliment down_threshold_suspended
+=======
+>>>>>>> 7d4af2ffc39d... cpufreq: chill: Version 2.0
 }
 
 static void cs_dbs_timer(struct work_struct *work)
@@ -489,6 +518,7 @@ static void cs_dbs_timer(struct work_struct *work)
 		modify_all = false;
 		else
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 		else
@@ -498,6 +528,8 @@ static void cs_dbs_timer(struct work_struct *work)
 >>>>>>> parent of 906f7610a539... cpufreq: Add Chill cpu gov
 =======
 >>>>>>> parent of 68d5b64a0801... cpufreq: chill: Replace sleep_depth with true load ignorance
+=======
+>>>>>>> 7d4af2ffc39d... cpufreq: chill: Version 2.0
 			dbs_check_cpu(dbs_data, cpu);
 
 	gov_queue_work(dbs_data, dbs_info->cdbs.cur_policy, delay, modify_all);
@@ -784,6 +816,7 @@ show_store_one(cs, ignore_nice_load);
 show_store_one(cs, freq_step);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 show_store_one(cs, boost_enabled);
 show_store_one(cs, boost_count);
 <<<<<<< HEAD
@@ -820,6 +853,8 @@ show_store_one(cs, sleep_depth);
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
 =======
 >>>>>>> parent of 62d732615bba... cpufreq: chill: Add boost option
+=======
+>>>>>>> 7d4af2ffc39d... cpufreq: chill: Version 2.0
 show_store_one(cs, boost_enabled);
 show_store_one(cs, boost_count);
 >>>>>>> parent of 906f7610a539... cpufreq: Add Chill cpu gov
@@ -830,6 +865,7 @@ gov_sys_pol_attr_rw(down_threshold);
 gov_sys_pol_attr_rw(down_threshold_suspended);
 gov_sys_pol_attr_rw(ignore_nice_load);
 gov_sys_pol_attr_rw(freq_step);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -846,6 +882,8 @@ gov_sys_pol_attr_rw(sleep_depth);
 >>>>>>> parent of 68d5b64a0801... cpufreq: chill: Replace sleep_depth with true load ignorance
 =======
 >>>>>>> parent of 62d732615bba... cpufreq: chill: Add boost option
+=======
+>>>>>>> 7d4af2ffc39d... cpufreq: chill: Version 2.0
 gov_sys_pol_attr_rw(boost_enabled);
 gov_sys_pol_attr_rw(boost_count);
 
