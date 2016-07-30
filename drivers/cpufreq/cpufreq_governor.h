@@ -196,10 +196,6 @@ struct cs_dbs_tuners {
 	unsigned int freq_step;
 	unsigned int sleep_depth;
 	unsigned int boost_enabled;
-<<<<<<< HEAD
-	unsigned int boost_ceiling;
-=======
->>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
 	unsigned int boost_count;
 };
 
