@@ -14,13 +14,16 @@
 
 #include <linux/slab.h>
 #include "cpufreq_governor.h"
-#ifdef CONFIG_POWERSUSPEND
-#include <linux/powersuspend.h>
-#endif
+#include <linux/display_state.h>
 
 /* Chill version macros */
+<<<<<<< HEAD
 #define CHILL_VERSION_MAJOR			(1)
 #define CHILL_VERSION_MINOR			(8)
+=======
+#define CHILL_VERSION_MAJOR			(2)
+#define CHILL_VERSION_MINOR			(1)
+>>>>>>> 6c66a250bd58... cpufreq: chill: Use native display_state instead of PowerSuspend
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
@@ -63,11 +66,19 @@ static void cs_check_cpu(int cpu, unsigned int load)
 	struct dbs_data *dbs_data = policy->governor_data;
 	struct cs_dbs_tuners *cs_tuners = dbs_data->tuners;
 
-#ifdef CONFIG_POWERSUSPEND
+	/* Create display state boolean */
+	bool display_on = is_display_on();
+
 	/* Once min frequency is reached while screen off, stop taking load samples*/
+<<<<<<< HEAD
 	if (power_suspended & policy->cur == policy->min)
 		return;
 #endif
+=======
+	if (!display_on && policy->cur == policy->min)
+		return;
+
+>>>>>>> 6c66a250bd58... cpufreq: chill: Use native display_state instead of PowerSuspend
 	/*
 	 * break out if we 'cannot' reduce the speed as the user might
 	 * want freq_step to be zero
@@ -75,9 +86,8 @@ static void cs_check_cpu(int cpu, unsigned int load)
 	if (cs_tuners->freq_step == 0)
 		return;
 
-#ifdef CONFIG_POWERSUSPEND
 	/* Check for frequency decrease */
-	if (!power_suspended && load < cs_tuners->down_threshold) {
+	if (display_on && load < cs_tuners->down_threshold) {
 		unsigned int freq_target;
 		/*
 		 * if we cannot reduce the frequency anymore, break out early
@@ -121,7 +131,7 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		__cpufreq_driver_target(policy, dbs_info->requested_freq,
 				CPUFREQ_RELATION_L);
 		return;
-	} else if (power_suspended && load <= cs_tuners->down_threshold_suspended) {
+	} else if (!display_on && load <= cs_tuners->down_threshold_suspended) {
 		unsigned int freq_target;
 		/*
 		 * if we cannot reduce the frequency anymore, break out early
@@ -140,6 +150,7 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		return;
 	}
 
+<<<<<<< HEAD
 #else
 	/* Check for frequency decrease */
 	if (load < cs_tuners->down_threshold) {
@@ -161,6 +172,35 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		return;
 	}
 #endif
+=======
+	/* Check for frequency increase */
+	if (load > cs_tuners->up_threshold) {
+
+		/* if we are already at full speed then break out early */
+		if (dbs_info->requested_freq == policy->max)
+			return;
+
+		/* if display is off then break out early */
+		if (!display_on)
+			return;
+
+		/* Boost if count is reached, otherwise increase freq */
+		if (cs_tuners->boost_enabled && boost_counter >= cs_tuners->boost_count)
+			dbs_info->requested_freq = policy->max;
+		else
+			dbs_info->requested_freq += get_freq_target(cs_tuners, policy);
+
+ 		/* Make sure max hasn't been reached, otherwise increment boost_counter */
+		if (dbs_info->requested_freq >= policy->max)
+			dbs_info->requested_freq = policy->max;
+		else
+			boost_counter++;
+
+		__cpufreq_driver_target(policy, dbs_info->requested_freq,
+			CPUFREQ_RELATION_H);
+		return;
+	}
+>>>>>>> 6c66a250bd58... cpufreq: chill: Use native display_state instead of PowerSuspend
 }
 
 static void cs_dbs_timer(struct work_struct *work)
