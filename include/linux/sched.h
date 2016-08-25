@@ -3422,8 +3422,6 @@ int register_cpu_cycle_counter_cb(struct cpu_cycle_counter_cb *cb);
 #define SCHED_CPUFREQ_EARLY_DET    (1U << 6)
 #define SCHED_CPUFREQ_FORCE_UPDATE (1U << 7)
 
-#define SCHED_CPUFREQ_RT_DL    (SCHED_CPUFREQ_RT | SCHED_CPUFREQ_DL)
-
 #ifdef CONFIG_CPU_FREQ
 struct update_util_data {
 	void (*func)(struct update_util_data *data, u64 time, unsigned int flags);
