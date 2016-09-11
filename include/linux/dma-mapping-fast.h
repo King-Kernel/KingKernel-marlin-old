@@ -34,6 +34,7 @@ struct dma_fast_smmu_mapping {
 
 	spinlock_t	lock;
 	struct notifier_block notifier;
+
 };
 
 #ifdef CONFIG_IOMMU_IO_PGTABLE_FAST
@@ -47,7 +48,6 @@ static inline int fast_smmu_attach_device(struct device *dev,
 {
 	return -ENODEV;
 }
-
 static inline void fast_smmu_detach_device(struct device *dev,
 					   struct dma_iommu_mapping *mapping)
 {
