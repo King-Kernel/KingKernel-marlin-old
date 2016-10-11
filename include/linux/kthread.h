@@ -206,6 +206,9 @@ bool kthread_queue_delayed_work(struct kthread_worker *worker,
 void kthread_flush_work(struct kthread_work *work);
 void kthread_flush_worker(struct kthread_worker *worker);
 
+bool kthread_cancel_work_sync(struct kthread_work *work);
+bool kthread_cancel_delayed_work_sync(struct kthread_delayed_work *work);
+
 void kthread_destroy_worker(struct kthread_worker *worker);
 
 bool kthread_cancel_work_sync(struct kthread_work *work);
