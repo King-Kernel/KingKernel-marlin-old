@@ -21,6 +21,7 @@
 #define CHILL_VERSION_MAJOR			(2)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(0)
 =======
 #define CHILL_VERSION_MAJOR			(1)
@@ -39,6 +40,9 @@
 =======
 #define CHILL_VERSION_MINOR			(2)
 >>>>>>> 221f642107c... chill: Reset boost count at max regardless of whether we've boosted
+=======
+#define CHILL_VERSION_MINOR			(5)
+>>>>>>> 25a07dd7e0d... chill: Decrease boost count alongside frequency
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
@@ -140,6 +144,13 @@ static void cs_check_cpu(int cpu, unsigned int load)
 			return;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+		/* reduce boost count with frequency */
+		if (boost_counter < 0)
+			boost_counter--;
+
+>>>>>>> 25a07dd7e0d... chill: Decrease boost count alongside frequency
 		freq_target = get_freq_target(cs_tuners, policy);
 		if (dbs_info->requested_freq > freq_target)
 			dbs_info->requested_freq -= freq_target;
