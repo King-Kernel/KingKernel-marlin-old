@@ -28,6 +28,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(0)
 =======
 #define CHILL_VERSION_MAJOR			(1)
@@ -64,6 +65,9 @@
 =======
 #define CHILL_VERSION_MINOR			(3)
 >>>>>>> 868d882e126... chill: I'm secretly retarded
+=======
+#define CHILL_VERSION_MINOR			(4)
+>>>>>>> 3cf87276695... chill: Simplify boost increment logic
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
@@ -359,15 +363,10 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		if (cs_tuners->boost_enabled && boost_counter >= cs_tuners->boost_count) {
 			dbs_info->requested_freq = policy->max;
 			boost_counter = 0;
-		} else
+		} else {
 			dbs_info->requested_freq += get_freq_target(cs_tuners, policy);
-
- 		/* Make sure max hasn't been reached, otherwise increment boost_counter */
-		if (dbs_info->requested_freq >= policy->max) {
-			dbs_info->requested_freq = policy->max;
-			boost_counter = 0;
-		} else
 			boost_counter++;
+		};
 
 		__cpufreq_driver_target(policy, dbs_info->requested_freq,
 			CPUFREQ_RELATION_H);
