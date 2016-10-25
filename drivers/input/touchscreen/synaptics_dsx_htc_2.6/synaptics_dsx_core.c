@@ -56,7 +56,7 @@
 #define TYPE_B_PROTOCOL
 #endif
 
-#define WAKEUP_GESTURE false
+#define WAKEUP_GESTURE true
 
 #define NO_0D_WHILE_2D
 #define REPORT_2D_Z
@@ -1111,6 +1111,7 @@ static ssize_t synaptics_rmi4_wake_gesture_store(struct device *dev,
 <<<<<<< HEAD
 	if (rmi4_data->f11_wakeup_gesture || rmi4_data->f12_wakeup_gesture)
 <<<<<<< HEAD
+<<<<<<< HEAD
 		rmi4_data->enable_wakeup_gesture = WAKEUP_GESTURE && input;
 =======
 		rmi4_data->enable_wakeup_gesture = input;
@@ -1125,6 +1126,9 @@ static ssize_t synaptics_rmi4_wake_gesture_store(struct device *dev,
 		}
 	}
 >>>>>>> d7902c49ad44... touch: fix enable wakeup gesture while tp is suspended
+=======
+		rmi4_data->enable_wakeup_gesture = input;
+>>>>>>> e923c5486845... Revert "touch: disable wakeup gesture"
 
 	return count;
 }
