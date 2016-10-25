@@ -24,12 +24,21 @@
 #include <linux/input.h>
 
 extern int s2w_switch;
+<<<<<<< HEAD
 extern bool dt2w_switch;
 extern bool wg_switch;
 extern bool wg_switch_temp;
 extern bool wg_changed;
 extern int vib_strength;
 bool scr_suspended(void);
+=======
+extern int s2w_switch_temp;
+extern bool dt2w_switch;
+extern int vib_strength;
+bool scr_suspended(void);
+bool get_internal_dt(void);
+void set_internal_dt(bool input);
+>>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
 void wg_setdev(struct input_dev *);
 void set_vibrate(int value);
 
