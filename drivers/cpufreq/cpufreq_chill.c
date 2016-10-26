@@ -18,7 +18,11 @@
 
 /* Chill version macros */
 #define CHILL_VERSION_MAJOR			(2)
+<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(2)
+=======
+#define CHILL_VERSION_MINOR			(6)
+>>>>>>> 01d49229fb95... chill: Reset boost count on policy->min
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
@@ -114,9 +118,10 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		freq_target = get_freq_target(cs_tuners, policy);
 		if (dbs_info->requested_freq > freq_target)
 			dbs_info->requested_freq -= freq_target;
-		else
+		else {
 			dbs_info->requested_freq = policy->min;
-
+			boost_counter = 0;
+		}
 		__cpufreq_driver_target(policy, dbs_info->requested_freq,
 				CPUFREQ_RELATION_L);
 		return;
@@ -131,8 +136,10 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		freq_target = get_freq_target(cs_tuners, policy);
 		if (dbs_info->requested_freq > freq_target)
 			dbs_info->requested_freq -= freq_target;
-		else
+		else {
 			dbs_info->requested_freq = policy->min;
+			boost_counter = 0;
+		}
 
 		__cpufreq_driver_target(policy, dbs_info->requested_freq,
 				CPUFREQ_RELATION_L);
