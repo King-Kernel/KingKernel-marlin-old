@@ -35,10 +35,14 @@
 #include <linux/wakelock.h>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /* Tunables */
 =======
 /* Tuneables */
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+/* Tunables */
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 #define WG_DEBUG		0
 #define WG_DEFAULT		0
 #define S2W_DEFAULT		0
@@ -47,12 +51,17 @@
 
 /* marlin */
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define SWEEP_Y_MAX             2560
 #define SWEEP_X_MAX             1440
 =======
 #define SWEEP_Y_MAX             2559
 #define SWEEP_X_MAX             1439
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+#define SWEEP_Y_MAX             2560
+#define SWEEP_X_MAX             1440
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 #define SWEEP_EDGE		130
 #define SWEEP_Y_LIMIT           SWEEP_Y_MAX-SWEEP_EDGE
 #define SWEEP_X_LIMIT           SWEEP_X_MAX-SWEEP_EDGE
@@ -78,18 +87,39 @@
 #define SWEEP_Y_NEXT_SAILFISH	135
 =======
 #define SWEEP_Y_NEXT            180
+<<<<<<< HEAD
 #define DT2W_FEATHER		150
 #define DT2W_TIME 		150
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+
+/* sailfish */
+#define SWEEP_Y_MAX_SAILFISH	1920
+#define SWEEP_X_MAX_SAILFISH	1080
+#define SWEEP_EDGE_SAILFISH	90
+#define SWEEP_Y_LIMIT_SAILFISH	SWEEP_Y_MAX_SAILFISH-SWEEP_EDGE
+#define SWEEP_X_LIMIT_SAILFISH	SWEEP_X_MAX_SAILFISH-SWEEP_EDGE
+#define SWEEP_X_B1_SAILFISH	399
+#define SWEEP_X_B2_SAILFISH	720
+#define SWEEP_Y_START_SAILFISH	800
+#define SWEEP_X_START_SAILFISH	540
+#define SWEEP_X_FINAL_SAILFISH	270
+#define SWEEP_Y_NEXT_SAILFISH	135
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 
 /* Wake Gestures */
 #define SWEEP_TIMEOUT		90
 #define TRIGGER_TIMEOUT		150
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define DT2W_FEATHER		150
 #define DT2W_TIME 		150
 =======
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+#define DT2W_FEATHER		150
+#define DT2W_TIME 		150
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 #define WAKE_GESTURE		0x0b
 #define SWEEP_RIGHT		0x01
 #define SWEEP_LEFT		0x02
@@ -97,9 +127,12 @@
 #define SWEEP_DOWN		0x08
 #define VIB_STRENGTH 		20
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 #define WAKE_GESTURES_ENABLED	1
 
 #define LOGTAG			"WG"
@@ -134,6 +167,9 @@ static bool touch_cnt = true;
 int vib_strength = VIB_STRENGTH;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 static unsigned int sweep_y_limit = SWEEP_Y_LIMIT;
 static unsigned int sweep_x_limit = SWEEP_X_LIMIT;
 static unsigned int sweep_x_b1 = SWEEP_X_B1;
@@ -145,8 +181,11 @@ static unsigned int sweep_y_next = SWEEP_Y_NEXT;
 static unsigned int sweep_x_max = SWEEP_X_MAX;
 static unsigned int sweep_edge = SWEEP_EDGE;
 
+<<<<<<< HEAD
 =======
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 static struct input_dev * wake_dev;
 static DEFINE_MUTEX(pwrkeyworklock);
 static struct workqueue_struct *s2w_input_wq;
@@ -161,6 +200,9 @@ void wg_setdev(struct input_dev * input_device) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 //get hardware type
 static int __init get_model(char *cmdline_model)
 {
@@ -181,8 +223,11 @@ static int __init get_model(char *cmdline_model)
 }
 __setup("androidboot.hardware=", get_model);
 
+<<<<<<< HEAD
 =======
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 /* Wake Gestures */
 #if (WAKE_GESTURES_ENABLED)
 static void report_gesture(int gest)
@@ -219,9 +264,13 @@ static DECLARE_WORK(wake_presspwr_work, wake_presspwr);
 /* PowerKey trigger */
 static void wake_pwrtrigger(void) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 	pwrtrigger_time[1] = pwrtrigger_time[0];
 	pwrtrigger_time[0] = jiffies;
 	
@@ -272,6 +321,7 @@ static void detect_doubletap2wake(int x, int y, bool st)
                 x, y, tap_time_pre);
 #endif
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if (x < sweep_edge || x > sweep_x_limit)
        		return;
 	if (y < sweep_edge || y > sweep_y_limit)
@@ -280,6 +330,11 @@ static void detect_doubletap2wake(int x, int y, bool st)
        		return;
 	if (y < SWEEP_EDGE || y > SWEEP_Y_LIMIT)
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+	if (x < sweep_edge || x > sweep_x_limit)
+       		return;
+	if (y < sweep_edge || y > sweep_y_limit)
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
        		return;
 
 	if ((single_touch) && (dt2w_switch) && (exec_count) && (touch_cnt)) {
@@ -352,6 +407,7 @@ static void detect_sweep2wake_v(int x, int y, bool st)
 
 	//sweep up
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if (firsty > sweep_y_start && single_touch && s2w_switch & SWEEP_UP) {
 		prevy = firsty;
 		nexty = prevy - sweep_y_next;
@@ -360,22 +416,33 @@ static void detect_sweep2wake_v(int x, int y, bool st)
 			nexty -= sweep_y_next;
 =======
 	if (firsty > SWEEP_Y_START && single_touch && s2w_switch & SWEEP_UP) {
+=======
+	if (firsty > sweep_y_start && single_touch && s2w_switch & SWEEP_UP) {
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 		prevy = firsty;
-		nexty = prevy - SWEEP_Y_NEXT;
+		nexty = prevy - sweep_y_next;
 		if (barriery[0] == true || (y < prevy && y > nexty)) {
 			prevy = nexty;
+<<<<<<< HEAD
 			nexty -= SWEEP_Y_NEXT;
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+			nexty -= sweep_y_next;
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 			barriery[0] = true;
 			if (barriery[1] == true || (y < prevy && y > nexty)) {
 				prevy = nexty;
 				barriery[1] = true;
 				if (y < prevy) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 					if (y < (nexty - sweep_y_next)) {
 =======
 					if (y < (nexty - SWEEP_Y_NEXT)) {
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+					if (y < (nexty - sweep_y_next)) {
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 						if (exec_county && (jiffies - firsty_time < SWEEP_TIMEOUT)) {
 #if (WAKE_GESTURES_ENABLED)
 							if (gestures_switch) {
@@ -394,6 +461,7 @@ static void detect_sweep2wake_v(int x, int y, bool st)
 		}
 	//sweep down
 <<<<<<< HEAD
+<<<<<<< HEAD
 	} else if (firsty <= sweep_y_start && single_touch && s2w_switch & SWEEP_DOWN) {
 		prevy = firsty;
 		nexty = prevy + sweep_y_next;
@@ -402,22 +470,33 @@ static void detect_sweep2wake_v(int x, int y, bool st)
 			nexty += sweep_y_next;
 =======
 	} else if (firsty <= SWEEP_Y_START && single_touch && s2w_switch & SWEEP_DOWN) {
+=======
+	} else if (firsty <= sweep_y_start && single_touch && s2w_switch & SWEEP_DOWN) {
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 		prevy = firsty;
-		nexty = prevy + SWEEP_Y_NEXT;
+		nexty = prevy + sweep_y_next;
 		if (barriery[0] == true || (y > prevy && y < nexty)) {
 			prevy = nexty;
+<<<<<<< HEAD
 			nexty += SWEEP_Y_NEXT;
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+			nexty += sweep_y_next;
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 			barriery[0] = true;
 			if (barriery[1] == true || (y > prevy && y < nexty)) {
 				prevy = nexty;
 				barriery[1] = true;
 				if (y > prevy) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 					if (y > (nexty + sweep_y_next)) {
 =======
 					if (y > (nexty + SWEEP_Y_NEXT)) {
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+					if (y > (nexty + sweep_y_next)) {
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 						if (exec_county && (jiffies - firsty_time < SWEEP_TIMEOUT)) {
 #if (WAKE_GESTURES_ENABLED)
 							if (gestures_switch) {
@@ -444,10 +523,14 @@ static void detect_sweep2wake_h(int x, int y, bool st, bool scr_suspended)
         bool single_touch = st;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if (!scr_suspended && y < sweep_y_limit) {
 =======
 	if (!scr_suspended && y < SWEEP_Y_LIMIT) {
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+	if (!scr_suspended && y < sweep_y_limit) {
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 		sweep2wake_reset();
 		return;
 	}
@@ -463,6 +546,7 @@ static void detect_sweep2wake_h(int x, int y, bool st, bool scr_suspended)
 #endif
 	//left->right
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if (firstx < sweep_x_start && single_touch &&
 			((scr_suspended && (s2w_switch & SWEEP_RIGHT)) ||
 			(!scr_suspended && (s2s_switch & SWEEP_RIGHT)))) {
@@ -474,15 +558,22 @@ static void detect_sweep2wake_h(int x, int y, bool st, bool scr_suspended)
 			nextx = sweep_x_b2;
 =======
 	if (firstx < SWEEP_X_START && single_touch &&
+=======
+	if (firstx < sweep_x_start && single_touch &&
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 			((scr_suspended && (s2w_switch & SWEEP_RIGHT)) ||
 			(!scr_suspended && (s2s_switch & SWEEP_RIGHT)))) {
 		prevx = 0;
-		nextx = SWEEP_X_B1;
+		nextx = sweep_x_b1;
 		if ((barrierx[0] == true) ||
 		   ((x > prevx) && (x < nextx))) {
 			prevx = nextx;
+<<<<<<< HEAD
 			nextx = SWEEP_X_B2;
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+			nextx = sweep_x_b2;
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 			barrierx[0] = true;
 			if ((barrierx[1] == true) ||
 			   ((x > prevx) && (x < nextx))) {
@@ -490,10 +581,14 @@ static void detect_sweep2wake_h(int x, int y, bool st, bool scr_suspended)
 				barrierx[1] = true;
 				if (x > prevx) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 					if (x > (sweep_x_max - sweep_x_final)) {
 =======
 					if (x > (SWEEP_X_MAX - SWEEP_X_FINAL)) {
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+					if (x > (sweep_x_max - sweep_x_final)) {
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 						if (exec_countx && (jiffies - firstx_time < SWEEP_TIMEOUT)) {
 #if (WAKE_GESTURES_ENABLED)
 							if (gestures_switch && scr_suspended) {
@@ -512,6 +607,7 @@ static void detect_sweep2wake_h(int x, int y, bool st, bool scr_suspended)
 		}
 	//right->left
 <<<<<<< HEAD
+<<<<<<< HEAD
 	} else if (firstx >= sweep_x_start && single_touch &&
 			((scr_suspended && (s2w_switch & SWEEP_LEFT)) ||
 			(!scr_suspended && (s2s_switch & SWEEP_LEFT)))) {
@@ -523,15 +619,22 @@ static void detect_sweep2wake_h(int x, int y, bool st, bool scr_suspended)
 			nextx = sweep_x_b1;
 =======
 	} else if (firstx >= SWEEP_X_START && single_touch &&
+=======
+	} else if (firstx >= sweep_x_start && single_touch &&
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 			((scr_suspended && (s2w_switch & SWEEP_LEFT)) ||
 			(!scr_suspended && (s2s_switch & SWEEP_LEFT)))) {
-		prevx = (SWEEP_X_MAX - SWEEP_X_FINAL);
-		nextx = SWEEP_X_B2;
+		prevx = (sweep_x_max - sweep_x_final);
+		nextx = sweep_x_b2;
 		if ((barrierx[0] == true) ||
 		   ((x < prevx) && (x > nextx))) {
 			prevx = nextx;
+<<<<<<< HEAD
 			nextx = SWEEP_X_B1;
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+			nextx = sweep_x_b1;
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 			barrierx[0] = true;
 			if ((barrierx[1] == true) ||
 			   ((x < prevx) && (x > nextx))) {
@@ -539,10 +642,14 @@ static void detect_sweep2wake_h(int x, int y, bool st, bool scr_suspended)
 				barrierx[1] = true;
 				if (x < prevx) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 					if (x < sweep_x_final) {
 =======
 					if (x < SWEEP_X_FINAL) {
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+					if (x < sweep_x_final) {
+>>>>>>> c288f99a70e3... wake_gestures: support sailfish
 						if (exec_countx) {
 #if (WAKE_GESTURES_ENABLED)
 							if (gestures_switch && scr_suspended) {
