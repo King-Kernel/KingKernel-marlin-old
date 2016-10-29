@@ -5964,6 +5964,14 @@ static int synaptics_rmi4_resume(struct device *dev)
 
 	synaptics_rmi4_free_fingers(rmi4_data);
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_WAKE_GESTURES
+	if (s2w_switch || rmi4_data->enable_wakeup_gesture) {
+		if (!s2w_switch)
+			synaptics_rmi4_wakeup_gesture(rmi4_data, false);
+#else
+>>>>>>> 3a90861a1d79... wake_gestures: fix doubletap change while screen is off
 	if (rmi4_data->enable_wakeup_gesture) {
 		synaptics_rmi4_wakeup_gesture(rmi4_data, false);
 		disable_irq_wake(rmi4_data->irq);
