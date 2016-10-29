@@ -6123,7 +6123,7 @@ static int synaptics_rmi4_resume(struct device *dev)
 >>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 =======
 #ifdef CONFIG_WAKE_GESTURES
-	if (s2w_switch || dt2w_switch) {
+	if (s2w_switch || rmi4_data->enable_wakeup_gesture) {
 		if (!s2w_switch)
 			synaptics_rmi4_wakeup_gesture(rmi4_data, false);
 #else
