@@ -32,10 +32,10 @@ elif [ "$prof" == "balanced" ]; then
 	echo "30" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/hispeed_load
 	echo "20" > /sys/module/cpu_input_boost/parameters/dynamic_stune_boost
 	echo "64" > /sys/module/cpu_input_boost/parameters/input_boost_duration
-	echo "614000" > /sys/module/cpu_input_boost/parameters/input_boost_freq_lp
-	echo "404200" > /sys/module/cpu_input_boost/parameters/input_boost_freq_hp
-	echo "3250" > /sys/module/cpu_input_boost/parameters/frame_boost_timeout
-	echo "20" > /sys/module/cpu_input_boost/parameters/dynamic_stune_boost
+	echo "537000" > /sys/module/cpu_input_boost/parameters/input_boost_freq_lp
+	echo "460000" > /sys/module/cpu_input_boost/parameters/input_boost_freq_hp
+	echo "2700" > /sys/module/cpu_input_boost/parameters/frame_boost_timeout
+	echo "15" > /sys/module/cpu_input_boost/parameters/dynamic_stune_boost
 	echo "---------------------------------------------" | tee -a $LOG_FILE;
         echo "Balanced executed" | tee -a $LOG_FILE;
 elif [ "$prof" == "performance" ]; then 
@@ -49,7 +49,7 @@ elif [ "$prof" == "performance" ]; then
 	echo "125" > /sys/module/cpu_input_boost/parameters/input_boost_duration
 	echo "844200" > /sys/module/cpu_input_boost/parameters/input_boost_freq_lp
 	echo "614000" > /sys/module/cpu_input_boost/parameters/input_boost_freq_hp
-	echo "15000" > /sys/module/cpu_input_boost/parameters/frame_boost_timeout
+	echo "13000" > /sys/module/cpu_input_boost/parameters/frame_boost_timeout
 	echo "50" > /sys/module/cpu_input_boost/parameters/dynamic_stune_boost
 	echo "---------------------------------------------" | tee -a $LOG_FILE;
         echo "Performance executed" | tee -a $LOG_FILE;
