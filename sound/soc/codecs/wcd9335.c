@@ -13131,7 +13131,10 @@ static struct kobj_attribute headphone_pa_gain_attribute =
 		headphone_pa_gain_store);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 6102ed7770fd... sound_control: add speaker gain
 struct snd_soc_codec *tfa98xx_codec_ptr;
 #include "tfa9891_genregs.h"
 #define TO_FIXED(e) e
@@ -13175,6 +13178,7 @@ static struct kobj_attribute speaker_gain_attribute =
 		speaker_gain_show,
 		speaker_gain_store);
 
+<<<<<<< HEAD
 static ssize_t mic_gain_show(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
@@ -13231,9 +13235,12 @@ static struct kobj_attribute earpiece_gain_attribute =
 
 
 >>>>>>> 24a5043228c5... sound_control: prevent earpiece volume reset and fix derp
+=======
+>>>>>>> 6102ed7770fd... sound_control: add speaker gain
 static struct attribute *sound_control_attrs[] = {
 		&headphone_gain_attribute.attr,
 		&headphone_pa_gain_attribute.attr,
+		&speaker_gain_attribute.attr,
 		NULL,
 };
 
