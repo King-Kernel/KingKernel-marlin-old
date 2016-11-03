@@ -23,6 +23,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(0)
 =======
 #define CHILL_VERSION_MAJOR			(1)
@@ -47,6 +48,9 @@
 =======
 #define CHILL_VERSION_MINOR			(6)
 >>>>>>> 01d49229fb9... chill: Reset boost count on policy->min
+=======
+#define CHILL_VERSION_MINOR			(7)
+>>>>>>> 2c60c27d59a... chill: Allow any number >= 1 for boost count
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
@@ -561,10 +565,7 @@ static ssize_t store_boost_count(struct dbs_data *dbs_data, const char *buf,
 	if (ret != 1)
 		return -EINVAL;
 
-	if (input >= 5)
-		input = 5;
-
-	if (input = 0)
+	if (input < 1)
 		input = 0;
 
 	cs_tuners->boost_count = input;
