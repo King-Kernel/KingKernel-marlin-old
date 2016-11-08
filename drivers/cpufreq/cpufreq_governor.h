@@ -194,19 +194,9 @@ struct cs_dbs_tuners {
 	unsigned int down_threshold;
 	unsigned int down_threshold_suspended;
 	unsigned int freq_step;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-	unsigned int sleep_depth;
-	unsigned int boost_enabled;
-	unsigned int boost_ceiling;
-	unsigned int boost_count;
->>>>>>> 00c5a269f6a... Update Chill to 2.10
-=======
 	unsigned int sleep_depth;
 	unsigned int boost_enabled;
 	unsigned int boost_count;
->>>>>>> 55a9e8a3418... cpufreq: chill: Go back to using Conservative's tunables
 };
 
 struct ex_dbs_tuners {
