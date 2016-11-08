@@ -13179,6 +13179,9 @@ static struct kobj_attribute speaker_gain_attribute =
 		speaker_gain_store);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c0c10dbcba19... sound_control: earpiece and mic gain controls
 static ssize_t mic_gain_show(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
@@ -13228,19 +13231,28 @@ static ssize_t earpiece_gain_store(struct kobject *kobj,
 	return count;
 }
 
+<<<<<<< HEAD
 static struct kobj_attribute earpiece_gain_attribute =
+=======
+static struct kobj_attribute mic_gain_attribute =
+>>>>>>> c0c10dbcba19... sound_control: earpiece and mic gain controls
 	__ATTR(earpiece_gain, 0664,
 		earpiece_gain_show,
 		earpiece_gain_store);
 
 
+<<<<<<< HEAD
 >>>>>>> 24a5043228c5... sound_control: prevent earpiece volume reset and fix derp
 =======
 >>>>>>> 6102ed7770fd... sound_control: add speaker gain
+=======
+>>>>>>> c0c10dbcba19... sound_control: earpiece and mic gain controls
 static struct attribute *sound_control_attrs[] = {
 		&headphone_gain_attribute.attr,
 		&headphone_pa_gain_attribute.attr,
 		&speaker_gain_attribute.attr,
+		&mic_gain_attribute.attr,
+		&earpiece_gain_attribute.attr,
 		NULL,
 };
 
