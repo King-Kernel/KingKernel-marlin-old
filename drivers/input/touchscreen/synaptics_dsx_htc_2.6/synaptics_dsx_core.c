@@ -6058,7 +6058,11 @@ exit:
 	mutex_unlock(&exp_data.mutex);
 
 #ifdef CONFIG_WAKE_GESTURES
+<<<<<<< HEAD
 	if (wg_switch) {
+=======
+	if (s2w_switch) {
+>>>>>>> 19d528ed13ae... wake_gestures: don't pass touch to mcu if s2w enabled
 		rmi4_data->suspend = true;
 
 		return 0;
@@ -6089,7 +6093,11 @@ static int synaptics_rmi4_resume(struct device *dev)
 		return 0;
 
 #ifdef CONFIG_WAKE_GESTURES
+<<<<<<< HEAD
 	if (!wg_switch) {
+=======
+	if (!s2w_switch) {
+>>>>>>> 19d528ed13ae... wake_gestures: don't pass touch to mcu if s2w enabled
 #endif
 #ifdef USE_I2C_SWITCH
 	gpio_set_value(rmi4_data->hw_if->board_data->switch_gpio, 0);
