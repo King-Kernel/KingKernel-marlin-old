@@ -71,6 +71,7 @@
 #define SWEEP_X_START		720
 #define SWEEP_X_FINAL           360
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define SWEEP_Y_NEXT            240
 
 /* sailfish */
@@ -92,6 +93,9 @@
 #define DT2W_TIME 		150
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
 =======
+=======
+#define SWEEP_Y_NEXT            300
+>>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 
 /* sailfish */
 #define SWEEP_Y_MAX_SAILFISH	1920
@@ -145,14 +149,20 @@ static struct input_dev *gesture_dev;
 /* Resources */
 int s2w_switch = S2W_DEFAULT;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 bool dt2w_switch = false;
 bool wg_switch = false;
 bool wg_switch_temp = false;
 bool wg_changed = false;
+<<<<<<< HEAD
 =======
 int s2w_switch_temp; 
 bool dt2w_switch;
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+>>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 static int s2s_switch = S2S_DEFAULT;
 static int touch_x = 0, touch_y = 0;
 static bool touch_x_called = false, touch_y_called = false;
@@ -682,10 +692,14 @@ static void dt2w_input_callback(struct work_struct *unused)
 {
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if (scr_suspended() && dt2w_switch)
 =======
 	if (scr_suspended() && s2w_switch > 0 && dt2w_switch)
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+	if (scr_suspended() && dt2w_switch)
+>>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 		detect_doubletap2wake(touch_x, touch_y, true);
 	return;
 }
@@ -800,6 +814,9 @@ static struct input_handler wg_input_handler = {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 static void wake_gesture_changed(void)
 {
 	wg_switch_temp = (s2w_switch || dt2w_switch);
@@ -809,8 +826,11 @@ static void wake_gesture_changed(void)
 	else
 		wg_changed = true;
 }
+<<<<<<< HEAD
 =======
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+>>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 
 /*
  * SYSFS stuff below here
@@ -828,6 +848,7 @@ static ssize_t sweep2wake_show(struct device *dev,
 static ssize_t sweep2wake_dump(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t count)
 {
+<<<<<<< HEAD
 <<<<<<< HEAD
 	sscanf(buf, "%d ", &s2w_switch);
 	if (s2w_switch < 0 || s2w_switch > 15)
@@ -848,6 +869,13 @@ static ssize_t sweep2wake_dump(struct device *dev,
 	if (!scr_suspended())
 		s2w_switch = s2w_switch_temp;
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+	sscanf(buf, "%d ", &s2w_switch);
+	if (s2w_switch < 0 || s2w_switch > 15)
+		s2w_switch = 0;
+		
+	wake_gesture_changed();
+>>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 
 	return count;
 }
@@ -896,6 +924,7 @@ static ssize_t doubletap2wake_dump(struct device *dev,
 		input = 0;	
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	dt2w_switch = (input) ? true : false;
 	wake_gesture_changed();
 =======
@@ -904,6 +933,10 @@ static ssize_t doubletap2wake_dump(struct device *dev,
 	if (s2w_switch == 0 || s2w_switch_temp == 0)
 		set_internal_dt(dt2w_switch);
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+	dt2w_switch = (input) ? true : false;
+	wake_gesture_changed();
+>>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 
 	return count;
 }
@@ -985,10 +1018,13 @@ static int __init wake_gestures_init(void)
 	wake_lock_init(&dt2w_wakelock, WAKE_LOCK_SUSPEND, "dt2w_wakelock");
 		
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	//dt2w_switch = get_internal_dt();
 		
 >>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
+=======
+>>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 #if (WAKE_GESTURES_ENABLED)
 	gesture_dev = input_allocate_device();
 	if (!gesture_dev) {
