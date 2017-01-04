@@ -72,6 +72,7 @@
 #define SWEEP_X_FINAL           360
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define SWEEP_Y_NEXT            240
 
 /* sailfish */
@@ -96,6 +97,9 @@
 =======
 #define SWEEP_Y_NEXT            300
 >>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
+=======
+#define SWEEP_Y_NEXT            240
+>>>>>>> 531dbe94f566... wake_gestures: make vertical sweep more sensitive
 
 /* sailfish */
 #define SWEEP_Y_MAX_SAILFISH	1920
