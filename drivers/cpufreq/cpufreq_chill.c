@@ -24,6 +24,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(0)
 =======
 #define CHILL_VERSION_MAJOR			(1)
@@ -51,6 +52,9 @@
 =======
 #define CHILL_VERSION_MINOR			(7)
 >>>>>>> 2c60c27d59a... chill: Allow any number >= 1 for boost count
+=======
+#define CHILL_VERSION_MINOR			(8)
+>>>>>>> a3b5ef08cb1... chill: Fix logic for reducing boost count with freq
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
@@ -155,7 +159,7 @@ static void cs_check_cpu(int cpu, unsigned int load)
 <<<<<<< HEAD
 =======
 		/* reduce boost count with frequency */
-		if (boost_counter < 0)
+		if (boost_counter > 0)
 			boost_counter--;
 
 >>>>>>> 25a07dd7e0d... chill: Decrease boost count alongside frequency
