@@ -25,6 +25,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(0)
 =======
 #define CHILL_VERSION_MAJOR			(1)
@@ -55,6 +56,9 @@
 =======
 #define CHILL_VERSION_MINOR			(8)
 >>>>>>> a3b5ef08cb1... chill: Fix logic for reducing boost count with freq
+=======
+#define CHILL_VERSION_MINOR			(9)
+>>>>>>> 3657ca1396f... chill: Fix down_threshold_suspended sysfs input
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
@@ -429,7 +433,7 @@ static ssize_t store_down_threshold_suspended(struct dbs_data *dbs_data, const c
 			input >= cs_tuners->up_threshold)
 		return -EINVAL;
 
-	cs_tuners->down_threshold = input;
+	cs_tuners->down_threshold_suspended = input;
 	return count;
 }
 
