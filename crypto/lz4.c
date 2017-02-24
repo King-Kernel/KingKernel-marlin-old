@@ -66,18 +66,11 @@ static void lz4_exit(struct crypto_tfm *tfm)
 static int __lz4_compress_crypto(const u8 *src, unsigned int slen,
 				 u8 *dst, unsigned int *dlen, void *ctx)
 {
-	size_t tmp_len = *dlen;
-	int err;
+	int out_len = LZ4_compress_default(src, dst,
+		slen, *dlen, ctx);
 
-	err = lz4_compress(src, slen, dst, &tmp_len, ctx);
-
-static int __lz4_decompress_crypto(const u8 *src, unsigned int slen,
-				   u8 *dst, unsigned int *dlen, void *ctx)
-{
-	int out_len = LZ4_decompress_safe(src, dst, slen, *dlen);
-
-	if (out_len < 0)
-		return out_len;
+	if (!out_len)
+		return -EINVAL;
 
 	*dlen = out_len;
 	return 0;
@@ -101,14 +94,13 @@ static int lz4_compress_crypto(struct crypto_tfm *tfm, const u8 *src,
 static int __lz4_decompress_crypto(const u8 *src, unsigned int slen,
 				   u8 *dst, unsigned int *dlen, void *ctx)
 {
-	return __lz4_decompress_crypto(src, slen, dst, dlen, NULL);
-}
+	int out_len = LZ4_decompress_safe(src, dst, slen, *dlen);
 
-static int lz4_decompress_crypto(struct crypto_tfm *tfm, const u8 *src,
-				 unsigned int slen, u8 *dst,
-				 unsigned int *dlen)
-{
-	return __lz4_decompress_crypto(src, slen, dst, dlen, NULL);
+	if (out_len < 0)
+		return out_len;
+
+	*dlen = out_len;
+	return 0;
 }
 
 static int lz4_sdecompress(struct crypto_scomp *tfm, const u8 *src,
