@@ -167,8 +167,6 @@ static FORCE_INLINE const BYTE *LZ4_getPosition(
 
 	return LZ4_getPositionOnHash(h, tableBase, tableType, srcBase);
 }
-
-
 /*
  * LZ4_compress_generic() :
  * inlined, to ensure branches are decided at compilation time
@@ -933,6 +931,28 @@ int LZ4_compress_fast_continue(LZ4_stream_t *LZ4_stream, const char *source,
 		streamPtr->currentOffset += (U32)inputSize;
 		return result;
 	}
+}
+EXPORT_SYMBOL(LZ4_compress_fast_continue);
+
+/*-******************************
+ *	For backwards compatibility
+ ********************************/
+int lz4_compress(const unsigned char *src, size_t src_len, unsigned char *dst,
+	size_t *dst_len, void *wrkmem) {
+	*dst_len = LZ4_compress_default(src, dst, src_len,
+		*dst_len, wrkmem);
+
+	/*
+	 * Prior lz4_compress will return -1 in case of error
+	 * and 0 on success
+	 * while new LZ4_compress_fast/default
+	 * returns 0 in case of error
+	 * and the output length on success
+	 */
+	if (!*dst_len)
+		return -1;
+	else
+		return 0;
 }
 EXPORT_SYMBOL(LZ4_compress_fast_continue);
 
