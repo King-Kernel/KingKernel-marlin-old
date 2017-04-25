@@ -832,8 +832,13 @@
 		<  401800000  5  5 >,
 		<  510000000  6  5 >,
 		<  560000000  7  7 >,
+<<<<<<< HEAD
 		<  624000000  8  7 >,
 		<  652800000  9  7 >;
+=======
+		<  652800000  8  7 >,
+		<  710000000  9  7 >;
+>>>>>>> f37aacd795f4... block: Switch to noop I/O scheduler when the screen turns off
 	qcom,gfxfreq-mx-speedbin0 =
 		<	   0  0 >,
 		<  133000000  4 >,
@@ -842,8 +847,13 @@
 		<  401800000  5 >,
 		<  510000000  5 >,
 		<  560000000  7 >,
+<<<<<<< HEAD
 		<  624000000  7 >,
 		<  652800000  7 >;
+=======
+		<  652800000  7 >,
+		<  710000000  7 >;
+>>>>>>> f37aacd795f4... block: Switch to noop I/O scheduler when the screen turns off
 
 	qcom,gfxfreq-speedbin1 =
 		<	   0  0  0 >,
@@ -853,7 +863,12 @@
 		<  401800000  5  5 >,
 		<  510000000  6  5 >,
 		<  560000000  7  7 >,
+<<<<<<< HEAD
 		<  624000000  8  7 >;
+=======
+		<  624000000  8  7 >,
+		<  710000000  9  7 >;
+>>>>>>> f37aacd795f4... block: Switch to noop I/O scheduler when the screen turns off
 	qcom,gfxfreq-mx-speedbin1 =
 		<	   0  0 >,
 		<  133000000  4 >,
@@ -862,7 +877,12 @@
 		<  401800000  5 >,
 		<  510000000  5 >,
 		<  560000000  7 >,
+<<<<<<< HEAD
 		<  624000000  7 >;
+=======
+		<  624000000  7 >,
+		<  710000000  7 >;
+>>>>>>> f37aacd795f4... block: Switch to noop I/O scheduler when the screen turns off
 };
 
 &msm_cpufreq {
@@ -1036,7 +1056,11 @@
 
 			qcom,gpu-pwrlevel@0 {
 				reg = <0>;
+<<<<<<< HEAD
 				qcom,gpu-freq = <652800000>;
+=======
+				qcom,gpu-freq = <710000000>;
+>>>>>>> f37aacd795f4... block: Switch to noop I/O scheduler when the screen turns off
 				qcom,bus-freq = <12>;
 				qcom,bus-min = <12>;
 				qcom,bus-max = <12>;
@@ -1117,7 +1141,11 @@
 
 			qcom,gpu-pwrlevel@0 {
 				reg = <0>;
+<<<<<<< HEAD
 				qcom,gpu-freq = <624000000>;
+=======
+				qcom,gpu-freq = <710000000>;
+>>>>>>> f37aacd795f4... block: Switch to noop I/O scheduler when the screen turns off
 				qcom,bus-freq = <12>;
 				qcom,bus-min = <11>;
 				qcom,bus-max = <12>;

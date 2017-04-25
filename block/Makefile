@@ -20,6 +20,23 @@ obj-$(CONFIG_IOSCHED_DEADLINE)	+= deadline-iosched.o
 obj-$(CONFIG_IOSCHED_CFQ)	+= cfq-iosched.o
 obj-$(CONFIG_IOSCHED_TEST)	+= test-iosched.o
 obj-$(CONFIG_IOSCHED_MAPLE)     += maple-iosched.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_IOSCHED_FIOPS)     += fiops-iosched.o
+obj-$(CONFIG_IOSCHED_SIO)       += sio-iosched.o
+obj-$(CONFIG_IOSCHED_BFQ)	+= bfq-iosched.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_IOSCHED_ZEN)	+= zen-iosched.o
+obj-$(CONFIG_IOSCHED_TRIPNDROID)+= tripndroid-iosched.o
+obj-$(CONFIG_IOSCHED_SIOPLUS)	+= sioplus-iosched.o
+obj-$(CONFIG_IOSCHED_MAPLE)     += maple-iosched.o
+obj-$(CONFIG_IOSCHED_TRIPNDROID)+= tripndroid-iosched.o
+
+obj-$(CONFIG_IOSCHED_SWITCHER) += iosched_switcher.o
+
+>>>>>>> 8dcf40957300... block: Switch to noop I/O scheduler when the screen turns off
+>>>>>>> f37aacd795f4... block: Switch to noop I/O scheduler when the screen turns off
 
 obj-$(CONFIG_BLOCK_COMPAT)	+= compat_ioctl.o
 obj-$(CONFIG_BLK_CMDLINE_PARSER)	+= cmdline-parser.o
