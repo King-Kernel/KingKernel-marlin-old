@@ -102,6 +102,12 @@ config CPU_FREQ_DEFAULT_GOV_CONSERVATIVE
 	  Be aware that not all cpufreq drivers support the conservative
 	  governor. If unsure have a look at the help section of the
 	  driver. Fallback governor will be the performance governor.
+	  
+config CPU_FREQ_DEFAULT_GOV_CONSERVATIVEX
+	bool "conservativex"
+	select CPU_FREQ_GOV_CONSERVATIVEX
+	help
+	  Use the CPUFreq governor 'conservativex' as default.
 
 config CPU_FREQ_DEFAULT_GOV_INTERACTIVE
 	bool "interactive"
@@ -111,6 +117,16 @@ config CPU_FREQ_DEFAULT_GOV_INTERACTIVE
 	  you to get a full dynamic cpu frequency capable system by simply
 	  loading your cpufreq low-level hardware driver, using the
 	  'interactive' governor for latency-sensitive workloads.
+<<<<<<< HEAD
+=======
+	  
+config CPU_FREQ_DEFAULT_GOV_ELEMENTALX
+	bool "elementalx"
+	select CPU_FREQ_GOV_ELEMENTALX
+	select CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Use the CPUFreq governor 'elementalx' as default.
+>>>>>>> f69e97022aa... Add ConservativeX Governor and remove bad edits
 
 config CPU_FREQ_DEFAULT_GOV_SCHED
 	bool "sched"
@@ -202,6 +218,22 @@ config CPU_FREQ_GOV_INTERACTIVE
 	  For details, take a look at linux/Documentation/cpu-freq.
 
 	  If in doubt, say N.
+<<<<<<< HEAD
+=======
+	  
+config CPU_FREQ_GOV_ELEMENTALX
+	tristate "'elementalx' cpufreq policy governor"
+	select CPU_FREQ_TABLE
+	help
+	  'elementalx' - This driver adds a dynamic cpufreq policy governor.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called cpufreq_elementalx.
+
+	  For details, take a look at linux/Documentation/cpu-freq.
+
+	  If in doubt, say N.
+>>>>>>> f69e97022aa... Add ConservativeX Governor and remove bad edits
 
 config CPU_FREQ_GOV_CONSERVATIVE
 	tristate "'conservative' cpufreq governor"
@@ -226,6 +258,12 @@ config CPU_FREQ_GOV_CONSERVATIVE
 	  For details, take a look at linux/Documentation/cpu-freq.
 
 	  If in doubt, say N.
+	  
+config CPU_FREQ_GOV_CONSERVATIVEX
+	tristate "'conservativex' cpufreq governor"
+	depends on CPU_FREQ
+	help
+	  'conservativex' - less aggressive version of conservative
 
 config CPU_FREQ_GOV_SCHED
 	bool "'sched' cpufreq governor"
