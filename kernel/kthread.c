@@ -181,13 +181,14 @@ void *kthread_probe_data(struct task_struct *task)
 
 static void __kthread_parkme(struct kthread *self)
 {
-	for (;;) {
-		set_current_state(TASK_PARKED);
-		if (!test_bit(KTHREAD_SHOULD_PARK, &self->flags))
-			break;
+	__set_current_state(TASK_PARKED);
+	while (test_bit(KTHREAD_SHOULD_PARK, &self->flags)) {
+		preempt_disable();
 		if (!test_and_set_bit(KTHREAD_IS_PARKED, &self->flags))
 			complete(&self->parked);
-		schedule();
+		schedule_preempt_disabled();
+		preempt_enable();
+		__set_current_state(TASK_PARKED);
 	}
 	clear_bit(KTHREAD_IS_PARKED, &self->flags);
 	__set_current_state(TASK_RUNNING);
