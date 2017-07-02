@@ -1004,9 +1004,16 @@
 
 &soc {
 	qcom,msm-thermal {
+<<<<<<< HEAD
 		qcom,poll-ms = <50>;
 		qcom,limit-temp = <80>;
 		qcom,core-limit-temp = <90>;
+=======
+		msm_thermal_freq: qcom,vdd-apps-rstr {
+			qcom,max-freq-level = <1209600>;
+			qcom,levels = <1056000 1516800 1516800>;
+		};
+>>>>>>> d64b63dcd1ec... ARM: dts: msm: Rework and unify msm-thermal setup
 		qcom,vdd-gfx-rstr{
 			qcom,levels = <6 8 9>; /* Nominal, Turbo, Turbo_L1 */
 		};
