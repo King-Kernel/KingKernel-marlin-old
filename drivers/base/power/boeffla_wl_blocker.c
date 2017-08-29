@@ -1,5 +1,6 @@
 /*
 <<<<<<< HEAD
+<<<<<<< HEAD
  * Author: andip71, 01.09.2017
  *
  * Version 1.1.0
@@ -8,6 +9,11 @@
  *
  * Version 1.0.0
 >>>>>>> 8a3e7d48379b... boeffla_wl_blocker: add generic wakelock blocker driver v1.0.0
+=======
+ * Author: andip71, 29.08.2017
+ *
+ * Version 1.0.1
+>>>>>>> 2b0110acb264... boeffla_wl_blocker: update to wakelock blocker driver v1.0.1
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -24,6 +30,7 @@
  * Change log:
  *
 <<<<<<< HEAD
+<<<<<<< HEAD
  * 1.1.0 (01.09.2017)
  *   - By default, the following wakelocks are blocked in an own list
  *     qcom_rx_wakelock, wlan, wlan_wow_wl, wlan_extscan_wl, NETLINK
@@ -33,6 +40,11 @@
  *
 =======
 >>>>>>> 8a3e7d48379b... boeffla_wl_blocker: add generic wakelock blocker driver v1.0.0
+=======
+ * 1.0.1 (29.08.2017)
+ *   - Add killing wakelock when currently active
+ *
+>>>>>>> 2b0110acb264... boeffla_wl_blocker: update to wakelock blocker driver v1.0.1
  * 1.0.0 (28.08.2017)
  *   - Initial version
  *
@@ -49,8 +61,12 @@
 =======
 
 
+<<<<<<< HEAD
 #define BOEFFLA_WL_BLOCKER_VERSION	"1.0.0"
 >>>>>>> 8a3e7d48379b... boeffla_wl_blocker: add generic wakelock blocker driver v1.0.0
+=======
+#define BOEFFLA_WL_BLOCKER_VERSION	"1.0.1"
+>>>>>>> 2b0110acb264... boeffla_wl_blocker: update to wakelock blocker driver v1.0.1
 
 
 /*****************************************/

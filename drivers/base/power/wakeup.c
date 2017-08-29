@@ -39,10 +39,12 @@ static void wakeup_source_deactivate(struct wakeup_source *ws);
 =======
 
 #ifdef CONFIG_BOEFFLA_WL_BLOCKER
-char list_wl[255];
-char list_wl_search[257];
+char list_wl[255] = {0};
+char list_wl_search[257] = {0};
 bool wl_blocker_active = false;
 bool wl_blocker_debug = false;
+
+static void wakeup_source_deactivate(struct wakeup_source *ws);
 #endif
 
 
@@ -477,11 +479,15 @@ static void wakeup_source_activate(struct wakeup_source *ws)
 static bool check_for_block(struct wakeup_source *ws)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	char wakelock_name[52] = {0};
 	int length;
 =======
 	char wakelock_name[52];
 >>>>>>> 8a3e7d48379b... boeffla_wl_blocker: add generic wakelock blocker driver v1.0.0
+=======
+	char wakelock_name[52] = {0};
+>>>>>>> 2b0110acb264... boeffla_wl_blocker: update to wakelock blocker driver v1.0.1
 
 	// if debug mode on, print every wakelock requested
 	if (wl_blocker_debug)
@@ -491,6 +497,7 @@ static bool check_for_block(struct wakeup_source *ws)
 	if (!wl_blocker_active)
 		return false;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 	// only if ws structure is valid
 	if (ws)
@@ -503,17 +510,25 @@ static bool check_for_block(struct wakeup_source *ws)
 		// check if wakelock is in wake lock list to be blocked
 =======
 	// check if wakelock is in wake lock list to be blocked
+=======
+	// only if ws structure is valid
+>>>>>>> 2b0110acb264... boeffla_wl_blocker: update to wakelock blocker driver v1.0.1
 	if (ws)
 	{
 		// wake lock names which are longer than 50 chars are not handled
 		if (strlen(ws->name) > 50)
 			return false;
 
+<<<<<<< HEAD
 >>>>>>> 8a3e7d48379b... boeffla_wl_blocker: add generic wakelock blocker driver v1.0.0
+=======
+		// check if wakelock is in wake lock list to be blocked
+>>>>>>> 2b0110acb264... boeffla_wl_blocker: update to wakelock blocker driver v1.0.1
 		sprintf(wakelock_name, ";%s;", ws->name);
 
 		if(strstr(list_wl_search, wakelock_name) == NULL)
 			return false;
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 		// wake lock is in list, print it if debug mode on
@@ -541,13 +556,28 @@ static bool check_for_block(struct wakeup_source *ws)
 >>>>>>> 9963645c04c2... boeffla_wl_blocker: update to wakelock blocker driver v1.1.0
 =======
 	}
+=======
+>>>>>>> 2b0110acb264... boeffla_wl_blocker: update to wakelock blocker driver v1.0.1
 
-	// wake lock is in list, print it if debug mode on
-	if (wl_blocker_debug)
-		printk("Boeffla WL blocker: %s blocked\n", ws->name);
+		// wake lock is in list, print it if debug mode on
+		if (wl_blocker_debug)
+			printk("Boeffla WL blocker: %s blocked\n", ws->name);
 
-	// finally block it
-	return true;
+		// if it is currently active, deactivate it immediately + log in debug mode
+		if (ws->active)
+		{
+			wakeup_source_deactivate(ws);
+
+			if (wl_blocker_debug)
+				printk("Boeffla WL blocker: %s killed\n", ws->name);
+		}
+
+		// finally block it
+		return true;
+	}
+
+	// there was no valid ws structure, do not block by default
+	return false;
 }
 #endif
 
