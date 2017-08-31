@@ -5704,6 +5704,8 @@ boosted_task_util(struct task_struct *task)
 /*
  * find_idlest_group finds and returns the least busy CPU group within the
  * domain.
+ *
+ * Assumes p is allowed on at least one CPU in sd.
  */
 static struct sched_group *
 find_idlest_group(struct sched_domain *sd, struct task_struct *p,
@@ -5863,6 +5865,9 @@ static inline int find_idlest_cpu(struct sched_domain *sd, struct task_struct *p
 		schedstat_inc(p, se.statistics.nr_wakeups_cas_attempts);
 		schedstat_inc(this_rq(), eas_stats.cas_attempts);
 	}
+
+	if (!cpumask_intersects(sched_domain_span(sd), &p->cpus_allowed))
+		return prev_cpu;
 
 	while (sd) {
 		struct sched_group *group;
