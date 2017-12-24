@@ -20,7 +20,62 @@
 
 /* Chill version macros */
 #define CHILL_VERSION_MAJOR			(2)
+<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(10)
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+#define CHILL_VERSION_MINOR			(0)
+=======
+#define CHILL_VERSION_MAJOR			(1)
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+#define CHILL_VERSION_MINOR			(1)
+>>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
+=======
+#define CHILL_VERSION_MINOR			(3)
+>>>>>>> 89d2cfef07a... cpufreq: chill: Don't check for target frequency when boosting
+=======
+#define CHILL_VERSION_MINOR			(1)
+>>>>>>> 6c66a250bd5... cpufreq: chill: Use native display_state instead of PowerSuspend
+=======
+#define CHILL_VERSION_MINOR			(2)
+>>>>>>> 221f642107c... chill: Reset boost count at max regardless of whether we've boosted
+=======
+#define CHILL_VERSION_MINOR			(5)
+>>>>>>> 25a07dd7e0d... chill: Decrease boost count alongside frequency
+=======
+#define CHILL_VERSION_MINOR			(6)
+>>>>>>> 01d49229fb9... chill: Reset boost count on policy->min
+=======
+#define CHILL_VERSION_MINOR			(7)
+>>>>>>> 2c60c27d59a... chill: Allow any number >= 1 for boost count
+=======
+#define CHILL_VERSION_MINOR			(8)
+>>>>>>> a3b5ef08cb1... chill: Fix logic for reducing boost count with freq
+=======
+#define CHILL_VERSION_MINOR			(9)
+>>>>>>> 3657ca1396f... chill: Fix down_threshold_suspended sysfs input
+=======
+#define CHILL_VERSION_MINOR			(3)
+>>>>>>> 868d882e126... chill: I'm secretly retarded
+=======
+#define CHILL_VERSION_MINOR			(4)
+>>>>>>> 3cf87276695... chill: Simplify boost increment logic
+=======
+#define CHILL_VERSION_MINOR			(10)
+>>>>>>> 00c5a269f6a... Update Chill to 2.10
+>>>>>>> 7e9138069fac... Update Chill to 2.10
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(90)
@@ -583,6 +638,9 @@ static struct attribute_group cs_attr_group_gov_pol = {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7e9138069fac... Update Chill to 2.10
 static void save_tuners(struct cpufreq_policy *policy,
 			  struct cs_dbs_tuners *tuners)
 {
@@ -599,12 +657,15 @@ static void save_tuners(struct cpufreq_policy *policy,
 }
 
 static struct cs_dbs_tuners *alloc_tuners(struct cpufreq_policy *policy)
+<<<<<<< HEAD
 =======
 static int cs_init(struct dbs_data *dbs_data)
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 =======
 static int cs_init(struct dbs_data *dbs_data)
 >>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
+=======
+>>>>>>> 7e9138069fac... Update Chill to 2.10
 {
 	struct cs_dbs_tuners *tuners;
 
@@ -612,10 +673,14 @@ static int cs_init(struct dbs_data *dbs_data)
 	if (!tuners) {
 		pr_err("%s: kzalloc failed\n", __func__);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		return ERR_PTR(-ENOMEM);
 =======
 		return -ENOMEM;
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
+		return ERR_PTR(-ENOMEM);
+>>>>>>> 7e9138069fac... Update Chill to 2.10
 	}
 
 	tuners->up_threshold = DEF_FREQUENCY_UP_THRESHOLD;
@@ -658,6 +723,34 @@ static int cs_init(struct dbs_data *dbs_data, struct cpufreq_policy *policy)
 	tuners->sleep_depth = DEF_SLEEP_DEPTH;
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 
+	save_tuners(policy, tuners);
+
+	return tuners;
+}
+
+static struct cs_dbs_tuners *restore_tuners(struct cpufreq_policy *policy)
+{
+	int cpu;
+
+	if (have_governor_per_policy())
+		cpu = cpumask_first(policy->related_cpus);
+	else
+		cpu = 0;
+
+	return per_cpu(cached_tuners, cpu);
+}
+
+static int cs_init(struct dbs_data *dbs_data, struct cpufreq_policy *policy)
+{
+	struct cs_dbs_tuners *tuners;
+
+	tuners = restore_tuners(policy);
+	if (!tuners) {
+		tuners = alloc_tuners(policy);
+		if (IS_ERR(tuners))
+			return PTR_ERR(tuners);
+	}
+
 	dbs_data->tuners = tuners;
 	dbs_data->min_sampling_rate = DEF_SAMPLING_RATE;
 	mutex_init(&dbs_data->mutex);
@@ -667,10 +760,14 @@ static int cs_init(struct dbs_data *dbs_data, struct cpufreq_policy *policy)
 static void cs_exit(struct dbs_data *dbs_data)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	//nothing to do
 =======
 	kfree(dbs_data->tuners);
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
+	//nothing to do
+>>>>>>> 7e9138069fac... Update Chill to 2.10
 }
 
 define_get_cpu_dbs_routines(cs_cpu_dbs_info);
@@ -720,6 +817,9 @@ static int __init cpufreq_gov_dbs_init(void)
 static void __exit cpufreq_gov_dbs_exit(void)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7e9138069fac... Update Chill to 2.10
 	int cpu;
 
 	cpufreq_unregister_governor(&cpufreq_gov_chill);
@@ -727,9 +827,12 @@ static void __exit cpufreq_gov_dbs_exit(void)
 		kfree(per_cpu(cached_tuners, cpu));
 		per_cpu(cached_tuners, cpu) = NULL;
 	}
+<<<<<<< HEAD
 =======
 	cpufreq_unregister_governor(&cpufreq_gov_chill);
 >>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
+=======
+>>>>>>> 7e9138069fac... Update Chill to 2.10
 }
 
 MODULE_AUTHOR("Alexander Clouter <alex@digriz.org.uk>");

@@ -194,6 +194,7 @@ struct cs_dbs_tuners {
 	unsigned int down_threshold;
 	unsigned int down_threshold_suspended;
 	unsigned int freq_step;
+<<<<<<< HEAD
 	unsigned int sleep_depth;
 	unsigned int boost_enabled;
 	unsigned int boost_count;
@@ -207,6 +208,15 @@ struct ex_dbs_tuners {
 	unsigned int active_floor_freq;
 	unsigned int sampling_down_factor;
 	unsigned int powersave;
+=======
+<<<<<<< HEAD
+=======
+	unsigned int sleep_depth;
+	unsigned int boost_enabled;
+	unsigned int boost_ceiling;
+	unsigned int boost_count;
+>>>>>>> 00c5a269f6a... Update Chill to 2.10
+>>>>>>> 7e9138069fac... Update Chill to 2.10
 };
 
 struct ex_dbs_tuners {
