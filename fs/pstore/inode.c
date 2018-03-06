@@ -454,6 +454,8 @@ static int __init init_pstore_fs(void)
 {
 	int err = 0;
 
+	pstore_choose_compression();
+
 	/* Create a convenient mount point for people to access pstore */
 	pstore_kobj = kobject_create_and_add("pstore", fs_kobj);
 	if (!pstore_kobj) {
