@@ -3289,9 +3289,19 @@ static void __sched __schedule(void)
 	} else
 		raw_spin_unlock_irq(&rq->lock);
 
-	post_schedule(rq);
+void __noreturn do_task_dead(void)
+{
+	/* Causes final put_task_struct in finish_task_switch(): */
+	set_special_state(TASK_DEAD);
 
-	sched_preempt_enable_no_resched();
+	/* Tell freezer to ignore us: */
+	current->flags |= PF_NOFREEZE;
+
+	__schedule(false);
+	BUG();
+	/* Avoid "noreturn function does return".  */
+	for (;;)
+		cpu_relax();	/* For when BUG is null */
 }
 
 static inline void sched_submit_work(struct task_struct *tsk)
