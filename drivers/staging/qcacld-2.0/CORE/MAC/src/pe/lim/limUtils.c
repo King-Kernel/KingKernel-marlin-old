@@ -4444,7 +4444,11 @@ limEnableHtRifsProtection(tpAniSirGlobal pMac, tANI_U8 enable,
         return eSIR_SUCCESS; // this protection  is only for HT stations.
 
 
+<<<<<<< HEAD
         //overlapping protection configuration check.
+=======
+    //overlapping protection configuration check.
+>>>>>>> 150e88078fde... qcacld-2.0: Fix misleading indentation warning in limEnableHtRifsProtection
     if(overlap) {
         } else {
              //normal protection config check
