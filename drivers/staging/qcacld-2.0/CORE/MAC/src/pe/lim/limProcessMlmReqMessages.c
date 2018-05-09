@@ -3731,6 +3731,10 @@ tLimMlmRemoveKeyCnf  mlmRemoveKeyCnf;
   else {
     staIdx = pStaDs->staIndex;
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8946efbc79fc... qcacld-2.0: Fix misleading indentation warning in limProcessMlmRemoveKeyReq
 
 
     psessionEntry->limMlmState = eLIM_MLM_WT_REMOVE_STA_KEY_STATE;
