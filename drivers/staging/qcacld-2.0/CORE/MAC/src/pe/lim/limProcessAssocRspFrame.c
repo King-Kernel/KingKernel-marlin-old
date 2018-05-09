@@ -111,9 +111,15 @@ void limUpdateAssocStaDatas(tpAniSirGlobal pMac, tpDphHashNode pStaDs, tpSirAsso
                            pAssocRsp->HTInfo.recommendedTxWidthSet :
                            pAssocRsp->HTCaps.supportedChannelWidthSet);
                }
+<<<<<<< HEAD
 
                else {
                     pStaDs->htSupportedChannelWidthSet = eHT_CHANNEL_WIDTH_20MHZ;	       }
+=======
+               else {
+                   pStaDs->htSupportedChannelWidthSet = eHT_CHANNEL_WIDTH_20MHZ;
+	       }
+>>>>>>> 006b994ac3a8... qcacld-2.0: Fix misleading indentation warning in limUpdateAssocStaDatas
 
 	       pStaDs->htLsigTXOPProtection = ( tANI_U8 ) pAssocRsp->HTCaps.lsigTXOPProtection;
 	       pStaDs->htMIMOPSState =  (tSirMacHTMIMOPowerSaveState)pAssocRsp->HTCaps.mimoPowerSave;
