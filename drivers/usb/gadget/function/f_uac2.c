@@ -1313,11 +1313,26 @@ in_rq_range(struct usb_function *fn, const struct usb_ctrlrequest *cr)
 	c_srate = opts->c_srate;
 
 	if (control_selector == UAC2_CS_CONTROL_SAM_FREQ) {
+<<<<<<< HEAD
 		if (entity_id == USB_IN_CLK_ID)
 			r.dMIN = p_srate;
 		else if (entity_id == USB_OUT_CLK_ID)
 			r.dMIN = c_srate;
 		else
+=======
+		if (entity_id == USB_IN_CLK_ID || entity_id == USB_OUT_CLK_ID) {
+			int i;
+
+			r.wNumSubRanges = CLK_FREQ_ARR_SIZE;
+			for (i = 0; i < CLK_FREQ_ARR_SIZE; i++) {
+				r.dRangeAttrs[i][0] = clk_frequencies[i];
+				r.dRangeAttrs[i][1] = r.dRangeAttrs[i][0];
+				r.dRangeAttrs[i][2] = 0;
+			}
+			value = min_t(unsigned, w_length, sizeof(r));
+			memcpy(req->buf, &r, value);
+		} else
+>>>>>>> 2b822f5a64e1... usb: gadget: f_uac2: Fix constant logical operand warning
 			return -EOPNOTSUPP;
 
 		r.dMAX = r.dMIN;
