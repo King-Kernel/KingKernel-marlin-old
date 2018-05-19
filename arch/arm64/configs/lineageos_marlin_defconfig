@@ -116,9 +116,12 @@ CONFIG_FREEZER=y
 # CONFIG_ARM64_ERRATUM_843419 is not set
 # CONFIG_CPUFREQ_DT=y
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 CONFIG_SUSPEND_BOOSTER=y
 >>>>>>> 36fa620a6ea7... BioShock Governor.
+=======
+>>>>>>> 9b81ca645ea8... fix edits for bioshock
 CONFIG_NET=y
 CONFIG_PACKET=y
 CONFIG_UNIX=y
