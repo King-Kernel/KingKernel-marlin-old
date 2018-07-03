@@ -4745,10 +4745,6 @@ limHandleDelBssInReAssocContext(tpAniSirGlobal pMac, tpDphHashNode pStaDs,tpPESe
                     pBeaconStruct );
             if(pMac->lim.gLimProtectionControl != WNI_CFG_FORCE_POLICY_PROTECTION_DISABLE)
                 limDecideStaProtectionOnAssoc(pMac, pBeaconStruct, psessionEntry);
-<<<<<<< HEAD
-=======
-
->>>>>>> a77c5815369a... qcacld-2.0: Fix misleading indentation warning in limHandleDelBssInReAssocContext
             if(pBeaconStruct->erpPresent) {
                 if (pBeaconStruct->erpIEInfo.barkerPreambleMode)
                     psessionEntry->beaconParams.fShortPreamble = 0;

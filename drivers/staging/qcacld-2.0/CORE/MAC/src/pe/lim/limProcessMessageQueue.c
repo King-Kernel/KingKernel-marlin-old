@@ -382,11 +382,7 @@ __limHandleBeacon(tpAniSirGlobal pMac, tpSirMsgQ pMsg, tpPESession psessionEntry
      else
         limProcessBeaconFrame(pMac, pRxPacketInfo, psessionEntry);
 
-<<<<<<< HEAD
-     return;
-=======
     return;
->>>>>>> 7540926408d9... qcacld-2.0: Fix misleading indentation warning in __limHandleBeacon
 }
 
 

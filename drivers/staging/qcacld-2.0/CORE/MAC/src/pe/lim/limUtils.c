@@ -4097,11 +4097,7 @@ limEnableHT20Protection(tpAniSirGlobal pMac, tANI_U8 enable,
     if(!psessionEntry->htCapability)
         return eSIR_SUCCESS; // this protection  is only for HT stations.
 
-<<<<<<< HEAD
-        //overlapping protection configuration check.
-=======
     //overlapping protection configuration check.
->>>>>>> 268a1063eddd... qcacld-2.0: Fix misleading indentation warning in limEnableHT20Protection
     if(overlap) {
         } else {
             //normal protection config check
@@ -4305,11 +4301,7 @@ limEnableHTNonGfProtection(tpAniSirGlobal pMac, tANI_U8 enable,
     if(!psessionEntry->htCapability)
         return eSIR_SUCCESS; // this protection  is only for HT stations.
 
-<<<<<<< HEAD
-        //overlapping protection configuration check.
-=======
     //overlapping protection configuration check.
->>>>>>> 3b31d775677f... qcacld-2.0: Fix misleading indentation warning in limEnableHTNonGfProtection
     if(overlap) {
         } else {
             //normal protection config check
@@ -4374,11 +4366,7 @@ limEnableHTLsigTxopProtection(tpAniSirGlobal pMac, tANI_U8 enable,
     if(!psessionEntry->htCapability)
         return eSIR_SUCCESS; // this protection  is only for HT stations.
 
-<<<<<<< HEAD
-        //overlapping protection configuration check.
-=======
     //overlapping protection configuration check.
->>>>>>> 5e27b5f975c8... qcacld-2.0: Fix misleading indentation warning in limEnableHTNonGfProtection
     if(overlap) {
         } else {
             //normal protection config check
@@ -4443,12 +4431,7 @@ limEnableHtRifsProtection(tpAniSirGlobal pMac, tANI_U8 enable,
     if(!psessionEntry->htCapability)
         return eSIR_SUCCESS; // this protection  is only for HT stations.
 
-
-<<<<<<< HEAD
-        //overlapping protection configuration check.
-=======
     //overlapping protection configuration check.
->>>>>>> 150e88078fde... qcacld-2.0: Fix misleading indentation warning in limEnableHtRifsProtection
     if(overlap) {
         } else {
              //normal protection config check

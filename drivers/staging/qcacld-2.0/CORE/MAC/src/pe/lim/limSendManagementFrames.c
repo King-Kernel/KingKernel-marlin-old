@@ -5332,11 +5332,7 @@ tSirRetStatus limSendAddBARsp( tpAniSirGlobal pMac,
    else
       return eSIR_SUCCESS;
 
-<<<<<<< HEAD
-   returnAfterError:
-=======
 returnAfterError:
->>>>>>> 07c26bdbc68f... qcacld-2.0: Fix misleading indentation warning in limSendAddBARsp
 
       // Release buffer, if allocated
       if( NULL != pAddBARspBuffer )
@@ -5519,9 +5515,6 @@ tSirRetStatus limSendDelBAInd( tpAniSirGlobal pMac,
     else
       return eSIR_SUCCESS;
 
-<<<<<<< HEAD
-    returnAfterError:
-=======
 returnAfterError:
 >>>>>>> 4236eb061a24... qcacld-2.0: Fix misleading indentation warning in limSendDelBAInd
 

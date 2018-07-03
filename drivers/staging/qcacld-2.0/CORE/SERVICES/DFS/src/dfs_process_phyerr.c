@@ -201,9 +201,6 @@ dfs_process_phyerr_owl(struct ath_dfs *dfs, void *buf, u_int16_t datalen,
     */
    if (rssi == 0 && dur == 0) {
       dfs->ath_dfs_stats.datalen_discards++;
-<<<<<<< HEAD
-   return (0);
-=======
       return (0);
    }
 >>>>>>> 357ee35af7ac... qcacld-2.0: Fix misleading indentation warning in dfs_process_phyerr_owl
