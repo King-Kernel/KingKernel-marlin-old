@@ -5516,7 +5516,6 @@ tSirRetStatus limSendDelBAInd( tpAniSirGlobal pMac,
       return eSIR_SUCCESS;
 
 returnAfterError:
->>>>>>> 4236eb061a24... qcacld-2.0: Fix misleading indentation warning in limSendDelBAInd
 
       // Release buffer, if allocated
       if( NULL != pDelBAIndBuffer )
