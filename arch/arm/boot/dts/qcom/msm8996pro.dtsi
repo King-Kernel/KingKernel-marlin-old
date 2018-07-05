@@ -832,13 +832,8 @@
 		<  401800000  5  5 >,
 		<  510000000  6  5 >,
 		<  560000000  7  7 >,
-<<<<<<< HEAD
 		<  652800000  8  7 >,
 		<  710000000  9  7 >;
-=======
-		<  624000000  8  7 >,
-		<  715000000  9  7 >;
->>>>>>> 27ae6b9de6f5... Overclock the GPU to 715MHz -The overclock will be disabled by default-
 	qcom,gfxfreq-mx-speedbin0 =
 		<	   0  0 >,
 		<  133000000  4 >,
@@ -847,13 +842,8 @@
 		<  401800000  5 >,
 		<  510000000  5 >,
 		<  560000000  7 >,
-<<<<<<< HEAD
 		<  652800000  7 >,
 		<  710000000  7 >;
-=======
-		<  624000000  7 >,
-		<  715000000  7 >;
->>>>>>> 27ae6b9de6f5... Overclock the GPU to 715MHz -The overclock will be disabled by default-
 
 	qcom,gfxfreq-speedbin1 =
 		<	   0  0  0 >,
@@ -864,11 +854,7 @@
 		<  510000000  6  5 >,
 		<  560000000  7  7 >,
 		<  624000000  8  7 >,
-<<<<<<< HEAD
 		<  710000000  9  7 >;
-=======
-		<  715000000  9  7 >;
->>>>>>> 27ae6b9de6f5... Overclock the GPU to 715MHz -The overclock will be disabled by default-
 	qcom,gfxfreq-mx-speedbin1 =
 		<	   0  0 >,
 		<  133000000  4 >,
@@ -878,11 +864,7 @@
 		<  510000000  5 >,
 		<  560000000  7 >,
 		<  624000000  7 >,
-<<<<<<< HEAD
 		<  710000000  7 >;
-=======
-		<  715000000  7 >;
->>>>>>> 27ae6b9de6f5... Overclock the GPU to 715MHz -The overclock will be disabled by default-
 };
 
 &msm_cpufreq {
@@ -1056,11 +1038,7 @@
 
 			qcom,gpu-pwrlevel@0 {
 				reg = <0>;
-<<<<<<< HEAD
 				qcom,gpu-freq = <710000000>;
-=======
-				qcom,gpu-freq = <715000000>;
->>>>>>> 27ae6b9de6f5... Overclock the GPU to 715MHz -The overclock will be disabled by default-
 				qcom,bus-freq = <12>;
 				qcom,bus-min = <12>;
 				qcom,bus-max = <12>;
@@ -1141,11 +1119,7 @@
 
 			qcom,gpu-pwrlevel@0 {
 				reg = <0>;
-<<<<<<< HEAD
 				qcom,gpu-freq = <710000000>;
-=======
-				qcom,gpu-freq = <715000000>;
->>>>>>> 27ae6b9de6f5... Overclock the GPU to 715MHz -The overclock will be disabled by default-
 				qcom,bus-freq = <12>;
 				qcom,bus-min = <12>;
 				qcom,bus-max = <12>;
