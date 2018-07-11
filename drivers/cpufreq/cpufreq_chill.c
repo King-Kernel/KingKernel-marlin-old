@@ -23,6 +23,7 @@
 <<<<<<< HEAD
 >>>>>>> parent of 13dc17ad0df3... cpufreq: chill: Go back to using Conservative's tunables
 #include "cpufreq_governor.h"
+<<<<<<< HEAD
 =======
 >>>>>>> parent of 906f7610a539... cpufreq: Add Chill cpu gov
 #include <linux/display_state.h>
@@ -38,9 +39,15 @@
 >>>>>>> parent of 13dc17ad0df3... cpufreq: chill: Go back to using Conservative's tunables
 =======
 >>>>>>> parent of ab58cc58fec2... cpufreq: chill: Major cleanup, move changes from governor.h to chill.h
+=======
+#ifdef CONFIG_POWERSUSPEND
+#include <linux/powersuspend.h>
+#endif
+>>>>>>> parent of 04b71cf58a83... cpufreq: chill: Use native display_state instead of PowerSuspend
 
 /* Chill version macros */
 #define CHILL_VERSION_MAJOR			(2)
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(10)
@@ -49,6 +56,8 @@
 <<<<<<< HEAD
 =======
 >>>>>>> parent of ba75ac1e6353... chill: Reset boost count at max regardless of whether we've boosted
+=======
+>>>>>>> parent of 04b71cf58a83... cpufreq: chill: Use native display_state instead of PowerSuspend
 #define CHILL_VERSION_MINOR			(0)
 =======
 #define CHILL_VERSION_MAJOR			(1)
@@ -61,6 +70,7 @@
 =======
 #define CHILL_VERSION_MINOR			(3)
 >>>>>>> 89d2cfef07a... cpufreq: chill: Don't check for target frequency when boosting
+<<<<<<< HEAD
 =======
 #define CHILL_VERSION_MINOR			(1)
 >>>>>>> 6c66a250bd5... cpufreq: chill: Use native display_state instead of PowerSuspend
@@ -118,6 +128,8 @@
 >>>>>>> parent of eeca9b34ba80... chill: Decrease boost count alongside frequency
 =======
 >>>>>>> parent of ba75ac1e6353... chill: Reset boost count at max regardless of whether we've boosted
+=======
+>>>>>>> parent of 04b71cf58a83... cpufreq: chill: Use native display_state instead of PowerSuspend
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
@@ -212,12 +224,16 @@ static void cs_check_cpu(int cpu, unsigned int load)
 	struct dbs_data *dbs_data = policy->governor_data;
 	struct cs_dbs_tuners *cs_tuners = dbs_data->tuners;
 
-	/* Create display state boolean */
-	bool display_on = is_display_on();
-
+#ifdef CONFIG_POWERSUSPEND
 	/* Once min frequency is reached while screen off, stop taking load samples*/
+<<<<<<< HEAD
 	if (!display_on && policy->cur == policy->min)
+=======
+<<<<<<< HEAD
+	if (power_suspended && policy->cur == policy->min)
+>>>>>>> parent of 04b71cf58a83... cpufreq: chill: Use native display_state instead of PowerSuspend
 		return;
+#endif
 
 <<<<<<< HEAD
 =======
@@ -236,13 +252,17 @@ static void cs_check_cpu(int cpu, unsigned int load)
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 >>>>>>> parent of ab58cc58fec2... cpufreq: chill: Major cleanup, move changes from governor.h to chill.h
 =======
 >>>>>>> parent of 906f7610a539... cpufreq: Add Chill cpu gov
+=======
+#ifdef CONFIG_POWERSUSPEND
+>>>>>>> parent of 04b71cf58a83... cpufreq: chill: Use native display_state instead of PowerSuspend
 	/* Check for frequency decrease */
-	if (display_on && load < cs_tuners->down_threshold) {
+	if (!power_suspended && load < cs_tuners->down_threshold) {
 		unsigned int freq_target;
 		/*
 		 * if we cannot reduce the frequency anymore, break out early
@@ -279,7 +299,7 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		__cpufreq_driver_target(policy, dbs_info->requested_freq,
 				CPUFREQ_RELATION_L);
 		return;
-	} else if (!display_on && load <= cs_tuners->down_threshold_suspended) {
+	} else if (power_suspended && load <= cs_tuners->down_threshold_suspended) {
 		unsigned int freq_target;
 		/*
 		 * if we cannot reduce the frequency anymore, break out early
@@ -318,7 +338,6 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		return;
 	}
 
-<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 #ifdef CONFIG_POWERSUSPEND
@@ -404,9 +423,11 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		if (dbs_info->requested_freq == policy->max)
 			return;
 
-		/* if display is off then break out early */
-		if (!display_on)
+#ifdef CONFIG_POWERSUSPEND
+		/* if power is suspended then break out early */
+		if (power_suspended)
 			return;
+#endif
 
 		/* Boost if count is reached, otherwise increase freq */
 		if (cs_tuners->boost_enabled && boost_counter >= cs_tuners->boost_count)
