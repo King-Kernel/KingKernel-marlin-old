@@ -61,9 +61,9 @@
 #define CHILL_VERSION_MINOR			(0)
 =======
 #define CHILL_VERSION_MAJOR			(1)
-<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(1)
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
+<<<<<<< HEAD
 =======
 #define CHILL_VERSION_MINOR			(3)
 >>>>>>> 89d2cfef07a... cpufreq: chill: Don't check for target frequency when boosting
@@ -127,6 +127,8 @@
 >>>>>>> parent of ba75ac1e6353... chill: Reset boost count at max regardless of whether we've boosted
 =======
 >>>>>>> parent of 04b71cf58a83... cpufreq: chill: Use native display_state instead of PowerSuspend
+=======
+>>>>>>> parent of 4bf2bd8c3398... cpufreq: chill: Don't check for target frequency when boosting
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
@@ -342,13 +344,8 @@ static void cs_check_cpu(int cpu, unsigned int load)
 <<<<<<< HEAD
 =======
 		/* Boost if count is reached, otherwise increase freq */
-<<<<<<< HEAD
 		if (cs_tuners->boost_enabled && boost_counter >= cs_tuners->boost_count)
 			dbs_info->requested_freq += get_freq_target(cs_tuners, policy->max);
-=======
-		if (chill_tuners->boost_enabled && boost_counter >= chill_tuners->boost_count)
-			dbs_info->requested_freq = policy->max;
->>>>>>> 89d2cfef07a... cpufreq: chill: Don't check for target frequency when boosting
 		else
 			dbs_info->requested_freq += get_freq_target(cs_tuners, policy);
 
