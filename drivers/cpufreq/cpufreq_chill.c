@@ -50,7 +50,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(0)
 =======
 #define CHILL_VERSION_MAJOR			(1)
@@ -90,10 +89,23 @@
 =======
 #define CHILL_VERSION_MINOR			(4)
 >>>>>>> 3cf87276695... chill: Simplify boost increment logic
+<<<<<<< HEAD
 =======
 #define CHILL_VERSION_MINOR			(10)
 >>>>>>> 00c5a269f6a... Update Chill to 2.10
 <<<<<<< HEAD
+=======
+
+/* Chill governor macros */
+#define DEF_FREQUENCY_UP_THRESHOLD		(85)
+#define DEF_FREQUENCY_DOWN_THRESHOLD		(35)
+#define DEF_FREQUENCY_DOWN_THRESHOLD_SUSPENDED	(45)
+#define DEF_FREQUENCY_STEP			(5)
+<<<<<<< HEAD
+#define DEF_SAMPLING_RATE			(20000)
+#define DEF_BOOST_ENABLED			(1)
+#define DEF_BOOST_COUNT				(8)
+>>>>>>> parent of 7e9138069fac... Update Chill to 2.10
 =======
 #define CHILL_VERSION_MINOR			(2)
 >>>>>>> 7d019fa8484... cpufreq: chill: Major cleanup, move changes from governor.h to chill.h
@@ -117,7 +129,6 @@
 #define DEF_BOOST_COUNT				(8)
 
 static DEFINE_PER_CPU(struct cs_cpu_dbs_info_s, cs_cpu_dbs_info);
-static DEFINE_PER_CPU(struct cs_dbs_tuners *, cached_tuners);
 
 unsigned int boost_counter = 0;
 
@@ -774,6 +785,7 @@ static struct attribute_group cs_attr_group_gov_pol = {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 >>>>>>> parent of 13dc17ad0df3... cpufreq: chill: Go back to using Conservative's tunables
@@ -804,13 +816,16 @@ static int chill_init(struct dbs_data *dbs_data)
 >>>>>>> parent of 13dc17ad0df3... cpufreq: chill: Go back to using Conservative's tunables
 =======
 >>>>>>> parent of ab58cc58fec2... cpufreq: chill: Major cleanup, move changes from governor.h to chill.h
+=======
+static int cs_init(struct dbs_data *dbs_data)
+>>>>>>> parent of 7e9138069fac... Update Chill to 2.10
 {
 	struct cs_dbs_tuners *tuners;
 
 	tuners = kzalloc(sizeof(*tuners), GFP_KERNEL);
 	if (!tuners) {
 		pr_err("%s: kzalloc failed\n", __func__);
-		return ERR_PTR(-ENOMEM);
+		return -ENOMEM;
 	}
 
 	tuners->up_threshold = DEF_FREQUENCY_UP_THRESHOLD;
@@ -821,34 +836,6 @@ static int chill_init(struct dbs_data *dbs_data)
 	tuners->boost_enabled = DEF_BOOST_ENABLED;
 	tuners->boost_count = DEF_BOOST_COUNT;
 
-	save_tuners(policy, tuners);
-
-	return tuners;
-}
-
-static struct cs_dbs_tuners *restore_tuners(struct cpufreq_policy *policy)
-{
-	int cpu;
-
-	if (have_governor_per_policy())
-		cpu = cpumask_first(policy->related_cpus);
-	else
-		cpu = 0;
-
-	return per_cpu(cached_tuners, cpu);
-}
-
-static int cs_init(struct dbs_data *dbs_data, struct cpufreq_policy *policy)
-{
-	struct cs_dbs_tuners *tuners;
-
-	tuners = restore_tuners(policy);
-	if (!tuners) {
-		tuners = alloc_tuners(policy);
-		if (IS_ERR(tuners))
-			return PTR_ERR(tuners);
-	}
-
 	dbs_data->tuners = tuners;
 	dbs_data->min_sampling_rate = DEF_SAMPLING_RATE;
 	mutex_init(&dbs_data->mutex);
@@ -857,7 +844,7 @@ static int cs_init(struct dbs_data *dbs_data, struct cpufreq_policy *policy)
 
 static void cs_exit(struct dbs_data *dbs_data)
 {
-	//nothing to do
+	kfree(dbs_data->tuners);
 }
 
 define_get_cpu_dbs_routines(cs_cpu_dbs_info);
@@ -906,13 +893,7 @@ static int __init cpufreq_gov_dbs_init(void)
 
 static void __exit cpufreq_gov_dbs_exit(void)
 {
-	int cpu;
-
 	cpufreq_unregister_governor(&cpufreq_gov_chill);
-	for_each_possible_cpu(cpu) {
-		kfree(per_cpu(cached_tuners, cpu));
-		per_cpu(cached_tuners, cpu) = NULL;
-	}
 }
 
 MODULE_AUTHOR("Alexander Clouter <alex@digriz.org.uk>");

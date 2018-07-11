@@ -195,6 +195,7 @@ struct cs_dbs_tuners {
 	unsigned int down_threshold_suspended;
 	unsigned int freq_step;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 =======
@@ -206,6 +207,8 @@ struct cs_dbs_tuners {
 =======
 >>>>>>> 00c5a269f6a... Update Chill to 2.10
 >>>>>>> parent of 13dc17ad0df3... cpufreq: chill: Go back to using Conservative's tunables
+=======
+>>>>>>> parent of 7e9138069fac... Update Chill to 2.10
 };
 
 struct ex_dbs_tuners {
