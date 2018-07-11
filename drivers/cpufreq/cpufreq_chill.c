@@ -65,16 +65,9 @@ static void cs_check_cpu(int cpu, unsigned int load)
 
 #ifdef CONFIG_POWERSUSPEND
 	/* Once min frequency is reached while screen off, stop taking load samples*/
-<<<<<<< HEAD
-	if (power_suspended && policy->cur == policy->min)
-		return;
-#endif
-
-=======
 	if (power_suspended & policy->cur == policy->min)
 		return;
 #endif
->>>>>>> 155574ee802d... cpufreq: chill: Replace sleep_depth with true load ignorance
 	/*
 	 * break out if we 'cannot' reduce the speed as the user might
 	 * want freq_step to be zero
@@ -178,11 +171,7 @@ static void cs_dbs_timer(struct work_struct *work)
 
 	if (!need_load_eval(&core_dbs_info->cdbs, cs_tuners->sampling_rate))
 		modify_all = false;
-<<<<<<< HEAD
-		else
-=======
 	else
->>>>>>> 155574ee802d... cpufreq: chill: Replace sleep_depth with true load ignorance
 			dbs_check_cpu(dbs_data, cpu);
 
 	gov_queue_work(dbs_data, dbs_info->cdbs.cur_policy, delay, modify_all);
@@ -334,50 +323,6 @@ static ssize_t store_freq_step(struct dbs_data *dbs_data, const char *buf,
 	return count;
 }
 
-<<<<<<< HEAD
-static ssize_t store_boost_enabled(struct dbs_data *dbs_data, const char *buf,
-		size_t count)
-{
-	struct cs_dbs_tuners *cs_tuners = dbs_data->tuners;
-	unsigned int input;
-	int ret;
-	ret = sscanf(buf, "%u", &input);
-
-	if (ret != 1)
-		return -EINVAL;
-
-	if (input >= 1)
-		input = 1;
-	else
-		input = 0;
-
-	cs_tuners->boost_enabled = input;
-	return count;
-}
-
-static ssize_t store_boost_count(struct dbs_data *dbs_data, const char *buf,
-		size_t count)
-{
-	struct cs_dbs_tuners *cs_tuners = dbs_data->tuners;
-	unsigned int input;
-	int ret;
-	ret = sscanf(buf, "%u", &input);
-
-	if (ret != 1)
-		return -EINVAL;
-
-	if (input >= 5)
-		input = 5;
-
-	if (input < 1)
-		input = 1;
-
-	cs_tuners->sleep_depth = input;
-	return count;
-}
-
-=======
->>>>>>> 155574ee802d... cpufreq: chill: Replace sleep_depth with true load ignorance
 static ssize_t store_boost_enabled(struct dbs_data *dbs_data, const char *buf,
 		size_t count)
 {
