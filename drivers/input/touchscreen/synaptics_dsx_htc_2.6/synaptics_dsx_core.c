@@ -137,10 +137,6 @@
 static DECLARE_WAIT_QUEUE_HEAD(syn_data_ready_wq);
 #endif
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 #ifdef CONFIG_WAKE_GESTURES
 struct synaptics_rmi4_data *gl_rmi4_data;
 
@@ -151,27 +147,6 @@ bool scr_suspended(void)
 }
 #endif
 
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
-=======
-static bool wakeup_gesture_changed = false;
-static bool wakeup_gesture_temp;
-
-<<<<<<< HEAD
->>>>>>> d7902c49ad44... touch: fix enable wakeup gesture while tp is suspended
-=======
-=======
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
-#ifdef CONFIG_WAKE_GESTURES
-struct synaptics_rmi4_data *gl_rmi4_data;
-
-bool scr_suspended(void)
-{
-	struct synaptics_rmi4_data *rmi4_data = gl_rmi4_data;
-	return rmi4_data->suspend;
-}
-#endif
-
->>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
 static int synaptics_rmi4_check_status(struct synaptics_rmi4_data *rmi4_data,
 		bool *was_in_bl_mode);
 static int synaptics_rmi4_free_fingers(struct synaptics_rmi4_data *rmi4_data);
@@ -1127,32 +1102,8 @@ static ssize_t synaptics_rmi4_wake_gesture_store(struct device *dev,
 
 	input = input > 0 ? 1 : 0;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-	if (rmi4_data->f11_wakeup_gesture || rmi4_data->f12_wakeup_gesture)
-<<<<<<< HEAD
-<<<<<<< HEAD
-		rmi4_data->enable_wakeup_gesture = WAKEUP_GESTURE && input;
-=======
-		rmi4_data->enable_wakeup_gesture = input;
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
-=======
-	if (rmi4_data->f11_wakeup_gesture || rmi4_data->f12_wakeup_gesture) {
-		if (rmi4_data->suspend) { 
-			wakeup_gesture_changed = true;
-			wakeup_gesture_temp = input;
-		} else {
-			rmi4_data->enable_wakeup_gesture = input;
-		}
-	}
->>>>>>> d7902c49ad44... touch: fix enable wakeup gesture while tp is suspended
-=======
-		rmi4_data->enable_wakeup_gesture = input;
->>>>>>> e923c5486845... Revert "touch: disable wakeup gesture"
-=======
 	if (rmi4_data->f11_wakeup_gesture || rmi4_data->f12_wakeup_gesture)
 		rmi4_data->enable_wakeup_gesture = input;
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 
 	return count;
 }
@@ -1918,22 +1869,11 @@ static int synaptics_rmi4_f12_abs_report(struct synaptics_rmi4_data *rmi4_data,
 		if (rmi4_data->hw_if->board_data->y_flip)
 			y = rmi4_data->sensor_max_y - y;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 #ifdef CONFIG_WAKE_GESTURES
 		if (rmi4_data->suspend && wg_switch)
 		        x += 5000;
 #endif
 
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
-=======
-#ifdef CONFIG_WAKE_GESTURES
-		if (rmi4_data->suspend && wg_switch)
-		        x += 5000;
-#endif
-
->>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
 		switch (finger_status) {
 		case F12_FINGER_STATUS:
 		case F12_GLOVED_FINGER_STATUS:
@@ -5998,31 +5938,12 @@ static int synaptics_rmi4_suspend(struct device *dev)
 	if (rmi4_data->stay_awake)
 		return 0;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 #ifdef CONFIG_WAKE_GESTURES
 	if (wg_switch) {
 		enable_irq_wake(rmi4_data->irq);
 		goto exit;
 	}
 #endif
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
-=======
-#ifdef CONFIG_WAKE_GESTURES
-<<<<<<< HEAD
-	if (s2w_switch || dt2w_switch) {
-		if (!s2w_switch)
-			synaptics_rmi4_wakeup_gesture(rmi4_data, true);
-#else
->>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
-=======
-	if (wg_switch) {
-		enable_irq_wake(rmi4_data->irq);
-		goto exit;
-	}
-#endif
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 	if (rmi4_data->enable_wakeup_gesture) {
 		synaptics_rmi4_wakeup_gesture(rmi4_data, true);
 		enable_irq_wake(rmi4_data->irq);
@@ -6044,15 +5965,7 @@ exit:
 	mutex_unlock(&exp_data.mutex);
 
 #ifdef CONFIG_WAKE_GESTURES
-<<<<<<< HEAD
-<<<<<<< HEAD
 	if (wg_switch) {
-=======
-	if (s2w_switch) {
->>>>>>> 19d528ed13ae... wake_gestures: don't pass touch to mcu if s2w enabled
-=======
-	if (wg_switch) {
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 		rmi4_data->suspend = true;
 
 		return 0;
@@ -6083,15 +5996,7 @@ static int synaptics_rmi4_resume(struct device *dev)
 		return 0;
 
 #ifdef CONFIG_WAKE_GESTURES
-<<<<<<< HEAD
-<<<<<<< HEAD
 	if (!wg_switch) {
-=======
-	if (!s2w_switch) {
->>>>>>> 19d528ed13ae... wake_gestures: don't pass touch to mcu if s2w enabled
-=======
-	if (!wg_switch) {
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 #endif
 #ifdef USE_I2C_SWITCH
 	gpio_set_value(rmi4_data->hw_if->board_data->switch_gpio, 0);
@@ -6105,40 +6010,13 @@ static int synaptics_rmi4_resume(struct device *dev)
 
 	synaptics_rmi4_free_fingers(rmi4_data);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 #ifdef CONFIG_WAKE_GESTURES
-<<<<<<< HEAD
-	if (s2w_switch || rmi4_data->enable_wakeup_gesture) {
-		if (!s2w_switch)
-			synaptics_rmi4_wakeup_gesture(rmi4_data, false);
-#else
->>>>>>> 3a90861a1d79... wake_gestures: fix doubletap change while screen is off
-=======
 	if (wg_switch) {
 		disable_irq_wake(rmi4_data->irq);
 		synaptics_rmi4_force_cal(rmi4_data);
 		goto exit;
 	}
 #endif
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
-=======
-#ifdef CONFIG_WAKE_GESTURES
-<<<<<<< HEAD
-	if (s2w_switch || rmi4_data->enable_wakeup_gesture) {
-		if (!s2w_switch)
-			synaptics_rmi4_wakeup_gesture(rmi4_data, false);
-#else
->>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
-=======
-	if (wg_switch) {
-		disable_irq_wake(rmi4_data->irq);
-		synaptics_rmi4_force_cal(rmi4_data);
-		goto exit;
-	}
-#endif
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 	if (rmi4_data->enable_wakeup_gesture) {
 		synaptics_rmi4_wakeup_gesture(rmi4_data, false);
 		disable_irq_wake(rmi4_data->irq);
@@ -6174,10 +6052,6 @@ exit:
 
 	rmi4_data->suspend = false;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 #ifdef CONFIG_WAKE_GESTURES
 	if (wg_changed) {
 		wg_switch = wg_switch_temp;
@@ -6185,19 +6059,6 @@ exit:
 	}
 #endif
 
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
-=======
-	if (wakeup_gesture_changed) {
-=======
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
-#ifdef CONFIG_WAKE_GESTURES
-	if (wg_changed) {
-		wg_switch = wg_switch_temp;
-		wg_changed = false;
-	}
-#endif
-
->>>>>>> d7902c49ad44... touch: fix enable wakeup gesture while tp is suspended
 	return 0;
 }
 
@@ -6248,3 +6109,4 @@ module_exit(synaptics_rmi4_exit);
 MODULE_AUTHOR("Synaptics, Inc.");
 MODULE_DESCRIPTION("Synaptics DSX Touch Driver");
 MODULE_LICENSE("GPL v2");
+

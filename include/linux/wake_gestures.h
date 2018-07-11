@@ -24,32 +24,13 @@
 #include <linux/input.h>
 
 extern int s2w_switch;
-<<<<<<< HEAD
-<<<<<<< HEAD
 extern bool dt2w_switch;
 extern bool wg_switch;
 extern bool wg_switch_temp;
 extern bool wg_changed;
 extern int vib_strength;
 bool scr_suspended(void);
-=======
-extern int s2w_switch_temp;
-=======
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
-extern bool dt2w_switch;
-extern bool wg_switch;
-extern bool wg_switch_temp;
-extern bool wg_changed;
-extern int vib_strength;
-bool scr_suspended(void);
-<<<<<<< HEAD
-bool get_internal_dt(void);
-void set_internal_dt(bool input);
->>>>>>> e3e6210eb254... wake_gestures: add sweep2wake, doubletap2wake and sweep2sleep
-=======
->>>>>>> 463fb55dc932... wake_gestures: change dt implementation and simplify
 void wg_setdev(struct input_dev *);
 void set_vibrate(int value);
 
 #endif	/* _LINUX_WAKE_GESTURES_H */
-
