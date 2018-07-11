@@ -48,7 +48,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(0)
 =======
 #define CHILL_VERSION_MAJOR			(1)
@@ -82,6 +81,7 @@
 =======
 #define CHILL_VERSION_MINOR			(9)
 >>>>>>> 3657ca1396f... chill: Fix down_threshold_suspended sysfs input
+<<<<<<< HEAD
 =======
 #define CHILL_VERSION_MINOR			(3)
 >>>>>>> 868d882e126... chill: I'm secretly retarded
@@ -97,6 +97,8 @@
 =======
 =======
 >>>>>>> parent of f0750747e42d... chill: Simplify boost increment logic
+=======
+>>>>>>> parent of 5acb14fcfe3d... chill: I'm secretly retarded
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
@@ -391,10 +393,10 @@ static void cs_check_cpu(int cpu, unsigned int load)
 			return;
 
 		/* Boost if count is reached, otherwise increase freq */
-		if (cs_tuners->boost_enabled && boost_counter >= cs_tuners->boost_count) {
+		if (cs_tuners->boost_enabled && boost_counter >= cs_tuners->boost_count)
 			dbs_info->requested_freq = policy->max;
 			boost_counter = 0;
-		} else
+		else
 			dbs_info->requested_freq += get_freq_target(cs_tuners, policy);
 
  		/* Make sure max hasn't been reached, otherwise increment boost_counter */
