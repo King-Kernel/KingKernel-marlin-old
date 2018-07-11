@@ -49,7 +49,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(0)
 =======
 #define CHILL_VERSION_MAJOR			(1)
@@ -77,6 +76,7 @@
 =======
 #define CHILL_VERSION_MINOR			(7)
 >>>>>>> 2c60c27d59a... chill: Allow any number >= 1 for boost count
+<<<<<<< HEAD
 =======
 #define CHILL_VERSION_MINOR			(8)
 >>>>>>> a3b5ef08cb1... chill: Fix logic for reducing boost count with freq
@@ -104,6 +104,8 @@
 >>>>>>> parent of 5acb14fcfe3d... chill: I'm secretly retarded
 =======
 >>>>>>> parent of 7fb96c2eab99... chill: Fix down_threshold_suspended sysfs input
+=======
+>>>>>>> parent of 61743deb89a8... chill: Fix logic for reducing boost count with freq
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
@@ -250,7 +252,7 @@ static void cs_check_cpu(int cpu, unsigned int load)
 			return;
 
 		/* reduce boost count with frequency */
-		if (boost_counter > 0)
+		if (boost_counter < 0)
 			boost_counter--;
 
 		freq_target = get_freq_target(cs_tuners, policy);
