@@ -20,21 +20,12 @@
 
 /* Chill version macros */
 #define CHILL_VERSION_MAJOR			(1)
-<<<<<<< HEAD
-#define CHILL_VERSION_MINOR			(3)
-
-/* Chill governor macros */
-#define DEF_FREQUENCY_UP_THRESHOLD		(85)
-#define DEF_FREQUENCY_DOWN_THRESHOLD		(35)
-#define DEF_FREQUENCY_DOWN_THRESHOLD_SUSPENDED	(45)
-=======
 #define CHILL_VERSION_MINOR			(6)
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
 #define DEF_FREQUENCY_DOWN_THRESHOLD		(30)
 #define DEF_FREQUENCY_DOWN_THRESHOLD_SUSPENDED	(20)
->>>>>>> d37f805276d9... cpufreq: chill: Guard against 0 sleep depth and optimize defaults
 #define DEF_FREQUENCY_STEP			(5)
 #define DEF_SLEEP_DEPTH				(2)
 #define DEF_SAMPLING_RATE			(20000)
@@ -368,17 +359,10 @@ static ssize_t store_boost_count(struct dbs_data *dbs_data, const char *buf,
 	if (input >= 5)
 		input = 5;
 
-<<<<<<< HEAD
-	if (input = 0)
-		input = 0;
-
-	cs_tuners->boost_count = input;
-=======
 	if (input < 1)
 		input = 1;
 
 	cs_tuners->sleep_depth = input;
->>>>>>> d37f805276d9... cpufreq: chill: Guard against 0 sleep depth and optimize defaults
 	return count;
 }
 
