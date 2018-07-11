@@ -434,10 +434,6 @@ sg_read(struct file *filp, char __user *buf, size_t count, loff_t * ppos)
 	struct sg_header *old_hdr = NULL;
 	int retval = 0;
 
-<<<<<<< HEAD
-	if (unlikely(segment_eq(get_fs(), KERNEL_DS)))
-		return -EINVAL;
-=======
 	/*
 	 * This could cause a response to be stranded. Close the associated
 	 * file descriptor to free up any resources being held.
@@ -445,7 +441,6 @@ sg_read(struct file *filp, char __user *buf, size_t count, loff_t * ppos)
 	retval = sg_check_file_access(filp, __func__);
 	if (retval)
 		return retval;
->>>>>>> v3.18.115
 
 	if ((!(sfp = (Sg_fd *) filp->private_data)) || (!(sdp = sfp->parentdp)))
 		return -ENXIO;
