@@ -62,7 +62,6 @@
 =======
 #define CHILL_VERSION_MAJOR			(1)
 <<<<<<< HEAD
-<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(1)
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
 =======
@@ -140,6 +139,7 @@
 #define DEF_BOOST_COUNT				(8)
 >>>>>>> parent of 7e9138069fac... Update Chill to 2.10
 =======
+<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(2)
 >>>>>>> 7d019fa8484... cpufreq: chill: Major cleanup, move changes from governor.h to chill.h
 <<<<<<< HEAD
@@ -175,6 +175,13 @@
 #define DEF_SAMPLING_RATE			(20000)
 #define DEF_BOOST_ENABLED			(0)
 #define DEF_BOOST_COUNT				(8)
+=======
+#define DEF_SLEEP_DEPTH				(1)
+#define DEF_SAMPLING_RATE			(20000)
+#define DEF_BOOST_ENABLED			(1)
+#define DEF_BOOST_COUNT				(3)
+>>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
+>>>>>>> parent of 6e125a322825... cpufreq: chill: Guard against 0 sleep depth and optimize defaults
 
 static DEFINE_PER_CPU(struct cs_cpu_dbs_info_s, cs_cpu_dbs_info);
 
@@ -704,17 +711,10 @@ static ssize_t store_boost_count(struct dbs_data *dbs_data, const char *buf,
 	if (input >= 5)
 		input = 5;
 
-<<<<<<< HEAD
 	if (input = 0)
 		input = 0;
 
 	cs_tuners->boost_count = input;
-=======
-	if (input < 1)
-		input = 1;
-
-	cs_tuners->sleep_depth = input;
->>>>>>> d37f805276d... cpufreq: chill: Guard against 0 sleep depth and optimize defaults
 	return count;
 }
 
