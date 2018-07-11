@@ -42,10 +42,13 @@
 /* Chill version macros */
 #define CHILL_VERSION_MAJOR			(2)
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(10)
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+>>>>>>> parent of ba75ac1e6353... chill: Reset boost count at max regardless of whether we've boosted
 #define CHILL_VERSION_MINOR			(0)
 =======
 #define CHILL_VERSION_MAJOR			(1)
@@ -61,6 +64,7 @@
 =======
 #define CHILL_VERSION_MINOR			(1)
 >>>>>>> 6c66a250bd5... cpufreq: chill: Use native display_state instead of PowerSuspend
+<<<<<<< HEAD
 =======
 #define CHILL_VERSION_MINOR			(2)
 >>>>>>> 221f642107c... chill: Reset boost count at max regardless of whether we've boosted
@@ -112,6 +116,8 @@
 >>>>>>> parent of 465bc0e9bad3... chill: Reset boost count on policy->min
 =======
 >>>>>>> parent of eeca9b34ba80... chill: Decrease boost count alongside frequency
+=======
+>>>>>>> parent of ba75ac1e6353... chill: Reset boost count at max regardless of whether we've boosted
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
@@ -147,7 +153,7 @@
 
 static DEFINE_PER_CPU(struct cs_cpu_dbs_info_s, cs_cpu_dbs_info);
 
-unsigned int boost_counter = 0;
+static unsigned int boost_counter = 0;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -405,15 +411,13 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		/* Boost if count is reached, otherwise increase freq */
 		if (cs_tuners->boost_enabled && boost_counter >= cs_tuners->boost_count)
 			dbs_info->requested_freq = policy->max;
-			boost_counter = 0;
 		else
 			dbs_info->requested_freq += get_freq_target(cs_tuners, policy);
 
  		/* Make sure max hasn't been reached, otherwise increment boost_counter */
-		if (dbs_info->requested_freq >= policy->max) {
+		if (dbs_info->requested_freq >= policy->max)
 			dbs_info->requested_freq = policy->max;
-			boost_counter = 0;
-		} else
+		else
 			boost_counter++;
 
 		__cpufreq_driver_target(policy, dbs_info->requested_freq,
