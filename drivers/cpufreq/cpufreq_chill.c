@@ -50,7 +50,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(0)
 =======
 #define CHILL_VERSION_MAJOR			(1)
@@ -81,6 +80,7 @@
 =======
 #define CHILL_VERSION_MINOR			(8)
 >>>>>>> a3b5ef08cb1... chill: Fix logic for reducing boost count with freq
+<<<<<<< HEAD
 =======
 #define CHILL_VERSION_MINOR			(9)
 >>>>>>> 3657ca1396f... chill: Fix down_threshold_suspended sysfs input
@@ -102,6 +102,8 @@
 >>>>>>> parent of f0750747e42d... chill: Simplify boost increment logic
 =======
 >>>>>>> parent of 5acb14fcfe3d... chill: I'm secretly retarded
+=======
+>>>>>>> parent of 7fb96c2eab99... chill: Fix down_threshold_suspended sysfs input
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
@@ -554,6 +556,7 @@ static ssize_t store_down_threshold_suspended(struct dbs_data *dbs_data, const c
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	cs_tuners->down_threshold_suspended = input;
 =======
 <<<<<<< HEAD
@@ -574,6 +577,9 @@ static ssize_t store_down_threshold_suspended(struct dbs_data *dbs_data, const c
 =======
 	cs_tuners->down_threshold_suspended = input;
 >>>>>>> parent of 906f7610a539... cpufreq: Add Chill cpu gov
+=======
+	cs_tuners->down_threshold = input;
+>>>>>>> parent of 7fb96c2eab99... chill: Fix down_threshold_suspended sysfs input
 	return count;
 }
 
