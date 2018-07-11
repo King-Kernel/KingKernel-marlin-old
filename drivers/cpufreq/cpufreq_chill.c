@@ -144,10 +144,6 @@ static inline unsigned int get_freq_target(struct cs_dbs_tuners *cs_tuners,
 #include <linux/powersuspend.h>
 #endif
 
-/* Chill version macros */
-#define CHILL_VERSION_MAJOR		(1)
-#define CHILL_VERSION_MINOR		(0)
-
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(80)
 #define DEF_FREQUENCY_DOWN_THRESHOLD		(20)
