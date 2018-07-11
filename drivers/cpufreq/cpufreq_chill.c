@@ -47,7 +47,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(0)
 =======
 #define CHILL_VERSION_MAJOR			(1)
@@ -69,6 +68,7 @@
 =======
 #define CHILL_VERSION_MINOR			(5)
 >>>>>>> 25a07dd7e0d... chill: Decrease boost count alongside frequency
+<<<<<<< HEAD
 =======
 #define CHILL_VERSION_MINOR			(6)
 >>>>>>> 01d49229fb9... chill: Reset boost count on policy->min
@@ -108,6 +108,8 @@
 >>>>>>> parent of 61743deb89a8... chill: Fix logic for reducing boost count with freq
 =======
 >>>>>>> parent of 85b8d78c43d8... chill: Allow any number >= 1 for boost count
+=======
+>>>>>>> parent of 465bc0e9bad3... chill: Reset boost count on policy->min
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(85)
@@ -260,10 +262,9 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		freq_target = get_freq_target(cs_tuners, policy);
 		if (dbs_info->requested_freq > freq_target)
 			dbs_info->requested_freq -= freq_target;
-		else {
+		else
 			dbs_info->requested_freq = policy->min;
-			boost_counter = 0;
-		}
+
 		__cpufreq_driver_target(policy, dbs_info->requested_freq,
 				CPUFREQ_RELATION_L);
 		return;
@@ -278,9 +279,8 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		freq_target = get_freq_target(cs_tuners, policy);
 		if (dbs_info->requested_freq > freq_target)
 			dbs_info->requested_freq -= freq_target;
-		else {
+		else
 			dbs_info->requested_freq = policy->min;
-<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 =======
@@ -364,6 +364,7 @@ static void cs_check_cpu(int cpu, unsigned int load)
 			dbs_info->requested_freq -= freq_target;
 		else
 			dbs_info->requested_freq = policy->min;
+<<<<<<< HEAD
 =======
 >>>>>>> parent of 13dc17ad0df3... cpufreq: chill: Go back to using Conservative's tunables
 			boost_counter = 0;
@@ -372,6 +373,8 @@ static void cs_check_cpu(int cpu, unsigned int load)
 =======
 >>>>>>> 01d49229fb9... chill: Reset boost count on policy->min
 >>>>>>> parent of 906f7610a539... cpufreq: Add Chill cpu gov
+=======
+>>>>>>> parent of 465bc0e9bad3... chill: Reset boost count on policy->min
 
 		__cpufreq_driver_target(policy, dbs_info->requested_freq,
 				CPUFREQ_RELATION_L);
