@@ -48,6 +48,7 @@
 /* Chill version macros */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define CHILL_VERSION_MAJOR			(2)
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -229,19 +230,22 @@ static inline unsigned int get_freq_target(struct cs_dbs_tuners *cs_tuners,
 #define CHILL_VERSION_MAJOR			(1)
 #define CHILL_VERSION_MINOR			(1)
 >>>>>>> 24daa4d1311b... cpufreq: chill: Add boost option
+=======
+#define CHILL_VERSION_MAJOR		(1)
+#define CHILL_VERSION_MINOR		(0)
+>>>>>>> parent of 24daa4d1311b... cpufreq: chill: Add boost option
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(80)
 #define DEF_FREQUENCY_DOWN_THRESHOLD		(20)
 #define DEF_FREQUENCY_DOWN_THRESHOLD_SUSPENDED	(20)
 #define DEF_FREQUENCY_STEP			(5)
-#define DEF_SLEEP_DEPTH				(1)
-#define DEF_SAMPLING_RATE			(20000)
-#define DEF_BOOST_ENABLED			(1)
-#define DEF_BOOST_COUNT				(3)
+#define DEF_SLEEP_DEPTH			(1)
+#define DEF_SAMPLING_RATE		(20000)
 
 static DEFINE_PER_CPU(struct cs_cpu_dbs_info_s, cs_cpu_dbs_info);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 2be0437dd8e... cpufreq: Add Chill cpu gov
 =======
@@ -250,6 +254,8 @@ static DEFINE_PER_CPU(struct cs_cpu_dbs_info_s, cs_cpu_dbs_info);
 static unsigned int boost_counter = 0;
 
 >>>>>>> 24daa4d1311b... cpufreq: chill: Add boost option
+=======
+>>>>>>> parent of 24daa4d1311b... cpufreq: chill: Add boost option
 static inline unsigned int get_freq_target(struct cs_dbs_tuners *cs_tuners,
 <<<<<<< HEAD
 =======
@@ -357,17 +363,18 @@ static void cs_check_cpu(int cpu, unsigned int load)
 			return;
 #endif
 
+<<<<<<< HEAD
 		/* Boost if count is reached, otherwise increase freq */
 		if (cs_tuners->boost_enabled && boost_counter >= cs_tuners->boost_count)
 			dbs_info->requested_freq = policy->max;
 		else
 			dbs_info->requested_freq += get_freq_target(cs_tuners, policy);
+=======
+		dbs_info->requested_freq += get_freq_target(cs_tuners, policy);
+>>>>>>> parent of 24daa4d1311b... cpufreq: chill: Add boost option
 
- 		/* Make sure max hasn't been reached, otherwise increment boost_counter */
-		if (dbs_info->requested_freq >= policy->max)
+		if (dbs_info->requested_freq > policy->max)
 			dbs_info->requested_freq = policy->max;
-		else
-			boost_counter++;
 
 		__cpufreq_driver_target(policy, dbs_info->requested_freq,
 			CPUFREQ_RELATION_H);
@@ -833,6 +840,7 @@ static ssize_t store_boost_count(struct dbs_data *dbs_data, const char *buf,
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 155574ee802... cpufreq: chill: Replace sleep_depth with true load ignorance
 >>>>>>> parent of 13dc17ad0df3... cpufreq: chill: Go back to using Conservative's tunables
@@ -925,6 +933,8 @@ static ssize_t store_boost_count(struct dbs_data *dbs_data, const char *buf,
 }
 
 >>>>>>> 24daa4d1311b... cpufreq: chill: Add boost option
+=======
+>>>>>>> parent of 24daa4d1311b... cpufreq: chill: Add boost option
 show_store_one(cs, sampling_rate);
 show_store_one(cs, up_threshold);
 show_store_one(cs, down_threshold);
@@ -972,6 +982,7 @@ show_store_one(chill, boost_count);
 declare_show_sampling_rate_min(cs);
 show_store_one(cs, sleep_depth);
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
 =======
 >>>>>>> parent of 62d732615bba... cpufreq: chill: Add boost option
@@ -984,6 +995,8 @@ show_store_one(cs, boost_count);
 show_store_one(cs, boost_enabled);
 show_store_one(cs, boost_count);
 >>>>>>> 24daa4d1311b... cpufreq: chill: Add boost option
+=======
+>>>>>>> parent of 24daa4d1311b... cpufreq: chill: Add boost option
 
 gov_sys_pol_attr_rw(sampling_rate);
 gov_sys_pol_attr_rw(up_threshold);
@@ -1000,6 +1013,7 @@ gov_sys_pol_attr_rw(freq_step);
 =======
 gov_sys_pol_attr_ro(sampling_rate_min);
 gov_sys_pol_attr_rw(sleep_depth);
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
 <<<<<<< HEAD
@@ -1019,6 +1033,8 @@ gov_sys_pol_attr_ro(sampling_rate_min);
 >>>>>>> parent of 7d4af2ffc39d... cpufreq: chill: Version 2.0
 gov_sys_pol_attr_rw(boost_enabled);
 gov_sys_pol_attr_rw(boost_count);
+=======
+>>>>>>> parent of 24daa4d1311b... cpufreq: chill: Add boost option
 
 static struct attribute *dbs_attributes_gov_sys[] = {
 	&sampling_rate_min_gov_sys.attr,
@@ -1044,6 +1060,7 @@ static struct attribute *dbs_attributes_gov_sys[] = {
 =======
 	&sleep_depth_gov_sys.attr,
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
 >>>>>>> parent of 68d5b64a0801... cpufreq: chill: Replace sleep_depth with true load ignorance
 =======
@@ -1052,6 +1069,8 @@ static struct attribute *dbs_attributes_gov_sys[] = {
 >>>>>>> 24daa4d1311b... cpufreq: chill: Add boost option
 	&boost_enabled_gov_sys.attr,
 	&boost_count_gov_sys.attr,
+=======
+>>>>>>> parent of 24daa4d1311b... cpufreq: chill: Add boost option
 	NULL
 };
 
@@ -1084,6 +1103,7 @@ static struct attribute *dbs_attributes_gov_pol[] = {
 =======
 	&sleep_depth_gov_pol.attr,
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
 >>>>>>> parent of 68d5b64a0801... cpufreq: chill: Replace sleep_depth with true load ignorance
 =======
@@ -1092,6 +1112,8 @@ static struct attribute *dbs_attributes_gov_pol[] = {
 >>>>>>> 24daa4d1311b... cpufreq: chill: Add boost option
 	&boost_enabled_gov_pol.attr,
 	&boost_count_gov_pol.attr,
+=======
+>>>>>>> parent of 24daa4d1311b... cpufreq: chill: Add boost option
 	NULL
 };
 
@@ -1168,6 +1190,7 @@ static int cs_init(struct dbs_data *dbs_data)
 =======
 	tuners->sleep_depth = DEF_SLEEP_DEPTH;
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
 >>>>>>> parent of 68d5b64a0801... cpufreq: chill: Replace sleep_depth with true load ignorance
 =======
@@ -1176,6 +1199,8 @@ static int cs_init(struct dbs_data *dbs_data)
 >>>>>>> 24daa4d1311b... cpufreq: chill: Add boost option
 	tuners->boost_enabled = DEF_BOOST_ENABLED;
 	tuners->boost_count = DEF_BOOST_COUNT;
+=======
+>>>>>>> parent of 24daa4d1311b... cpufreq: chill: Add boost option
 
 	dbs_data->tuners = tuners;
 	dbs_data->min_sampling_rate = DEF_SAMPLING_RATE;

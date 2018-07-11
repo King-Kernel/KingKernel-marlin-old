@@ -200,6 +200,7 @@ struct cs_dbs_tuners {
 =======
 >>>>>>> parent of 13dc17ad0df3... cpufreq: chill: Go back to using Conservative's tunables
 	unsigned int sleep_depth;
+<<<<<<< HEAD
 	unsigned int boost_enabled;
 	unsigned int boost_count;
 <<<<<<< HEAD
@@ -221,6 +222,8 @@ struct ex_dbs_tuners {
 	unsigned int powersave;
 =======
 >>>>>>> 24daa4d1311b... cpufreq: chill: Add boost option
+=======
+>>>>>>> parent of 24daa4d1311b... cpufreq: chill: Add boost option
 };
 
 /* Common Governor data across policies */
