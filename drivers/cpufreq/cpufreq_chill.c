@@ -102,8 +102,6 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		return;
 	}
 
-<<<<<<< HEAD
-=======
 #ifdef CONFIG_POWERSUSPEND
 	/* Check for frequency decrease */
 	if (!power_suspended && load < cs_tuners->down_threshold) {
@@ -142,7 +140,6 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		return;
 	}
 
->>>>>>> 0153a72f931d... cpufreq: chill: Impliment down_threshold_suspended
 #else
 	/* Check for frequency decrease */
 	if (load < cs_tuners->down_threshold) {
@@ -164,39 +161,6 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		return;
 	}
 #endif
-<<<<<<< HEAD
-
-	/* Check for frequency increase */
-	if (load > cs_tuners->up_threshold) {
-
-		/* if we are already at full speed then break out early */
-		if (dbs_info->requested_freq == policy->max)
-			return;
-
-#ifdef CONFIG_POWERSUSPEND
-		/* if power is suspended then break out early */
-		if (power_suspended)
-			return;
-#endif
-
-		/* Boost if count is reached, otherwise increase freq */
-		if (cs_tuners->boost_enabled && boost_counter >= cs_tuners->boost_count)
-			dbs_info->requested_freq = policy->max;
-		else
-			dbs_info->requested_freq += get_freq_target(cs_tuners, policy);
-
- 		/* Make sure max hasn't been reached, otherwise increment boost_counter */
-		if (dbs_info->requested_freq >= policy->max)
-			dbs_info->requested_freq = policy->max;
-		else
-			boost_counter++;
-
-		__cpufreq_driver_target(policy, dbs_info->requested_freq,
-			CPUFREQ_RELATION_H);
-		return;
-	}
-=======
->>>>>>> 0153a72f931d... cpufreq: chill: Impliment down_threshold_suspended
 }
 
 static void cs_dbs_timer(struct work_struct *work)
