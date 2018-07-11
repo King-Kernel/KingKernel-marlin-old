@@ -193,23 +193,9 @@ struct cs_dbs_tuners {
 	unsigned int up_threshold;
 	unsigned int down_threshold;
 	unsigned int freq_step;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> parent of 13dc17ad0df3... cpufreq: chill: Go back to using Conservative's tunables
 	unsigned int sleep_depth;
-<<<<<<< HEAD
 	unsigned int boost_enabled;
 	unsigned int boost_count;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 00c5a269f6a... Update Chill to 2.10
->>>>>>> parent of 13dc17ad0df3... cpufreq: chill: Go back to using Conservative's tunables
-=======
->>>>>>> parent of 7e9138069fac... Update Chill to 2.10
 };
 
 struct ex_dbs_tuners {
@@ -220,10 +206,6 @@ struct ex_dbs_tuners {
 	unsigned int active_floor_freq;
 	unsigned int sampling_down_factor;
 	unsigned int powersave;
-=======
->>>>>>> 24daa4d1311b... cpufreq: chill: Add boost option
-=======
->>>>>>> parent of 24daa4d1311b... cpufreq: chill: Add boost option
 };
 
 /* Common Governor data across policies */
