@@ -52,7 +52,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(1)
 >>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
 =======
@@ -91,10 +90,13 @@
 =======
 #define CHILL_VERSION_MINOR			(2)
 >>>>>>> 7d019fa8484... cpufreq: chill: Major cleanup, move changes from governor.h to chill.h
+<<<<<<< HEAD
 =======
 #define CHILL_VERSION_MINOR			(4)
 >>>>>>> 2486219a5e3... cpufreq: chill: use GOV_CHILL macro
 >>>>>>> parent of 13dc17ad0df3... cpufreq: chill: Go back to using Conservative's tunables
+=======
+>>>>>>> parent of 429eafd1a315... cpufreq: chill: use GOV_CHILL macro
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(90)
@@ -839,7 +841,7 @@ static struct cs_ops chill_ops = {
 };
 
 static struct common_dbs_data chill_dbs_cdata = {
-	.governor = GOV_CHILL,
+	.governor = 1,
 	.attr_group_gov_sys = &chill_attr_group_gov_sys,
 	.attr_group_gov_pol = &chill_attr_group_gov_pol,
 	.get_cpu_cdbs = get_cpu_cdbs,
