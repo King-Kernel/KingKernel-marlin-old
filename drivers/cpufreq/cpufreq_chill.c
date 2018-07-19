@@ -14,68 +14,11 @@
 
 #include <linux/slab.h>
 #include "cpufreq_governor.h"
-<<<<<<< HEAD
-<<<<<<< HEAD
 #include <linux/display_state.h>
 
 /* Chill version macros */
 #define CHILL_VERSION_MAJOR			(2)
-<<<<<<< HEAD
 #define CHILL_VERSION_MINOR			(10)
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-#define CHILL_VERSION_MINOR			(0)
-=======
-#define CHILL_VERSION_MAJOR			(1)
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-#define CHILL_VERSION_MINOR			(1)
->>>>>>> ef2a5fdce7b... cpufreq: chill: Add boost option
-=======
-#define CHILL_VERSION_MINOR			(3)
->>>>>>> 89d2cfef07a... cpufreq: chill: Don't check for target frequency when boosting
-=======
-#define CHILL_VERSION_MINOR			(1)
->>>>>>> 6c66a250bd5... cpufreq: chill: Use native display_state instead of PowerSuspend
-=======
-#define CHILL_VERSION_MINOR			(2)
->>>>>>> 221f642107c... chill: Reset boost count at max regardless of whether we've boosted
-=======
-#define CHILL_VERSION_MINOR			(5)
->>>>>>> 25a07dd7e0d... chill: Decrease boost count alongside frequency
-=======
-#define CHILL_VERSION_MINOR			(6)
->>>>>>> 01d49229fb9... chill: Reset boost count on policy->min
-=======
-#define CHILL_VERSION_MINOR			(7)
->>>>>>> 2c60c27d59a... chill: Allow any number >= 1 for boost count
-=======
-#define CHILL_VERSION_MINOR			(8)
->>>>>>> a3b5ef08cb1... chill: Fix logic for reducing boost count with freq
-=======
-#define CHILL_VERSION_MINOR			(9)
->>>>>>> 3657ca1396f... chill: Fix down_threshold_suspended sysfs input
-=======
-#define CHILL_VERSION_MINOR			(3)
->>>>>>> 868d882e126... chill: I'm secretly retarded
-=======
-#define CHILL_VERSION_MINOR			(4)
->>>>>>> 3cf87276695... chill: Simplify boost increment logic
-=======
-#define CHILL_VERSION_MINOR			(10)
->>>>>>> 00c5a269f6a... Update Chill to 2.10
->>>>>>> 7e9138069fac... Update Chill to 2.10
 
 /* Chill governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(90)
@@ -90,36 +33,7 @@ static DEFINE_PER_CPU(struct cs_cpu_dbs_info_s, cs_cpu_dbs_info);
 static DEFINE_PER_CPU(struct cs_dbs_tuners *, cached_tuners);
 
 unsigned int boost_counter = 0;
-=======
-=======
->>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
-#ifdef CONFIG_POWERSUSPEND
-#include <linux/powersuspend.h>
-#endif
 
-<<<<<<< HEAD
-=======
-/* Chill version macros */
-#define CHILL_VERSION_MAJOR			(1)
-#define CHILL_VERSION_MINOR			(5)
-
->>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
-/* Chill governor macros */
-#define DEF_FREQUENCY_UP_THRESHOLD		(80)
-#define DEF_FREQUENCY_DOWN_THRESHOLD		(20)
-#define DEF_FREQUENCY_DOWN_THRESHOLD_SUSPENDED	(20)
-#define DEF_FREQUENCY_STEP			(5)
-#define DEF_SLEEP_DEPTH			(1)
-#define DEF_SAMPLING_RATE		(20000)
-
-static DEFINE_PER_CPU(struct cs_cpu_dbs_info_s, cs_cpu_dbs_info);
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
-
-<<<<<<< HEAD
-=======
-static unsigned int boost_counter = 0;
-
->>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
 static inline unsigned int get_freq_target(struct cs_dbs_tuners *cs_tuners,
 					   struct cpufreq_policy *policy)
 {
@@ -147,20 +61,14 @@ static void cs_check_cpu(int cpu, unsigned int load)
 	struct cpufreq_policy *policy = dbs_info->cdbs.cur_policy;
 	struct dbs_data *dbs_data = policy->governor_data;
 	struct cs_dbs_tuners *cs_tuners = dbs_data->tuners;
-<<<<<<< HEAD
 
-<<<<<<< HEAD
 	/* Create display state boolean */
 	bool display_on = is_display_on();
-=======
->>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
 
 	/* Once min frequency is reached while screen off, stop taking load samples*/
 	if (!display_on && policy->cur == policy->min)
 		return;
 
-=======
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 	/*
 	 * break out if we 'cannot' reduce the speed as the user might
 	 * want freq_step to be zero
@@ -168,7 +76,6 @@ static void cs_check_cpu(int cpu, unsigned int load)
 	if (cs_tuners->freq_step == 0)
 		return;
 
-<<<<<<< HEAD
 	/* Check for frequency decrease */
 	if (display_on && load < cs_tuners->down_threshold) {
 		unsigned int freq_target;
@@ -193,44 +100,6 @@ static void cs_check_cpu(int cpu, unsigned int load)
 				CPUFREQ_RELATION_L);
 		return;
 	} else if (!display_on && load <= cs_tuners->down_threshold_suspended) {
-=======
-	/* Check for frequency increase */
-	if (load > cs_tuners->up_threshold) {
-
-		/* if we are already at full speed then break out early */
-		if (dbs_info->requested_freq == policy->max)
-			return;
-
-#ifdef CONFIG_POWERSUSPEND
-		/* if power is suspended then break out early */
-		if (power_suspended)
-			return;
-#endif
-
-<<<<<<< HEAD
-		dbs_info->requested_freq += get_freq_target(cs_tuners, policy);
-=======
-		/* Boost if count is reached, otherwise increase freq */
-		if (cs_tuners->boost_enabled && boost_counter >= cs_tuners->boost_count)
-			dbs_info->requested_freq = policy->max;
-		else
-			dbs_info->requested_freq += get_freq_target(cs_tuners, policy);
->>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
-
-		if (dbs_info->requested_freq > policy->max)
-			dbs_info->requested_freq = policy->max;
-
-		__cpufreq_driver_target(policy, dbs_info->requested_freq,
-			CPUFREQ_RELATION_H);
-		return;
-	}
-
-	/* Check for frequency decrease */
-	if (load < cs_tuners->down_threshold) {
-<<<<<<< HEAD
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
-=======
->>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
 		unsigned int freq_target;
 		/*
 		 * if we cannot reduce the frequency anymore, break out early
@@ -241,21 +110,15 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		freq_target = get_freq_target(cs_tuners, policy);
 		if (dbs_info->requested_freq > freq_target)
 			dbs_info->requested_freq -= freq_target;
-<<<<<<< HEAD
 		else {
 			dbs_info->requested_freq = policy->min;
 			boost_counter = 0;
 		}
-=======
-		else
-			dbs_info->requested_freq = policy->min;
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 
 		__cpufreq_driver_target(policy, dbs_info->requested_freq,
 				CPUFREQ_RELATION_L);
 		return;
 	}
-<<<<<<< HEAD
 
 	/* Check for frequency increase */
 	if (load > cs_tuners->up_threshold) {
@@ -281,8 +144,6 @@ static void cs_check_cpu(int cpu, unsigned int load)
 			CPUFREQ_RELATION_H);
 		return;
 	}
-=======
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 }
 
 static void cs_dbs_timer(struct work_struct *work)
@@ -296,28 +157,12 @@ static void cs_dbs_timer(struct work_struct *work)
 	struct cs_dbs_tuners *cs_tuners = dbs_data->tuners;
 	int delay = delay_for_sampling_rate(cs_tuners->sampling_rate);
 	bool modify_all = true;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-	unsigned int sampling_rate_suspended = cs_tuners->sampling_rate * cs_tuners->sleep_depth;
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
-=======
-	unsigned int sampling_rate_suspended = cs_tuners->sampling_rate * cs_tuners->sleep_depth;
->>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
 
 	mutex_lock(&core_dbs_info->cdbs.timer_mutex);
 
 	if (!need_load_eval(&core_dbs_info->cdbs, cs_tuners->sampling_rate))
 		modify_all = false;
-<<<<<<< HEAD
 		else
-=======
-#ifdef CONFIG_POWERSUSPEND
-	else if (power_suspended && need_load_eval(&core_dbs_info->cdbs, sampling_rate_suspended))
-#else
-	else
-#endif
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 			dbs_check_cpu(dbs_data, cpu);
 
 	gov_queue_work(dbs_data, dbs_info->cdbs.cur_policy, delay, modify_all);
@@ -411,15 +256,7 @@ static ssize_t store_down_threshold_suspended(struct dbs_data *dbs_data, const c
 			input >= cs_tuners->up_threshold)
 		return -EINVAL;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 	cs_tuners->down_threshold_suspended = input;
-=======
-	cs_tuners->down_threshold = input;
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
-=======
-	cs_tuners->down_threshold = input;
->>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
 	return count;
 }
 
@@ -474,35 +311,10 @@ static ssize_t store_freq_step(struct dbs_data *dbs_data, const char *buf,
 	 * want this, they would be crazy though :)
 	 */
 	cs_tuners->freq_step = input;
-<<<<<<< HEAD
-=======
 	return count;
 }
 
-static ssize_t store_sleep_depth(struct dbs_data *dbs_data, const char *buf,
-		size_t count)
-{
-	struct cs_dbs_tuners *cs_tuners = dbs_data->tuners;
-	unsigned int input;
-	int ret;
-	ret = sscanf(buf, "%u", &input);
-
-	if (ret != 1)
-		return -EINVAL;
-
-	if (input > 5)
-		input = 5;
-
-	cs_tuners->sleep_depth = input;
->>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
-	return count;
-}
-
-<<<<<<< HEAD
 static ssize_t store_boost_enabled(struct dbs_data *dbs_data, const char *buf,
-=======
-static ssize_t store_sleep_depth(struct dbs_data *dbs_data, const char *buf,
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 		size_t count)
 {
 	struct cs_dbs_tuners *cs_tuners = dbs_data->tuners;
@@ -513,7 +325,6 @@ static ssize_t store_sleep_depth(struct dbs_data *dbs_data, const char *buf,
 	if (ret != 1)
 		return -EINVAL;
 
-<<<<<<< HEAD
 	if (input >= 1)
 		input = 1;
 	else
@@ -538,15 +349,6 @@ static ssize_t store_boost_count(struct dbs_data *dbs_data, const char *buf,
 		input = 0;
 
 	cs_tuners->boost_count = input;
-<<<<<<< HEAD
-=======
-	if (input > 5)
-		input = 5;
-
-	cs_tuners->sleep_depth = input;
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
-=======
->>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
 	return count;
 }
 
@@ -556,20 +358,8 @@ show_store_one(cs, down_threshold);
 show_store_one(cs, down_threshold_suspended);
 show_store_one(cs, ignore_nice_load);
 show_store_one(cs, freq_step);
-<<<<<<< HEAD
-<<<<<<< HEAD
 show_store_one(cs, boost_enabled);
 show_store_one(cs, boost_count);
-=======
-declare_show_sampling_rate_min(cs);
-show_store_one(cs, sleep_depth);
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
-=======
-declare_show_sampling_rate_min(cs);
-show_store_one(cs, sleep_depth);
-show_store_one(cs, boost_enabled);
-show_store_one(cs, boost_count);
->>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
 
 gov_sys_pol_attr_rw(sampling_rate);
 gov_sys_pol_attr_rw(up_threshold);
@@ -577,30 +367,18 @@ gov_sys_pol_attr_rw(down_threshold);
 gov_sys_pol_attr_rw(down_threshold_suspended);
 gov_sys_pol_attr_rw(ignore_nice_load);
 gov_sys_pol_attr_rw(freq_step);
-<<<<<<< HEAD
 gov_sys_pol_attr_rw(boost_enabled);
 gov_sys_pol_attr_rw(boost_count);
 
 static struct attribute *dbs_attributes_gov_sys[] = {
-=======
-gov_sys_pol_attr_ro(sampling_rate_min);
-gov_sys_pol_attr_rw(sleep_depth);
-
-static struct attribute *dbs_attributes_gov_sys[] = {
-	&sampling_rate_min_gov_sys.attr,
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 	&sampling_rate_gov_sys.attr,
 	&up_threshold_gov_sys.attr,
 	&down_threshold_gov_sys.attr,
 	&down_threshold_suspended_gov_sys.attr,
 	&ignore_nice_load_gov_sys.attr,
 	&freq_step_gov_sys.attr,
-<<<<<<< HEAD
 	&boost_enabled_gov_sys.attr,
 	&boost_count_gov_sys.attr,
-=======
-	&sleep_depth_gov_sys.attr,
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 	NULL
 };
 
@@ -610,22 +388,14 @@ static struct attribute_group cs_attr_group_gov_sys = {
 };
 
 static struct attribute *dbs_attributes_gov_pol[] = {
-<<<<<<< HEAD
-=======
-	&sampling_rate_min_gov_pol.attr,
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 	&sampling_rate_gov_pol.attr,
 	&up_threshold_gov_pol.attr,
 	&down_threshold_gov_pol.attr,
 	&down_threshold_suspended_gov_pol.attr,
 	&ignore_nice_load_gov_pol.attr,
 	&freq_step_gov_pol.attr,
-<<<<<<< HEAD
 	&boost_enabled_gov_pol.attr,
 	&boost_count_gov_pol.attr,
-=======
-	&sleep_depth_gov_pol.attr,
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 	NULL
 };
 
@@ -636,11 +406,6 @@ static struct attribute_group cs_attr_group_gov_pol = {
 
 /************************** sysfs end ************************/
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 7e9138069fac... Update Chill to 2.10
 static void save_tuners(struct cpufreq_policy *policy,
 			  struct cs_dbs_tuners *tuners)
 {
@@ -657,30 +422,13 @@ static void save_tuners(struct cpufreq_policy *policy,
 }
 
 static struct cs_dbs_tuners *alloc_tuners(struct cpufreq_policy *policy)
-<<<<<<< HEAD
-=======
-static int cs_init(struct dbs_data *dbs_data)
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
-=======
-static int cs_init(struct dbs_data *dbs_data)
->>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
-=======
->>>>>>> 7e9138069fac... Update Chill to 2.10
 {
 	struct cs_dbs_tuners *tuners;
 
 	tuners = kzalloc(sizeof(*tuners), GFP_KERNEL);
 	if (!tuners) {
 		pr_err("%s: kzalloc failed\n", __func__);
-<<<<<<< HEAD
-<<<<<<< HEAD
 		return ERR_PTR(-ENOMEM);
-=======
-		return -ENOMEM;
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
-=======
-		return ERR_PTR(-ENOMEM);
->>>>>>> 7e9138069fac... Update Chill to 2.10
 	}
 
 	tuners->up_threshold = DEF_FREQUENCY_UP_THRESHOLD;
@@ -688,40 +436,8 @@ static int cs_init(struct dbs_data *dbs_data)
 	tuners->down_threshold_suspended = DEF_FREQUENCY_DOWN_THRESHOLD_SUSPENDED;
 	tuners->ignore_nice_load = 0;
 	tuners->freq_step = DEF_FREQUENCY_STEP;
-<<<<<<< HEAD
 	tuners->boost_enabled = DEF_BOOST_ENABLED;
 	tuners->boost_count = DEF_BOOST_COUNT;
-
-	save_tuners(policy, tuners);
-
-	return tuners;
-}
-
-static struct cs_dbs_tuners *restore_tuners(struct cpufreq_policy *policy)
-{
-	int cpu;
-
-	if (have_governor_per_policy())
-		cpu = cpumask_first(policy->related_cpus);
-	else
-		cpu = 0;
-
-	return per_cpu(cached_tuners, cpu);
-}
-
-static int cs_init(struct dbs_data *dbs_data, struct cpufreq_policy *policy)
-{
-	struct cs_dbs_tuners *tuners;
-
-	tuners = restore_tuners(policy);
-	if (!tuners) {
-		tuners = alloc_tuners(policy);
-		if (IS_ERR(tuners))
-			return PTR_ERR(tuners);
-	}
-=======
-	tuners->sleep_depth = DEF_SLEEP_DEPTH;
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
 
 	save_tuners(policy, tuners);
 
@@ -759,15 +475,7 @@ static int cs_init(struct dbs_data *dbs_data, struct cpufreq_policy *policy)
 
 static void cs_exit(struct dbs_data *dbs_data)
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
 	//nothing to do
-=======
-	kfree(dbs_data->tuners);
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
-=======
-	//nothing to do
->>>>>>> 7e9138069fac... Update Chill to 2.10
 }
 
 define_get_cpu_dbs_routines(cs_cpu_dbs_info);
@@ -816,10 +524,6 @@ static int __init cpufreq_gov_dbs_init(void)
 
 static void __exit cpufreq_gov_dbs_exit(void)
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 7e9138069fac... Update Chill to 2.10
 	int cpu;
 
 	cpufreq_unregister_governor(&cpufreq_gov_chill);
@@ -827,12 +531,6 @@ static void __exit cpufreq_gov_dbs_exit(void)
 		kfree(per_cpu(cached_tuners, cpu));
 		per_cpu(cached_tuners, cpu) = NULL;
 	}
-<<<<<<< HEAD
-=======
-	cpufreq_unregister_governor(&cpufreq_gov_chill);
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
-=======
->>>>>>> 7e9138069fac... Update Chill to 2.10
 }
 
 MODULE_AUTHOR("Alexander Clouter <alex@digriz.org.uk>");
@@ -848,11 +546,3 @@ fs_initcall(cpufreq_gov_dbs_init);
 module_init(cpufreq_gov_dbs_init);
 #endif
 module_exit(cpufreq_gov_dbs_exit);
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> 2be0437dd8e1... cpufreq: Add Chill cpu gov
-=======
->>>>>>> 55a9e8a34183... cpufreq: chill: Go back to using Conservative's tunables
