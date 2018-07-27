@@ -2905,26 +2905,19 @@ static inline struct thread_info *task_thread_info(struct task_struct *task)
 {
 	return &task->thread_info;
 }
-<<<<<<< HEAD
-=======
 
 /*
  * When accessing the stack of a non-current task that might exit, use
  * try_get_task_stack() instead.  task_stack_page will return a pointer
  * that could get freed out from under you.
  */
->>>>>>> android-p-preview-1_r0.1
 static inline void *task_stack_page(const struct task_struct *task)
 {
 	return task->stack;
 }
-<<<<<<< HEAD
-#define setup_thread_stack(new,old)	do { } while(0)
-=======
 
 #define setup_thread_stack(new,old)	do { } while(0)
 
->>>>>>> android-p-preview-1_r0.1
 static inline unsigned long *end_of_stack(const struct task_struct *task)
 {
 	return task->stack;

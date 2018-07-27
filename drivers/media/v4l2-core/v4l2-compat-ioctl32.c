@@ -916,6 +916,7 @@ struct v4l2_event32 {
 static int put_v4l2_event32(struct v4l2_event __user *kp,
 			    struct v4l2_event32 __user *up)
 {
+<<<<<<< HEAD
 	if (!access_ok(VERIFY_WRITE, up, sizeof(*up)) ||
 	    assign_in_user(&up->type, &kp->type) ||
 	    copy_in_user(&up->u, &kp->u, sizeof(kp->u)) ||
@@ -926,6 +927,18 @@ static int put_v4l2_event32(struct v4l2_event __user *kp,
 	    assign_in_user(&up->id, &kp->id) ||
 	    copy_in_user(up->reserved, kp->reserved, sizeof(up->reserved)))
 		return -EFAULT;
+=======
+	if (!access_ok(VERIFY_WRITE, up, sizeof(struct v4l2_event32)) ||
+		convert_in_user(&kp->type, &up->type) ||
+		copy_in_user(&up->u, &kp->u, sizeof(kp->u)) ||
+		convert_in_user(&kp->pending, &up->pending) ||
+		convert_in_user(&kp->sequence, &up->sequence) ||
+		convert_in_user(&kp->timestamp.tv_sec, &up->timestamp.tv_sec) ||
+		convert_in_user(&kp->timestamp.tv_nsec, &up->timestamp.tv_nsec) ||
+		convert_in_user(&kp->id, &up->id) ||
+		copy_in_user(up->reserved, kp->reserved, 8 * sizeof(__u32)))
+			return -EFAULT;
+>>>>>>> android-p-preview-2_r0.1
 	return 0;
 }
 
