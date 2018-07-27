@@ -991,8 +991,6 @@ sg_ioctl(struct file *filp, unsigned int cmd_in, unsigned long arg)
 				/* strange ..., for backward compatibility */
 		return sfp->timeout_user;
 	case SG_SET_FORCE_LOW_DMA:
-<<<<<<< HEAD
-=======
 		result = get_user(val, ip);
 		if (result)
 			return result;
@@ -1010,7 +1008,6 @@ sg_ioctl(struct file *filp, unsigned int cmd_in, unsigned long arg)
 				return -ENODEV;
 			sfp->low_dma = sdp->device->host->unchecked_isa_dma;
 		}
->>>>>>> android-p-preview-2_r0.1
 		/*
 		 * N.B. This ioctl never worked properly, but failed to
 		 * return an error value. So returning '0' to keep compability
