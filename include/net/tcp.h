@@ -381,16 +381,13 @@ ssize_t tcp_splice_read(struct socket *sk, loff_t *ppos,
 			struct pipe_inode_info *pipe, size_t len,
 			unsigned int flags);
 
-<<<<<<< HEAD
 /* sysctl master controller */
 extern int tcp_use_userconfig_sysctl_handler(struct ctl_table *, int,
 				void __user *, size_t *, loff_t *);
 extern int tcp_proc_delayed_ack_control(struct ctl_table *, int,
 				void __user *, size_t *, loff_t *);
 
-=======
 void tcp_enter_quickack_mode(struct sock *sk);
->>>>>>> v3.18.117
 static inline void tcp_dec_quickack_mode(struct sock *sk,
 					 const unsigned int pkts)
 {
