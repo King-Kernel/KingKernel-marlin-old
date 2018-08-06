@@ -1278,8 +1278,6 @@ static void print_other_cpu_stall(struct rcu_state *rsp, unsigned long gpnum)
 	/* Complain about tasks blocking the grace period. */
 	rcu_print_detail_task_stall(rsp);
 
-	rcu_check_gp_kthread_starvation(rsp);
-
 	force_quiescent_state(rsp);  /* Kick them all. */
 }
 
