@@ -360,20 +360,14 @@ config CPU_INPUT_BOOST
 	  frame drops are near-zero at the boosted frequencies and power
 	  consumption is minimized at said frequency combination.
 
-if CPU_INPUT_BOOST
-
-config INPUT_BOOST_DURATION_MS
-	int "Input boost duration"
-	default "100"
-	help
-	  Input boost duration in milliseconds.
-
 config WAKE_BOOST_DURATION_MS
 	int "Wake boost duration"
+	depends on CPU_INPUT_BOOST
 	default "1000"
 	help
 	  Wake boost duration in milliseconds.
 
+<<<<<<< HEAD
 config INPUT_BOOST_FREQ_LP
 	int "Low-power cluster boost freq"
 	default "0"
@@ -389,6 +383,8 @@ config INPUT_BOOST_FREQ_PERF
 endif
 >>>>>>> c24e464ee7db... cpu_input_boost: Introduce driver for event-based CPU boosting
 
+=======
+>>>>>>> 4473b51aaef9... cpu_input_boost: Remove the actual input boosting functionality
 comment "CPU frequency scaling drivers"
 
 config CPUFREQ_DT
