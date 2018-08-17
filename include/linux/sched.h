@@ -1920,6 +1920,7 @@ struct task_struct {
 #endif
 	atomic64_t *concurrent_active_time;
 	atomic64_t *concurrent_policy_time;
+<<<<<<< HEAD
     
     /* CPU-bound kernel thread */
 =======
@@ -1929,6 +1930,8 @@ struct task_struct {
 	/* CPU-bound kernel thread */
 >>>>>>> parent of 5c33c92312d3... EXNS/PIE: Adaptive Battery deps
 	bool kthread_per_cpu;
+=======
+>>>>>>> 4cafa07cbedb... EXNS/PIE: Adaptive Battery deps
 };
 
 /* Future-safe accessor for struct task_struct's cpus_allowed. */
