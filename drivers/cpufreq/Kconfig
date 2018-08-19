@@ -323,7 +323,6 @@ config CPU_FREQ_GOV_SCHED
 
 	  If in doubt, say N.
 
-<<<<<<< HEAD
 config CPU_FREQ_GOV_SCHEDUTIL
 	bool "'schedutil' cpufreq policy governor"
 	depends on CPU_FREQ && SMP
@@ -341,15 +340,6 @@ config CPU_FREQ_GOV_SCHEDUTIL
 
 	  If in doubt, say N.
 
-config CPU_WAKE_BOOST
-	bool "CPU wake boost"
-	depends on FB
-	help
-	  Boosts all online CPUs to policy->max (scaling_max_freq) when the display
-	  is powered on, as reported by the framebuffer chain notifier. This helps
-	  make the display power on faster, as well as ensures good performance
-	  immediately after powering on the display.
-=======
 config CPU_INPUT_BOOST
 	bool "CPU Input Boost"
 	help
@@ -367,24 +357,6 @@ config WAKE_BOOST_DURATION_MS
 	help
 	  Wake boost duration in milliseconds.
 
-<<<<<<< HEAD
-config INPUT_BOOST_FREQ_LP
-	int "Low-power cluster boost freq"
-	default "0"
-	help
-	  Input boost frequency for the low-power CPU cluster.
-
-config INPUT_BOOST_FREQ_PERF
-	int "Performance cluster boost freq"
-	default "0"
-	help
-	  Input boost frequency for the performance CPU cluster.
-
-endif
->>>>>>> c24e464ee7db... cpu_input_boost: Introduce driver for event-based CPU boosting
-
-=======
->>>>>>> 4473b51aaef9... cpu_input_boost: Remove the actual input boosting functionality
 comment "CPU frequency scaling drivers"
 
 config CPUFREQ_DT
