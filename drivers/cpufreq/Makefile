@@ -26,9 +26,12 @@ obj-$(CONFIG_CPU_INPUT_BOOST)		+= cpu_input_boost.o
 
 obj-$(CONFIG_CPU_FREQ_GOV_COMMON)		+= cpufreq_governor.o
 
+<<<<<<< HEAD
 # CPU Input Boost
 obj-$(CONFIG_CPU_INPUT_BOOST)		+= cpu_input_boost.o
 
+=======
+>>>>>>> 48cca11aca8d... Revert "cpufreq: Introduce CPU wake boost driver"
 obj-$(CONFIG_CPUFREQ_DT)		+= cpufreq-dt.o
 
 ##################################################################################

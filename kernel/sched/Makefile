@@ -2,11 +2,6 @@ ifdef CONFIG_FUNCTION_TRACER
 CFLAGS_REMOVE_clock.o = -pg
 endif
 
-<<<<<<< HEAD
-# These files are disabled because they produce non-interesting flaky coverage
-# that is not a function of syscall inputs. E.g. involuntary context switches.
-KCOV_INSTRUMENT := n
-=======
 # KASAN instrumentation is temporarily disabled for energy.o due to the repeated
 # reports that caused the kernel to not boot as seen in b/31800756. Should a fix
 # be provided, this line can be removed again. But given that KCOV is also disabled
@@ -15,7 +10,6 @@ KCOV_INSTRUMENT := n
 KASAN_SANITIZE_core.o := n
 KASAN_SANITIZE_energy.o := n
 KASAN_SANITIZE_fair.o := n
->>>>>>> 202215379ac0... Revert "BACKPORT: kernel: add kcov code coverage"
 
 ifneq ($(CONFIG_SCHED_OMIT_FRAME_POINTER),y)
 # According to Alan Modra <alan@linuxcare.com.au>, the -fno-omit-frame-pointer is

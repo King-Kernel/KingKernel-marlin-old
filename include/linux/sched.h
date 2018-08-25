@@ -1909,6 +1909,7 @@ struct task_struct {
 	unsigned int	sequential_io;
 	unsigned int	sequential_io_avg;
 #endif
+<<<<<<< HEAD
 
 #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
 	unsigned long	task_state_change;
@@ -1921,6 +1922,12 @@ struct task_struct {
 	atomic64_t *concurrent_policy_time;
     
     /* CPU-bound kernel thread */
+=======
+	atomic64_t *concurrent_active_time;
+	atomic64_t *concurrent_policy_time;
+
+	/* CPU-bound kernel thread */
+>>>>>>> parent of 5c33c92312d3... EXNS/PIE: Adaptive Battery deps
 	bool kthread_per_cpu;
 };
 

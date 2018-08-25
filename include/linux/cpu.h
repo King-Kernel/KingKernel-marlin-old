@@ -92,11 +92,8 @@ enum {
 					* Called on the new cpu, just before
 					* enabling interrupts. Must not sleep,
 					* must not fail */
-<<<<<<< HEAD
-=======
 #define CPU_DYING_IDLE		0x000B /* CPU (unsigned)v dying, reached
 					* idle loop. */
->>>>>>> 6e2fb3e1fd32... rcu: Handle outgoing CPUs on exit from idle loop
 #define CPU_BROKEN		0x000C /* CPU (unsigned)v did not die properly,
 					* perhaps due to preemption. */
 

@@ -324,6 +324,7 @@ config CPU_FREQ_GOV_SCHED
 
 	  If in doubt, say N.
 
+<<<<<<< HEAD
 config CPU_FREQ_GOV_SCHEDUTIL
 	bool "'schedutil' cpufreq policy governor"
 	depends on CPU_FREQ && SMP
@@ -358,6 +359,8 @@ config WAKE_BOOST_DURATION_MS
 	help
 	  Wake boost duration in milliseconds.
 
+=======
+>>>>>>> 48cca11aca8d... Revert "cpufreq: Introduce CPU wake boost driver"
 comment "CPU frequency scaling drivers"
 
 config CPUFREQ_DT
