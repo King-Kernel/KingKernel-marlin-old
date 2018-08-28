@@ -464,5 +464,4 @@ config SH_CPU_FREQ
 	  If unsure, say N.
 endmenu
 
-endif
 endmenu
