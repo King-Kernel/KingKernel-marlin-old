@@ -5497,9 +5497,8 @@ static void rearm_empty_soc_irq(void)
 	if (delayed_work_pending(&the_chip->rearm_empty_soc_irq_work))
 		cancel_delayed_work_sync(&the_chip->rearm_empty_soc_irq_work);
 	if (g_empty_soc_irq_count < CRITICAL_SHUTDOWN_COUNT)
-		queue_delayed_work(system_power_efficient_wq,
-			&the_chip->rearm_empty_soc_irq_work,
-			REARM_EMPTY_SOC_IRQ_MS);
+		schedule_delayed_work(&the_chip->rearm_empty_soc_irq_work,
+				REARM_EMPTY_SOC_IRQ_MS);
 }
 #endif /* CONFIG_HTC_BATT */
 
@@ -5532,9 +5531,8 @@ static irqreturn_t fg_empty_soc_irq_handler(int irq, void *_chip)
 #ifdef CONFIG_HTC_BATT
 	/* Clear critical shutdown count after 30secs */
 	if (!delayed_work_pending(&chip->clear_empty_soc_irq_counter))
-		queue_delayed_work(system_power_efficient_wq,
-			&chip->clear_empty_soc_irq_counter,
-			CLEAR_EMPTY_SOC_IRQ_COUNTER_MS);
+		schedule_delayed_work(&chip->clear_empty_soc_irq_counter,
+				CLEAR_EMPTY_SOC_IRQ_COUNTER_MS);
 
 	if (g_empty_soc_irq_count < CRITICAL_SHUTDOWN_COUNT
 			&& fg_is_batt_empty(chip))
