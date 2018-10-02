@@ -37,6 +37,7 @@ struct sugov_tunables {
 	struct gov_attr_set attr_set;
 	unsigned int up_rate_limit_us;
 	unsigned int down_rate_limit_us;
+	bool iowait_boost_enable;
 };
 
 struct sugov_policy {
@@ -516,6 +517,7 @@ static struct governor_attr down_rate_limit_us = __ATTR_RW(down_rate_limit_us);
 static struct attribute *sugov_attributes[] = {
 	&up_rate_limit_us.attr,
 	&down_rate_limit_us.attr,
+	&iowait_boost_enable.attr,
 	NULL
 };
 
