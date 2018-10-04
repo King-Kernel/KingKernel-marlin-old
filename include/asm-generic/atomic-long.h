@@ -267,4 +267,9 @@ static inline long atomic_long_add_unless(atomic_long_t *l, long a, long u)
 
 #endif  /*  BITS_PER_LONG == 64  */
 
+#define atomic_long_cond_read_relaxed(v, c) \
+	ATOMIC_LONG_PFX(_cond_read_relaxed)((ATOMIC_LONG_PFX(_t) *)(v), (c))
+#define atomic_long_cond_read_acquire(v, c) \
+	ATOMIC_LONG_PFX(_cond_read_acquire)((ATOMIC_LONG_PFX(_t) *)(v), (c))
+
 #endif  /*  _ASM_GENERIC_ATOMIC_LONG_H  */

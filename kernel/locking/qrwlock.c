@@ -23,27 +23,10 @@
 #include <asm/qrwlock.h>
 
 /**
- * rspin_until_writer_unlock - inc reader count & spin until writer is gone
- * @lock  : Pointer to queue rwlock structure
- * @writer: Current queue rwlock writer status byte
- *
- * In interrupt context or at the head of the queue, the reader will just
- * increment the reader count & wait until the writer releases the lock.
- */
-static __always_inline void
-rspin_until_writer_unlock(struct qrwlock *lock, u32 cnts)
-{
-	while ((cnts & _QW_WMASK) == _QW_LOCKED) {
-		cpu_relax_lowlatency();
-		cnts = smp_load_acquire((u32 *)&lock->cnts);
-	}
-}
-
-/**
  * queue_read_lock_slowpath - acquire read lock of a queue rwlock
  * @lock: Pointer to queue rwlock structure
  */
-void queue_read_lock_slowpath(struct qrwlock *lock)
+void queued_read_lock_slowpath(struct qrwlock *lock)
 {
 	u32 cnts;
 
@@ -52,11 +35,12 @@ void queue_read_lock_slowpath(struct qrwlock *lock)
 	 */
 	if (unlikely(in_interrupt())) {
 		/*
-		 * Readers in interrupt context will spin until the lock is
-		 * available without waiting in the queue.
+		 * Readers in interrupt context will get the lock immediately
+		 * if the writer is just waiting (not holding the lock yet),
+		 * so spin with ACQUIRE semantics until the lock is available
+		 * without waiting in the queue.
 		 */
-		cnts = smp_load_acquire((u32 *)&lock->cnts);
-		rspin_until_writer_unlock(lock, cnts);
+		atomic_cond_read_acquire(&lock->cnts, !(VAL & _QW_LOCKED));
 		return;
 	}
 	atomic_sub(_QR_BIAS, &lock->cnts);
@@ -64,7 +48,8 @@ void queue_read_lock_slowpath(struct qrwlock *lock)
 	/*
 	 * Put the reader into the wait queue
 	 */
-	arch_spin_lock(&lock->lock);
+	arch_spin_lock(&lock->wait_lock);
+	atomic_add(_QR_BIAS, &lock->cnts);
 
 	/*
 	 * At the head of the wait queue now, wait until the writer state
@@ -73,11 +58,7 @@ void queue_read_lock_slowpath(struct qrwlock *lock)
 	 * lock in the interim, so it is necessary to check the writer byte
 	 * to make sure that the write lock isn't taken.
 	 */
-	while (atomic_read(&lock->cnts) & _QW_WMASK)
-		cpu_relax_lowlatency();
-
-	cnts = atomic_add_return(_QR_BIAS, &lock->cnts) - _QR_BIAS;
-	rspin_until_writer_unlock(lock, cnts);
+	atomic_cond_read_acquire(&lock->cnts, !(VAL & _QW_LOCKED));
 
 	/*
 	 * Signal the next one in queue to become queue head
@@ -102,30 +83,14 @@ void queue_write_lock_slowpath(struct qrwlock *lock)
 	    (atomic_cmpxchg(&lock->cnts, 0, _QW_LOCKED) == 0))
 		goto unlock;
 
-	/*
-	 * Set the waiting flag to notify readers that a writer is pending,
-	 * or wait for a previous writer to go away.
-	 */
-	for (;;) {
-		cnts = atomic_read(&lock->cnts);
-		if (!(cnts & _QW_WMASK) &&
-		    (atomic_cmpxchg(&lock->cnts, cnts,
-				    cnts | _QW_WAITING) == cnts))
-			break;
+	/* Set the waiting flag to notify readers that a writer is pending */
+	atomic_add(_QW_WAITING, &lock->cnts);
 
-		cpu_relax_lowlatency();
-	}
-
-	/* When no more readers, set the locked flag */
-	for (;;) {
-		cnts = atomic_read(&lock->cnts);
-		if ((cnts == _QW_WAITING) &&
-		    (atomic_cmpxchg(&lock->cnts, _QW_WAITING,
-				    _QW_LOCKED) == _QW_WAITING))
-			break;
-
-		cpu_relax_lowlatency();
-	}
+	/* When no more readers or writers, set the locked flag */
+	do {
+		atomic_cond_read_acquire(&lock->cnts, VAL == _QW_WAITING);
+	} while (atomic_cmpxchg_relaxed(&lock->cnts, _QW_WAITING,
+					_QW_LOCKED) != _QW_WAITING);
 unlock:
 	arch_spin_unlock(&lock->lock);
 }
