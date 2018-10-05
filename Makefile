@@ -388,7 +388,7 @@ KBUILD_CFLAGS   := -Werror -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -Wno-duplicate-decl-specifier \
-#		   -Wno-frame-larger-than= \
+		   -Wno-frame-larger-than= \
 		   -std=gnu89
 
 KBUILD_AFLAGS_KERNEL :=
