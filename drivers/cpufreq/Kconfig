@@ -349,7 +349,6 @@ config CPU_FREQ_GOV_SCHEDUTIL
 
 	  If in doubt, say N.
 
-<<<<<<< HEAD
 config CPU_FREQ_GOV_BLU_SCHEDUTIL
 	tristate "'blu_schedutil' cpufreq policy governor"
 	depends on CPU_FREQ
@@ -372,8 +371,6 @@ config CPU_FREQ_GOV_BLU_SCHEDUTIL
 
 endif
 
-=======
->>>>>>> 5ff090e117e0... sched: backport schedutil governor from 4.9-rc4
 comment "CPU frequency scaling drivers"
 
 config CPU_BOOST
