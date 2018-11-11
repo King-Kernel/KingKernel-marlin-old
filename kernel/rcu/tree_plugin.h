@@ -413,6 +413,24 @@ void rcu_read_unlock_special(struct task_struct *t)
 		}
 	}
 
+	/*
+	 * Respond to a request for an expedited grace period, but only if
+	 * we were not preempted, meaning that we were running on the same
+	 * CPU throughout.  If we were preempted, the exp_need_qs flag
+	 * would have been cleared at the time of the first preemption,
+	 * and the quiescent state would be reported when we were dequeued.
+	 */
+	if (special.b.exp_need_qs) {
+		WARN_ON_ONCE(special.b.blocked);
+		t->rcu_read_unlock_special.b.exp_need_qs = false;
+		rdp = this_cpu_ptr(rcu_state_p->rda);
+		rcu_report_exp_rdp(rcu_state_p, rdp, true);
+		if (!t->rcu_read_unlock_special.s) {
+			local_irq_restore(flags);
+			return;
+		}
+	}
+
 	/* Hardware IRQ handlers cannot block, complain if they get here. */
 	if (in_irq() || in_serving_softirq()) {
 		lockdep_rcu_suspicious(__FILE__, __LINE__,
