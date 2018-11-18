@@ -75,10 +75,6 @@ static inline bool init_done(struct zram *zram)
 	return zram->disksize;
 }
 
-static struct notifier_block zram_show_mem_notifier_block = {
-	.notifier_call = zram_show_mem_notifier
-};
-
 static inline struct zram *dev_to_zram(struct device *dev)
 {
 	return (struct zram *)dev_to_disk(dev)->private_data;
@@ -364,16 +360,16 @@ static ssize_t comp_algorithm_store(struct device *dev,
 	if (!zcomp_available_algorithm(compressor))
 		return -EINVAL;
 
-	down_write(&zram->init_lock);
-	if (init_done(zram)) {
-		up_write(&zram->init_lock);
-		pr_info("Can't change algorithm for initialized device\n");
-		return -EBUSY;
-	}
+    down_write(&zram->init_lock);
+    if (init_done(zram)) {
+        up_write(&zram->init_lock);
+        pr_info("Can't change algorithm for initialized device\n");
+        return -EBUSY;
+    }
 
-	strlcpy(zram->compressor, compressor, sizeof(compressor));
-	up_write(&zram->init_lock);
-	return len;
+    strcpy(zram->compressor, compressor);
+    up_write(&zram->init_lock);
+    return len;
 }
 
 static ssize_t compact_store(struct device *dev,
@@ -747,7 +743,6 @@ compress_again:
 	 */
 	if (!handle)
 		handle = zs_malloc(meta->mem_pool, clen,
-				__GFP_KSWAPD_RECLAIM |
 				__GFP_NOWARN |
 				__GFP_HIGHMEM |
 				__GFP_MOVABLE);
