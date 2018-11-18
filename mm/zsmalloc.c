@@ -556,7 +556,7 @@ static const struct file_operations zs_stat_size_ops = {
 	.release        = single_release,
 };
 
-static int zs_pool_stat_create(char *name, struct zs_pool *pool)
+static int zs_pool_stat_create(struct zs_pool *pool, const char *name)
 {
 	struct dentry *entry;
 
@@ -613,7 +613,7 @@ static void __exit zs_stat_exit(void)
 {
 }
 
-static inline int zs_pool_stat_create(char *name, struct zs_pool *pool)
+static inline int zs_pool_stat_create(struct zs_pool *pool, const char *name)
 {
 	return 0;
 }
@@ -621,7 +621,6 @@ static inline int zs_pool_stat_create(char *name, struct zs_pool *pool)
 static inline void zs_pool_stat_destroy(struct zs_pool *pool)
 {
 }
-
 #endif
 
 
@@ -1717,32 +1716,8 @@ static struct page *isolate_source_page(struct size_class *class)
 	return page;
 }
 
-/*
- *
- * Based on the number of unused allocated objects calculate
- * and return the number of pages that we can free.
- *
- * Should be called under class->lock.
- */
-static unsigned long zs_can_compact(struct size_class *class)
-{
-	unsigned long obj_wasted;
-
-	if (!zs_stat_get(class, CLASS_ALMOST_EMPTY))
-		return 0;
-
-	obj_wasted = zs_stat_get(class, OBJ_ALLOCATED) -
-		zs_stat_get(class, OBJ_USED);
-
-	obj_wasted /= get_maxobj_per_zspage(class->size,
-			class->pages_per_zspage);
-
-	return obj_wasted * get_pages_per_zspage(class->size);
-}
-
 static void __zs_compact(struct zs_pool *pool, struct size_class *class)
 {
-	int nr_to_migrate;
 	struct zs_compact_control cc;
 	struct page *src_page;
 	struct page *dst_page = NULL;
@@ -1752,8 +1727,7 @@ static void __zs_compact(struct zs_pool *pool, struct size_class *class)
 
 		BUG_ON(!is_first_page(src_page));
 
-		/* The goal is to migrate all live objects in source page */
-		nr_to_migrate = src_page->inuse;
+
 		cc.index = 0;
 		cc.s_page = src_page;
 
@@ -1767,6 +1741,7 @@ static void __zs_compact(struct zs_pool *pool, struct size_class *class)
 				break;
 
 			putback_zspage(pool, class, dst_page);
+
 		}
 
 		/* Stop if we couldn't find slot */
