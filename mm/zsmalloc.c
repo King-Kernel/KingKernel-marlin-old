@@ -1741,7 +1741,6 @@ static unsigned long zs_can_compact(struct size_class *class)
 }
 
 static void __zs_compact(struct zs_pool *pool, struct size_class *class)
->>>>>>> 7d3f3938236b... zsmalloc/zram: introduce zs_pool_stats api
 {
 	int nr_to_migrate;
 	struct zs_compact_control cc;
