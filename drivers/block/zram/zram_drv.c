@@ -29,6 +29,7 @@
 #include <linux/vmalloc.h>
 #include <linux/err.h>
 #include <linux/idr.h>
+#include <linux/moduleparam.h>
 #include <linux/sysfs.h>
 
 #include "zram_drv.h"
@@ -38,11 +39,10 @@ static DEFINE_IDR(zram_index_idr);
 static DEFINE_MUTEX(zram_index_mutex);
 
 static int zram_major;
-#ifdef CONFIG_CRYPTO_ZSTD
-static const char *default_compressor = "zstd";
-#else
-static const char *default_compressor = "lzo";
-#endif
+static char *default_compressor = CONFIG_ZRAM_DEFAULT_COMP_ALGORITHM;
+
+module_param(default_compressor, charp, 0644);
+
 
 /*
  * We don't need to see memory allocation errors more than once every 1
