@@ -102,4 +102,19 @@ static inline void aead_givcrypt_set_giv(struct aead_givcrypt_request *req,
 	req->seq = seq;
 }
 
+/**
+ * aead_request_set_ad - set associated data information
+ * @req: request handle
+ * @assoclen: number of bytes in associated data
+ *
+ * Setting the AD information.  This function sets the length of
+ * the associated data.
+ */
+static inline void aead_request_set_ad(struct aead_request *req,
+                       unsigned int assoclen)
+{
+    req->assoclen = assoclen;
+}
+
+
 #endif	/* _CRYPTO_AEAD_H */

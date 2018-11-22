@@ -24,6 +24,13 @@
 #include <linux/list.h>
 #include <linux/types.h>
 
+/*
+ * Choose whether access to the RAM zone requires locking or not.  If a zone
+ * can be written to from different CPUs like with ftrace for example, then
+ * PRZ_FLAG_NO_LOCK is used. For all other cases, locking is required.
+ */
+#define PRZ_FLAG_NO_LOCK    BIT(0)
+
 struct persistent_ram_buffer;
 struct rs_control;
 
@@ -65,9 +72,9 @@ struct persistent_ram_zone {
 };
 
 struct persistent_ram_zone *persistent_ram_new(phys_addr_t start,
-			phys_addr_t alt_start, size_t size,
-			u32 sig, struct persistent_ram_ecc_info *ecc_info,
-			unsigned int memtype, u32 flags);
+            phys_addr_t alt_start, size_t size,
+            u32 sig, struct persistent_ram_ecc_info *ecc_info,
+            unsigned int memtype, u32 flags);
 void persistent_ram_free(struct persistent_ram_zone *prz);
 void persistent_ram_zap(struct persistent_ram_zone *prz, bool use_alt);
 

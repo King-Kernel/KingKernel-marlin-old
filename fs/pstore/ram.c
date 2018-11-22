@@ -39,6 +39,7 @@
 #include <linux/scatterlist.h>
 #include <crypto/aead.h>
 #include <linux/htc_debug_tools.h>
+#include <linux/vmalloc.h>
 
 #define RAMOOPS_KERNMSG_HDR "===="
 #define MIN_MEM_SIZE 4096UL
@@ -706,8 +707,8 @@ static int ramoops_init_prz(struct device *dev, struct ramoops_context *cxt,
 		return -ENOMEM;
 	}
 
-	*prz = persistent_ram_new(*paddr, *alt_paddr, sz, sig, &cxt->ecc_info,
-				  cxt->memtype);
+    *prz = persistent_ram_new(*paddr, *alt_paddr, sz, sig, &cxt->ecc_info,
+                  cxt->memtype, 0);
 	if (IS_ERR(*prz)) {
 		int err = PTR_ERR(*prz);
 
