@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-/* Copyright (c) 2013, HTC Corporation. All rights reserved.
-=======
 /* Copyright (c) 2013,2017 HTC Corporation. All rights reserved.
->>>>>>> 47b2252826d4... fs:pstore:ramoops: add new driver to append bootloader log into ramoops
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and

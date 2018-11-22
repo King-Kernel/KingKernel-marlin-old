@@ -509,8 +509,8 @@ static int check_syslog_permissions(int type, int source)
 	 * If this is from /proc/kmsg and we've already opened it, then we've
 	 * already done the capabilities checks at open time.
 	 */
-	if (from_file && type != SYSLOG_ACTION_OPEN)
-		goto ok;
+    if (source == SYSLOG_FROM_PROC && type != SYSLOG_ACTION_OPEN)
+        goto ok;
 
 	if (syslog_action_restricted(type)) {
 		if (capable(CAP_SYSLOG))
@@ -1341,173 +1341,130 @@ static inline int insert_to_buf(char __user *buf, int buf_len, const char* str)
 }
 #endif
 
-int do_syslog(int type, char __user *buf, int len, bool from_file)
+int do_syslog(int type, char __user *buf, int len, int source)
 {
-	bool clear = false;
-	static int saved_console_loglevel = -1;
-	int error;
-#if defined(CONFIG_HTC_DEBUG_BOOTLOADER_LOG)
-	ssize_t lk_len = 0, lk_len_total = 0;
-#define HB_LAST_TITLE "[HB LAST]\n"
-#define HB_LOG_TITLE "[HB LOG]\n"
-#endif
+    bool clear = false;
+    static int saved_console_loglevel = LOGLEVEL_DEFAULT;
+    int error;
 
-	error = check_syslog_permissions(type, from_file);
-	if (error)
-		goto out;
+    error = check_syslog_permissions(type, source);
+    if (error)
+        goto out;
 
-	switch (type) {
-	case SYSLOG_ACTION_CLOSE:	/* Close log */
-		break;
-	case SYSLOG_ACTION_OPEN:	/* Open log */
-		break;
-	case SYSLOG_ACTION_READ:	/* Read from log */
-		error = -EINVAL;
-		if (!buf || len < 0)
-			goto out;
-		error = 0;
-		if (!len)
-			goto out;
-		if (!access_ok(VERIFY_WRITE, buf, len)) {
-			error = -EFAULT;
-			goto out;
-		}
-		error = wait_event_interruptible(log_wait,
-						 syslog_seq != log_next_seq);
-		if (error)
-			goto out;
-		error = syslog_print(buf, len);
-		break;
-	/* Read/clear last kernel messages */
-	case SYSLOG_ACTION_READ_CLEAR:
-		clear = true;
-		/* FALL THRU */
-	/* Read last kernel messages */
-	case SYSLOG_ACTION_READ_ALL:
-		error = -EINVAL;
-		if (!buf || len < 0)
-			goto out;
-		error = 0;
-		if (!len)
-			goto out;
-		if (!access_ok(VERIFY_WRITE, buf, len)) {
-			error = -EFAULT;
-			goto out;
-		}
-		error = syslog_print_all(buf, len, clear);
-		break;
-#if defined(CONFIG_HTC_DEBUG_BOOTLOADER_LOG)
-	/* Read last kernel messages + LK/LAST LK log*/
-	case SYSLOG_ACTION_READ_ALL_APPEND_LK:
-		error = -EINVAL;
-		if (!buf || len < 0)
-			goto out;
-		error = 0;
-		if (!len)
-			goto out;
-		if (!access_ok(VERIFY_WRITE, buf, len)) {
-			error = -EFAULT;
-			goto out;
-		}
+    switch (type) {
+    case SYSLOG_ACTION_CLOSE:    /* Close log */
+        break;
+    case SYSLOG_ACTION_OPEN:    /* Open log */
+        break;
+    case SYSLOG_ACTION_READ:    /* Read from log */
+        error = -EINVAL;
+        if (!buf || len < 0)
+            goto out;
+        error = 0;
+        if (!len)
+            goto out;
+        if (!access_ok(VERIFY_WRITE, buf, len)) {
+            error = -EFAULT;
+            goto out;
+        }
+        error = wait_event_interruptible(log_wait,
+                         syslog_seq != log_next_seq);
+        if (error)
+            goto out;
+        error = syslog_print(buf, len);
+        break;
+    /* Read/clear last kernel messages */
+    case SYSLOG_ACTION_READ_CLEAR:
+        clear = true;
+        /* FALL THRU */
+    /* Read last kernel messages */
+    case SYSLOG_ACTION_READ_ALL:
+        error = -EINVAL;
+        if (!buf || len < 0)
+            goto out;
+        error = 0;
+        if (!len)
+            goto out;
+        if (!access_ok(VERIFY_WRITE, buf, len)) {
+            error = -EFAULT;
+            goto out;
+        }
+        error = syslog_print_all(buf, len, clear);
+        break;
+    /* Clear ring buffer */
+    case SYSLOG_ACTION_CLEAR:
+        syslog_print_all(NULL, 0, true);
+        break;
+    /* Disable logging to console */
+    case SYSLOG_ACTION_CONSOLE_OFF:
+        if (saved_console_loglevel == LOGLEVEL_DEFAULT)
+            saved_console_loglevel = console_loglevel;
+        console_loglevel = minimum_console_loglevel;
+        break;
+    /* Enable logging to console */
+    case SYSLOG_ACTION_CONSOLE_ON:
+        if (saved_console_loglevel != LOGLEVEL_DEFAULT) {
+            console_loglevel = saved_console_loglevel;
+            saved_console_loglevel = LOGLEVEL_DEFAULT;
+        }
+        break;
+    /* Set level of messages printed to console */
+    case SYSLOG_ACTION_CONSOLE_LEVEL:
+        error = -EINVAL;
+        if (len < 1 || len > 8)
+            goto out;
+        if (len < minimum_console_loglevel)
+            len = minimum_console_loglevel;
+        console_loglevel = len;
+        /* Implicitly re-enable logging to console */
+        saved_console_loglevel = LOGLEVEL_DEFAULT;
+        error = 0;
+        break;
+    /* Number of chars in the log buffer */
+    case SYSLOG_ACTION_SIZE_UNREAD:
+        raw_spin_lock_irq(&logbuf_lock);
+        if (syslog_seq < log_first_seq) {
+            /* messages are gone, move to first one */
+            syslog_seq = log_first_seq;
+            syslog_idx = log_first_idx;
+            syslog_prev = 0;
+            syslog_partial = 0;
+        }
+        if (source == SYSLOG_FROM_PROC) {
+            /*
+             * Short-cut for poll(/"proc/kmsg") which simply checks
+             * for pending data, not the size; return the count of
+             * records, not the length.
+             */
+            error = log_next_seq - syslog_seq;
+        } else {
+            u64 seq = syslog_seq;
+            u32 idx = syslog_idx;
+            enum log_flags prev = syslog_prev;
 
-		lk_len = insert_to_buf(buf, len, HB_LAST_TITLE);
-		len -= lk_len;
-		buf += lk_len;
-		lk_len_total += lk_len;
+            error = 0;
+            while (seq < log_next_seq) {
+                struct printk_log *msg = log_from_idx(idx);
 
-		lk_len = bldr_last_log_read_once(buf, len);
-		len -= lk_len;
-		buf += lk_len;
-		lk_len_total += lk_len;
-
-		lk_len = insert_to_buf(buf, len, HB_LOG_TITLE);
-		len -= lk_len;
-		buf += lk_len;
-		lk_len_total += lk_len;
-
-		lk_len = bldr_log_read_once(buf, len);
-		len -= lk_len;
-		buf += lk_len;
-		lk_len_total += lk_len;
-
-		error = syslog_print_all(buf, len, clear);
-		error += lk_len_total;
-		break;
-#endif
-	/* Clear ring buffer */
-	case SYSLOG_ACTION_CLEAR:
-		syslog_print_all(NULL, 0, true);
-		break;
-	/* Disable logging to console */
-	case SYSLOG_ACTION_CONSOLE_OFF:
-		if (saved_console_loglevel == -1)
-			saved_console_loglevel = console_loglevel;
-		console_loglevel = minimum_console_loglevel;
-		break;
-	/* Enable logging to console */
-	case SYSLOG_ACTION_CONSOLE_ON:
-		if (saved_console_loglevel != -1) {
-			console_loglevel = saved_console_loglevel;
-			saved_console_loglevel = -1;
-		}
-		break;
-	/* Set level of messages printed to console */
-	case SYSLOG_ACTION_CONSOLE_LEVEL:
-		error = -EINVAL;
-		if (len < 1 || len > 8)
-			goto out;
-		if (len < minimum_console_loglevel)
-			len = minimum_console_loglevel;
-		console_loglevel = len;
-		/* Implicitly re-enable logging to console */
-		saved_console_loglevel = -1;
-		error = 0;
-		break;
-	/* Number of chars in the log buffer */
-	case SYSLOG_ACTION_SIZE_UNREAD:
-		raw_spin_lock_irq(&logbuf_lock);
-		if (syslog_seq < log_first_seq) {
-			/* messages are gone, move to first one */
-			syslog_seq = log_first_seq;
-			syslog_idx = log_first_idx;
-			syslog_prev = 0;
-			syslog_partial = 0;
-		}
-		if (from_file) {
-			/*
-			 * Short-cut for poll(/"proc/kmsg") which simply checks
-			 * for pending data, not the size; return the count of
-			 * records, not the length.
-			 */
-			error = log_next_seq - syslog_seq;
-		} else {
-			u64 seq = syslog_seq;
-			u32 idx = syslog_idx;
-			enum log_flags prev = syslog_prev;
-
-			error = 0;
-			while (seq < log_next_seq) {
-				struct printk_log *msg = log_from_idx(idx);
-
-				error += msg_print_text(msg, prev, true, NULL, 0);
-				idx = log_next(idx);
-				seq++;
-				prev = msg->flags;
-			}
-			error -= syslog_partial;
-		}
-		raw_spin_unlock_irq(&logbuf_lock);
-		break;
-	/* Size of the log buffer */
-	case SYSLOG_ACTION_SIZE_BUFFER:
-		error = log_buf_len;
-		break;
-	default:
-		error = -EINVAL;
-		break;
-	}
+                error += msg_print_text(msg, prev, true, NULL, 0);
+                idx = log_next(idx);
+                seq++;
+                prev = msg->flags;
+            }
+            error -= syslog_partial;
+        }
+        raw_spin_unlock_irq(&logbuf_lock);
+        break;
+    /* Size of the log buffer */
+    case SYSLOG_ACTION_SIZE_BUFFER:
+        error = log_buf_len;
+        break;
+    default:
+        error = -EINVAL;
+        break;
+    }
 out:
-	return error;
+    return error;
 }
 
 SYSCALL_DEFINE3(syslog, int, type, char __user *, buf, int, len)
