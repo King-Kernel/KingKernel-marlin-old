@@ -368,9 +368,6 @@ int pstore_mkfile(enum pstore_type_id type, char *psname, u64 id, int count,
 	memcpy(private->data, data, size);
 	inode->i_size = private->size = size;
 
-	if (type == PSTORE_TYPE_CONSOLE)
-		inode->i_size += bldr_log_total_size();
-
 	inode->i_private = private;
 
 	if (time.tv_sec)
@@ -471,13 +468,6 @@ out:
 	return err;
 }
 module_init(init_pstore_fs)
-
-static void __exit exit_pstore_fs(void)
-{
-	unregister_filesystem(&pstore_fs_type);
-	sysfs_remove_mount_point(fs_kobj, "pstore");
-}
-module_exit(exit_pstore_fs)
 
 MODULE_AUTHOR("Tony Luck <tony.luck@intel.com>");
 MODULE_LICENSE("GPL");
