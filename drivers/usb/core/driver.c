@@ -507,6 +507,9 @@ int usb_driver_claim_interface(struct usb_driver *driver,
 	struct usb_device *udev;
 	int retval = 0;
 
+	if (!iface)
+		return -ENODEV;
+
 	if (dev->driver)
 		return -EBUSY;
 
