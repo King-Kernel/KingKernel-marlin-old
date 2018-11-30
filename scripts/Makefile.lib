@@ -299,6 +299,26 @@ $(obj)/%.dtb: $(src)/%.dts FORCE
 
 dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
 
+# Helper targets for Installing DTBs into the boot directory
+quiet_cmd_dtb_install =	INSTALL $<
+      cmd_dtb_install =	cp $< $(2)
+
+_dtbinst_pre_:
+	$(Q)if [ -d $(INSTALL_DTBS_PATH).old ]; then rm -rf $(INSTALL_DTBS_PATH).old; fi
+	$(Q)if [ -d $(INSTALL_DTBS_PATH) ]; then mv $(INSTALL_DTBS_PATH) $(INSTALL_DTBS_PATH).old; fi
+	$(Q)mkdir -p $(INSTALL_DTBS_PATH)
+
+%.dtb_dtbinst_: $(obj)/%.dtb _dtbinst_pre_
+	$(call cmd,dtb_install,$(INSTALL_DTBS_PATH))
+
+# mkdtimg
+#----------------------------------------------------------------------------
+quiet_cmd_mkdtimg = DTBOIMG $@
+cmd_mkdtimg = python2 $(srctree)/scripts/libufdt/utils/src/mkdtboimg.py cfg_create $@ $<; \
+	if [ ! -z "$(2)" ]; then \
+		dd if=/dev/zero bs=1 count=$$(((`stat -c%s $@`+$(2)-1)/$(2)*$(2)-`stat -c%s $@`)) >> $@; \
+	fi
+
 # cat
 # ---------------------------------------------------------------------------
 # Concatentate multiple files together
