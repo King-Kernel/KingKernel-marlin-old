@@ -1489,7 +1489,7 @@ static void batt_worker(struct work_struct *work)
 					user_set_chg_curr = get_property(htc_batt_info.usb_psy, POWER_SUPPLY_PROP_CURRENT_MAX);
 					if (!get_connect2pc() && !g_rerun_apsd_done && !g_is_unknown_charger) {
 						user_set_chg_curr = SLOW_CHARGE_CURR;
-                        if (delayed_work_pending(&htc_batt_info.chk_unknown_chg_work))
+						if (delayed_work_pending(&htc_batt_info.chk_unknown_chg_work))
 							cancel_delayed_work(&htc_batt_info.chk_unknown_chg_work);
 						schedule_delayed_work(&htc_batt_info.chk_unknown_chg_work,
 								msecs_to_jiffies(CHG_UNKNOWN_CHG_PERIOD_MS));

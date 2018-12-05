@@ -943,7 +943,6 @@ static void fusb302_set_current_limit(struct work_struct *work)
 			chip->utc->sink_current = sink_current;
 		}
 
-
 		if (IS_ERR_OR_NULL(chip->batt_psy)) {
 			chip->batt_psy = power_supply_get_by_name("battery");
 			if (IS_ERR_OR_NULL(chip->batt_psy)) {
@@ -955,7 +954,8 @@ static void fusb302_set_current_limit(struct work_struct *work)
 				return;
 			}
 		}
- 		if (chip->utc &&
+
+		if (chip->utc &&
 		    (sink_current != pre_sink_current)) {
 			ret = chip->batt_psy->set_property(chip->batt_psy,
 					POWER_SUPPLY_PROP_TYPEC_SINK_CURRENT,
@@ -981,6 +981,13 @@ static void fusb302_set_current_limit(struct work_struct *work)
 	}
 	
     ret = chip->usb_psy->set_property(chip->usb_psy,
+			POWER_SUPPLY_PROP_INPUT_CURRENT_MAX,
+			(const union power_supply_propval *)
+			&max_ma);
+	if (ret < 0)
+		fusb302_log("cannot set usb current, ret=%d\n", ret);
+
+	ret = chip->usb_psy->set_property(chip->usb_psy,
 			POWER_SUPPLY_PROP_INPUT_CURRENT_MAX,
 			(const union power_supply_propval *)
 			&max_ma);
@@ -2066,7 +2073,7 @@ static int fusb302_probe(struct i2c_client *client,
 	struct power_supply *batt_psy, *usb_psy;
 	int ret = 0;
 
-    /* Lazy acquisition of batt_psy */
+	/* Lazy acquisition of batt_psy */
 	batt_psy = power_supply_get_by_name("battery");
 	if (IS_ERR_OR_NULL(batt_psy))
 		fusb302_log("cannot get battery power supply, ret=%d\n", ret);

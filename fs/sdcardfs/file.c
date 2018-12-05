@@ -256,7 +256,7 @@ static int sdcardfs_open(struct inode *inode, struct file *file)
 		sdcardfs_copy_and_fix_attrs(inode, sdcardfs_lower_inode(inode));
 
 out_revert_cred:
-    revert_fsids(saved_cred);
+	revert_fsids(saved_cred);
 out_err:
 	dput(parent);
 	return err;

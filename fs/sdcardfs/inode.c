@@ -98,7 +98,7 @@ static int sdcardfs_create(struct inode *dir, struct dentry *dentry,
 		goto out_unlock;
 	}
 	copied_fs->umask = 0;
-    task_lock(current);
+	task_lock(current);
 	current->fs = copied_fs;
 	task_unlock(current);
 
@@ -383,7 +383,6 @@ out:
 out_eacces:
 	return err;
 }
-
 
 /*
  * The locking rules in sdcardfs_rename are complex.  We could use a simpler
