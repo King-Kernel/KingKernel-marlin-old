@@ -843,3 +843,5 @@ config STATE_NOTIFIER
 	help
 	  A unified display state notifier for kernel drivers for easy porting
 	  between different devices.
+
+endif # ARCH_MSM
