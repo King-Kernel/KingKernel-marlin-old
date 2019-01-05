@@ -141,6 +141,16 @@ config CPU_FREQ_DEFAULT_GOV_SCHED
 	  cpu frequency using CPU utilization estimates from the
 	  scheduler.
 
+config CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+	bool "schedutil"
+	depends on SMP
+	select CPU_FREQ_GOV_SCHEDUTIL
+	select CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Use the 'schedutil' CPUFreq governor by default. If unsure,
+	  have a look at the help section of that governor. The fallback
+	  governor will be 'performance'.
+
 config CPU_FREQ_DEFAULT_GOV_BIOSHOCK
 	bool "BioShock"
 	select CPU_FREQ_GOV_BIOSHOCK
@@ -168,15 +178,6 @@ config CPU_FREQ_DEFAULT_GOV_BLU_SCHEDUTIL
 	  have a look at the help section of that governor. The fallback
 	  governor will be 'performance'.
 
-config CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
-	bool "schedutil"
-	depends on SMP
-	select CPU_FREQ_GOV_SCHEDUTIL
-	select CPU_FREQ_GOV_PERFORMANCE
-	help
-	  Use the 'schedutil' CPUFreq governor by default. If unsure,
-	  have a look at the help section of that governor. The fallback
-	  governor will be 'performance'.
 endchoice
 
 config CPU_FREQ_GOV_PERFORMANCE
@@ -362,6 +363,7 @@ config CPU_FREQ_GOV_BLU_SCHEDUTIL
 	  case, it is proportional to the current frequency of the CPU.  The
 	  frequency tipping point is at utilization/capacity equal to 80% in
 	  both cases.
+
 	  To compile this driver as a module, choose M here: the module will
 	  be called cpufreq_blu_schedutil.
 
@@ -421,7 +423,7 @@ config REMOVE_INPUT_BOOST_FREQ_PERF
 	  use cpuinfo.min_freq. In case the device has some kind of quirk
 	  of using a higher than cpuinfo.min_freq (e.g. OnePlus 5/5T/6)
 	  this frequency will be used.
-	  If in doubt, say N.
+endif
 
 comment "CPU frequency scaling drivers"
 
