@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  kernel:
+    build: .
+    volumes:
+      - ccache:/.ccache
+      - $PWD:/src
+
+volumes:
+  ccache:
