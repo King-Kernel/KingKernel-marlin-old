@@ -26,8 +26,9 @@ struct static_key __read_mostly __sched_freq = STATIC_KEY_INIT_FALSE;
 static bool __read_mostly cpufreq_driver_slow;
 
 #ifndef CONFIG_CPU_FREQ_DEFAULT_GOV_SCHED
-static struct cpufreq_governor cpufreq_gov_sched;
+static
 #endif
+struct cpufreq_governor cpufreq_gov_sched;
 
 static DEFINE_PER_CPU(unsigned long, enabled);
 DEFINE_PER_CPU(struct sched_capacity_reqs, cpu_sched_capacity_reqs);
