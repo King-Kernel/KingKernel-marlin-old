@@ -14,7 +14,7 @@ RUN mkdir /toolchains && cd /toolchains && \
   git clone https://android.googlesource.com/platform/external/lz4 lz4
 
 ENV USE_CCACHE=1
-ENV ANDROID_JACK_VM_ARGS="-Xmx8g -Dfile.encoding=UTF-8 -XX:+TieredCompilation"
+ENV ANDROID_JACK_VM_ARGS="-Xmx11g -Dfile.encoding=UTF-8 -XX:+TieredCompilation"
 
 WORKDIR /src
 
