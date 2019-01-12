@@ -19,6 +19,8 @@
 #include "sched.h"
 #include "tune.h"
 
+unsigned long boosted_cpu_util(int cpu);
+
 /* Stub out fast switch routines present on mainline to reduce the backport
  * overhead. */
 #define cpufreq_driver_fast_switch(x, y) 0
@@ -195,7 +197,6 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
 				policy->cpuinfo.max_freq : policy->cur;
 
 	freq = (freq + (freq >> 2)) * util / max;
-	trace_sugov_next_freq(policy->cpu, util, max, freq);
 
 	if (freq == sg_policy->cached_raw_freq && sg_policy->next_freq != UINT_MAX)
 		return sg_policy->next_freq;
@@ -214,7 +215,7 @@ static void sugov_get_util(unsigned long *util, unsigned long *max, int cpu)
 	*util = min(rq->cfs.avg.util_avg, cfs_max);
 	*max = cfs_max;
 
-	*util = boosted_cpu_util(cpu, &loadcpu->walt_load);
+	*util = boosted_cpu_util(cpu);
 }
 
 static void sugov_set_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
@@ -291,14 +292,14 @@ static void sugov_calc_avg_cap(struct sugov_policy *sg_policy, u64 curr_ws,
 		return;
 
 	/* If we skipped some windows */
-	if (curr_ws > (last_ws + sched_ravg_window)) {
+	if (curr_ws > (last_ws + walt_ravg_window)) {
 		avg_freq = prev_freq;
 		/* Reset tracking history */
 		sg_policy->last_cyc_update_time = curr_ws;
 	} else {
 		sugov_track_cycles(sg_policy, prev_freq, curr_ws);
 		avg_freq = sg_policy->curr_cycles;
-		avg_freq /= sched_ravg_window / (NSEC_PER_SEC / KHZ);
+		avg_freq /= walt_ravg_window / (NSEC_PER_SEC / KHZ);
 	}
 	sg_policy->avg_cap = freq_to_util(sg_policy, avg_freq);
 	sg_policy->curr_cycles = 0;
@@ -389,10 +390,6 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
 		sg_cpu->flags = flags;
 		sugov_calc_avg_cap(sg_policy, sg_cpu->walt_load.ws,
 				   sg_policy->policy->cur);
-		trace_sugov_util_update(sg_cpu->cpu, sg_cpu->util,
-					sg_policy->avg_cap,
-					max, sg_cpu->walt_load.nl,
-					sg_cpu->walt_load.pl, flags);
 		sugov_iowait_boost(sg_cpu, &util, &max);
 		sugov_walt_adjust(sg_cpu, &util, &max);
 		next_f = get_next_freq(sg_policy, util, max);
@@ -486,28 +483,23 @@ static void sugov_update_shared(struct update_util_data *hook, u64 time,
 	sugov_set_iowait_boost(sg_cpu, time, flags);
 	sg_cpu->last_update = time;
 
-	sugov_calc_avg_cap(sg_policy, sg_cpu->walt_load.ws,
-			   sg_policy->policy->cur);
+    sugov_calc_avg_cap(sg_policy, sg_cpu->walt_load.ws,
+               sg_policy->policy->cur);
 
-	trace_sugov_util_update(sg_cpu->cpu, sg_cpu->util, sg_policy->avg_cap,
-				max, sg_cpu->walt_load.nl,
-				sg_cpu->walt_load.pl, flags);
+    if (sugov_should_update_freq(sg_policy, time)) {
+        if (flags & SCHED_CPUFREQ_RT_DL) {
+            next_f = sg_policy->policy->cpuinfo.max_freq;
+            /* clear cache when it's bypassed */
+            sg_policy->cached_raw_freq = 0;
+        } else {
+            next_f = sugov_next_freq_shared(sg_cpu, time);
+        }
 
-	if (sugov_should_update_freq(sg_policy, time)) {
-		if (flags & SCHED_CPUFREQ_RT_DL) {
-			next_f = sg_policy->policy->cpuinfo.max_freq;
-			/* clear cache when it's bypassed */
-			sg_policy->cached_raw_freq = 0;
-		} else {
-			next_f = sugov_next_freq_shared(sg_cpu, time);
-		}
+        sugov_update_commit(sg_policy, time, next_f);
+    }
 
-		sugov_update_commit(sg_policy, time, next_f);
-	}
-
-	raw_spin_unlock(&sg_policy->update_lock);
+    raw_spin_unlock(&sg_policy->update_lock);
 }
-
 static void sugov_work(struct kthread_work *work)
 {
 	struct sugov_policy *sg_policy = container_of(work, struct sugov_policy, work);
@@ -928,7 +920,7 @@ static int sugov_init(struct cpufreq_policy *policy)
 
 	policy->governor_data = sg_policy;
 	sg_policy->tunables = tunables;
-	stale_ns = sched_ravg_window + (sched_ravg_window >> 3);
+	stale_ns = walt_ravg_window + (walt_ravg_window >> 3);
 
 	sugov_tunables_restore(policy);
 
@@ -1054,6 +1046,8 @@ static int sugov_limits(struct cpufreq_policy *policy)
 	}
 
 	sg_policy->need_freq_update = true;
+ 
+    return 0;
 }
 
 static int cpufreq_schedutil_cb(struct cpufreq_policy *policy,
