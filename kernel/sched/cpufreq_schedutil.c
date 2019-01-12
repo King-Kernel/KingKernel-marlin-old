@@ -221,7 +221,6 @@ static void sugov_set_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
 				   unsigned int flags)
 {
 	struct sugov_policy *sg_policy = sg_cpu->sg_policy;
-
 	if (!sg_policy->tunables->iowait_boost_enable)
 		return;
 
@@ -545,7 +544,7 @@ static void sugov_irq_work(struct irq_work *irq_work)
 	 * after the work_in_progress flag is cleared. The effects of that are
 	 * neglected for now.
 	 */
-	kthread_queue_work(&sg_policy->worker, &sg_policy->work);
+	queue_kthread_work(&sg_policy->worker, &sg_policy->work);
 }
 
 /************************** sysfs interface ************************/
@@ -695,30 +694,27 @@ static ssize_t iowait_boost_enable_show(struct gov_attr_set *attr_set,
 					char *buf)
 {
 	struct sugov_tunables *tunables = to_sugov_tunables(attr_set);
-
 	return sprintf(buf, "%u\n", tunables->iowait_boost_enable);
 }
 
 static ssize_t iowait_boost_enable_store(struct gov_attr_set *attr_set,
-					 const char *buf, size_t count)
+                     const char *buf, size_t count)
 {
 	struct sugov_tunables *tunables = to_sugov_tunables(attr_set);
 	bool enable;
-
 	if (kstrtobool(buf, &enable))
+    
 		return -EINVAL;
-
 	tunables->iowait_boost_enable = enable;
-
 	return count;
 }
 
+static struct governor_attr iowait_boost_enable = __ATTR_RW(iowait_boost_enable);
 static struct governor_attr up_rate_limit_us = __ATTR_RW(up_rate_limit_us);
 static struct governor_attr down_rate_limit_us = __ATTR_RW(down_rate_limit_us);
 static struct governor_attr hispeed_load = __ATTR_RW(hispeed_load);
 static struct governor_attr hispeed_freq = __ATTR_RW(hispeed_freq);
 static struct governor_attr pl = __ATTR_RW(pl);
-static struct governor_attr iowait_boost_enable = __ATTR_RW(iowait_boost_enable);
 
 static struct attribute *sugov_attributes[] = {
 	&up_rate_limit_us.attr,
@@ -737,7 +733,10 @@ static struct kobj_type sugov_tunables_ktype = {
 
 /********************** cpufreq governor interface *********************/
 
-static struct cpufreq_governor schedutil_gov;
+#ifndef CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+static
+#endif
+struct cpufreq_governor cpufreq_gov_schedutil;
 
 static struct sugov_policy *sugov_policy_alloc(struct cpufreq_policy *policy)
 {
@@ -768,8 +767,8 @@ static int sugov_kthread_create(struct sugov_policy *sg_policy)
 	if (policy->fast_switch_enabled)
 		return 0;
 
-	kthread_init_work(&sg_policy->work, sugov_work);
-	kthread_init_worker(&sg_policy->worker);
+	init_kthread_work(&sg_policy->work, sugov_work);
+	init_kthread_worker(&sg_policy->worker);
 	thread = kthread_create(kthread_worker_fn, &sg_policy->worker,
 				"sugov:%d",
 				cpumask_first(policy->related_cpus));
@@ -801,7 +800,7 @@ static void sugov_kthread_stop(struct sugov_policy *sg_policy)
 	if (sg_policy->policy->fast_switch_enabled)
 		return;
 
-	kthread_flush_worker(&sg_policy->worker);
+	flush_kthread_worker(&sg_policy->worker);
 	kthread_stop(sg_policy->thread);
 	mutex_destroy(&sg_policy->work_lock);
 }
@@ -925,7 +924,7 @@ static int sugov_init(struct cpufreq_policy *policy)
 		tunables->down_rate_limit_us *= lat;
 	}
 
-	tunables->iowait_boost_enable = false;
+	tunables->iowait_boost_enable = true;
 
 	policy->governor_data = sg_policy;
 	sg_policy->tunables = tunables;
@@ -935,7 +934,7 @@ static int sugov_init(struct cpufreq_policy *policy)
 
 	ret = kobject_init_and_add(&tunables->attr_set.kobj, &sugov_tunables_ktype,
 				   get_governor_parent_kobj(policy), "%s",
-				   schedutil_gov.name);
+				   cpufreq_gov_schedutil.name);
 	if (ret)
 		goto fail;
 
@@ -962,7 +961,7 @@ disable_fast_switch:
 	return ret;
 }
 
-static void sugov_exit(struct cpufreq_policy *policy)
+static int sugov_exit(struct cpufreq_policy *policy)
 {
 	struct sugov_policy *sg_policy = policy->governor_data;
 	struct sugov_tunables *tunables = sg_policy->tunables;
@@ -982,6 +981,7 @@ static void sugov_exit(struct cpufreq_policy *policy)
 	sugov_kthread_stop(sg_policy);
 	sugov_policy_free(sg_policy);
 	cpufreq_disable_fast_switch(policy);
+    return 0;
 }
 
 static int sugov_start(struct cpufreq_policy *policy)
@@ -1021,7 +1021,7 @@ static int sugov_start(struct cpufreq_policy *policy)
 	return 0;
 }
 
-static void sugov_stop(struct cpufreq_policy *policy)
+static int sugov_stop(struct cpufreq_policy *policy)
 {
 	struct sugov_policy *sg_policy = policy->governor_data;
 	unsigned int cpu;
@@ -1035,9 +1035,10 @@ static void sugov_stop(struct cpufreq_policy *policy)
 		irq_work_sync(&sg_policy->irq_work);
 		kthread_cancel_work_sync(&sg_policy->work);
 	}
+    return 0;
 }
 
-static void sugov_limits(struct cpufreq_policy *policy)
+static int sugov_limits(struct cpufreq_policy *policy)
 {
 	struct sugov_policy *sg_policy = policy->governor_data;
 	unsigned long flags;
@@ -1055,25 +1056,36 @@ static void sugov_limits(struct cpufreq_policy *policy)
 	sg_policy->need_freq_update = true;
 }
 
-static struct cpufreq_governor schedutil_gov = {
-	.name = "schedutil",
-	.owner = THIS_MODULE,
-	.init = sugov_init,
-	.exit = sugov_exit,
-	.start = sugov_start,
-	.stop = sugov_stop,
-	.limits = sugov_limits,
-};
-
-#ifdef CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
-struct cpufreq_governor *cpufreq_default_governor(void)
+static int cpufreq_schedutil_cb(struct cpufreq_policy *policy,
+                unsigned int event)
 {
-	return &schedutil_gov;
+    switch(event) {
+    case CPUFREQ_GOV_POLICY_INIT:
+        return sugov_init(policy);
+    case CPUFREQ_GOV_POLICY_EXIT:
+        return sugov_exit(policy);
+    case CPUFREQ_GOV_START:
+        return sugov_start(policy);
+    case CPUFREQ_GOV_STOP:
+        return sugov_stop(policy);
+    case CPUFREQ_GOV_LIMITS:
+        return sugov_limits(policy);
+    default:
+        BUG();
+    }
 }
+
+#ifndef CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+static
 #endif
+struct cpufreq_governor cpufreq_gov_schedutil = {
+    .name = "schedutil",
+    .governor = cpufreq_schedutil_cb,
+    .owner = THIS_MODULE,
+};
 
 static int __init sugov_register(void)
 {
-	return cpufreq_register_governor(&schedutil_gov);
+    return cpufreq_register_governor(&cpufreq_gov_schedutil);
 }
 fs_initcall(sugov_register);
