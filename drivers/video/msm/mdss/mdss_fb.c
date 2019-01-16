@@ -4818,8 +4818,12 @@ int mdss_fb_do_ioctl(struct fb_info *info, unsigned int cmd,
 		break;
 
     case MSMFB_ATOMIC_COMMIT:
-        cpu_input_boost_kick();
-        devfreq_boost_kick(DEVFREQ_MSM_CPUBW);
+        #ifdef CONFIG_CPU_INPUT_BOOST
+            if (time_before(jiffies, last_input_jiffies + msecs_to_jiffies(2500))) {
+                cpu_input_boost_kick_general(80);
+                devfreq_boost_kick(DEVFREQ_MSM_CPUBW);
+            }
+        #endif
         ret = mdss_fb_atomic_commit_ioctl(info, argp, file);
         break;
 
