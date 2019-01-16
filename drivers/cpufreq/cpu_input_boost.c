@@ -162,7 +162,7 @@ static void update_stune_boost(struct boost_drv *b, u32 state, u32 bit, char *st
 {
 	if (level && !(state & bit)) {
 		if (!do_stune_boost(st, level, slot))
-			set_boost_bit(b, bit);
+			    set_boost_bit(b, bit);
 	}
 }
 
