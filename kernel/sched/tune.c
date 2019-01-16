@@ -25,6 +25,7 @@ extern struct reciprocal_value schedtune_spc_rdiv;
 struct target_nrg schedtune_target_nrg;
 
 #ifdef CONFIG_DYNAMIC_STUNE_BOOST
+static int input_stune_boost = CONFIG_INPUT_BOOST_STUNE_LEVEL;
 #define DYNAMIC_BOOST_SLOTS_COUNT 5
 static DEFINE_MUTEX(boost_slot_mutex);
 static DEFINE_MUTEX(stune_boost_mutex);
@@ -772,8 +773,8 @@ boost_write(struct cgroup_subsys_state *css, struct cftype *cft,
 
 	if (boost < -100 || boost > 100)
 		return -EINVAL;
-	boost_pct = boost;
-
+    pr_info("caller: %s\n", current->comm);
+    boost_pct = boost;
 	/*
 	 * Update threshold params for Performance Boost (B)
 	 * and Performance Constraint (C) regions.
@@ -1171,7 +1172,7 @@ static int _do_stune_boost(struct schedtune *st, int boost, int *slot)
 	if (boost > st->boost)
 		ret = dynamic_boost(st, boost);
 	mutex_unlock(&stune_boost_mutex);
-
+    
 	return ret;
 }
 
