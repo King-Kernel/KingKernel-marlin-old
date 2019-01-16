@@ -51,14 +51,8 @@ static __read_mostly int suspend_bg_stune_boost = CONFIG_SUSPEND_BOOST_STUNE_LEV
 static __read_mostly int suspend_root_stune_boost = CONFIG_ROOT_SUSPEND_BOOST_STUNE_LEVEL;
 
 module_param_named(dynamic_stune_boost, input_stune_boost, int, 0644);
-
-static __read_mostly int max_stune_boost = CONFIG_MAX_BOOST_STUNE_LEVEL;
 module_param(max_stune_boost, int, 0644);
-
-static __read_mostly int general_stune_boost = CONFIG_GENERAL_BOOST_STUNE_LEVEL;
 module_param(general_stune_boost, int, 0644);
-
-static __read_mostly int display_stune_boost = CONFIG_DISPLAY_BOOST_STUNE_LEVEL;
 module_param(display_stune_boost, int, 0644);
 module_param(display_bg_stune_boost, int, 0644);
 module_param(suspend_ta_stune_boost, int, 0644);
