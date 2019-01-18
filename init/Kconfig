@@ -1289,6 +1289,15 @@ config DYNAMIC_STUNE_BOOST
 
 	  If unsure, say N.
 
+config STUNE_PERFD_DEBUG
+	bool "Debugging for dynamic stune boost when using perfd"
+	default n
+	depends on DYNAMIC_STUNE_BOOST
+	help
+	  Just a debugging utility
+
+	  If unsure, say N.
+
 config DEFAULT_USE_ENERGY_AWARE
 	bool "Default to enabling the Energy Aware Scheduler feature"
 	default n
