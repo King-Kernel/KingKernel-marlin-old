@@ -28,15 +28,9 @@
 #include <linux/console.h>
 #include <linux/module.h>
 #include <linux/pstore.h>
-#ifdef CONFIG_PSTORE_LZO_COMPRESS
 #include <linux/lzo.h>
-#endif
-#if defined(CONFIG_PSTORE_LZ4_COMPRESS) || defined(CONFIG_PSTORE_LZ4HC_COMPRESS)
 #include <linux/lz4.h>
-#endif
-#if IS_ENABLED(CONFIG_PSTORE_ZSTD_COMPRESS)
 #include <linux/zstd.h>
-#endif
 #include <linux/crypto.h>
 #include <linux/string.h>
 #include <linux/timer.h>
@@ -197,7 +191,7 @@ static int zbufsize_842(size_t size)
 }
 #endif
 
-#if IS_ENABLED(CONFIG_PSTORE_ZSTD_COMPRESS)
+#ifdef CONFIG_PSTORE_ZSTD_COMPRESS
 static int zbufsize_zstd(size_t size)
 {
 	return ZSTD_compressBound(size);
@@ -237,7 +231,7 @@ static const struct pstore_zbackend zbackends[] = {
 		.name		= "842",
 	},
 #endif
-#if IS_ENABLED(CONFIG_PSTORE_ZSTD_COMPRESS)
+#ifdef CONFIG_PSTORE_ZSTD_COMPRESS
 	{
 		.zbufsize	= zbufsize_zstd,
 		.name		= "zstd",
