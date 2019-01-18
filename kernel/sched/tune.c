@@ -772,7 +772,10 @@ boost_write(struct cgroup_subsys_state *css, struct cftype *cft,
 
 	if (boost < -100 || boost > 100)
 		return -EINVAL;
-    pr_info("caller: %s\n", current->comm);
+#ifdef CONFIG_DYNAMIC_STUNE_BOOST
+    if (!memcmp(current->comm, "perfd", 6) || (current->pid == 1))
+        return 0;
+#endif
     boost_pct = boost;
 	/*
 	 * Update threshold params for Performance Boost (B)
