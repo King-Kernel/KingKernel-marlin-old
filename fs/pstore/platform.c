@@ -29,7 +29,9 @@
 #include <linux/module.h>
 #include <linux/pstore.h>
 #include <linux/lzo.h>
+#if IS_ENABLED(CONFIG_CRYPTO_LZ4)
 #include <linux/lz4.h>
+#endif
 #include <linux/zstd.h>
 #include <linux/crypto.h>
 #include <linux/string.h>
