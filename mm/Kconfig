@@ -712,4 +712,31 @@ config SWAPPINESS
 	int "default swappiness percentage"
 	default 60
 	help
-	  This sets the VM_SEAPPINESS value to be used for the swapfile.
+	  Try to handle user space page faults without holding the mmap_sem.
+
+	  This should allow better concurrency for massively threaded process
+	  since the page fault handler will not wait for other threads memory
+	  layout change to be done, assuming that this change is done in another
+	  part of the process's memory space. This type of page fault is named
+	  speculative page fault.
+
+	  If the speculative page fault fails because of a concurrency is
+	  detected or because underlying PMD or PTE tables are not yet
+	  allocating, it is failing its processing and a classic page fault
+	  is then tried.
+
+config DIRTY_RATIO
+	int "Default dirty ratio for writeback"
+	default 7
+	help
+	  The percentage of memory which may be used for dirty pages before the
+	  kernel commits dirty data to disk when another process performs a
+	  write call.
+
+config DIRTY_BACKGROUND_RATIO
+	int "Default background dirty ratio for writeback"
+	default 3
+	help
+	  The percentage of memory which may be used for dirty pages before the
+	  kernel's background writeback threads start committing the dirty data
+	  to disk.
