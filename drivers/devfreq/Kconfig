@@ -116,6 +116,19 @@ config ADRENO_IDLER
 	  wasted power coming from stock Adreno TZ while
 	  maintaining high-performance.
 
+config ADRENOBOOST
+	tristate "Adreno boost driver"
+	depends on DEVFREQ_GOV_MSM_ADRENO_TZ
+	help
+	  A boosting driver for the msm-adreno-tz governor
+
+config ADRENOBOOST_VAL
+	int "Adreno boost default value, can be 0,1,2,3"
+	depends on ADRENOBOOST
+	default 0
+	help
+	  Sets value for adrenoboost
+
 config ARM_MEMLAT_MON
 	tristate "ARM CPU Memory Latency monitor hardware"
 	depends on ARCH_MSM
