@@ -1642,7 +1642,7 @@ static int bfq_merge(struct request_queue *q, struct request **req,
 	struct request *__rq;
 
 	__rq = bfq_find_rq_fmerge(bfqd, bio);
-	if (__rq && elv_bio_merge_ok(__rq, bio)) {
+	if (__rq && elv_rq_merge_ok(__rq, bio)) {
 		*req = __rq;
 		return ELEVATOR_FRONT_MERGE;
 	}
@@ -1688,7 +1688,7 @@ static void bfq_bio_merged(struct request_queue *q, struct request *req,
 			   struct bio *bio)
 {
 	bfqg_stats_update_io_merged(bfqq_group(RQ_BFQQ(req)), bio_op(bio),
-				    bio->bi_opf);
+				    bio->bi_rw);
 }
 #endif
 
