@@ -54,17 +54,6 @@ config CFQ_GROUP_IOSCHED
 	---help---
 	  Enable group IO scheduling in CFQ.
 
-config IOSCHED_SWITCHER
-	bool "Switch to noop while the screen is off"
-	depends on IOSCHED_NOOP
-	---help---
-	  This enables a driver that switches the I/O scheduler for a single
-	  block device to noop when the screen turns off, and back to its
-	  original I/O scheduler after a delay when the screen is turned back
-	  on. It requires being manually initialized from a different driver
-	  in order to grab the request_queue pointer that should have its I/O
-	  scheduler switched to noop when the screen turns off.
-
 config IOSCHED_BFQ
 	tristate "BFQ I/O scheduler"
 	default n
@@ -103,6 +92,9 @@ choice
 	config DEFAULT_MAPLE
 		bool "Maple" if IOSCHED_MAPLE=y
 
+    config DEFAULT_BFQ
+        bool "BFQ" if IOSCHED_BFQ=y
+
 endchoice
 
 config DEFAULT_IOSCHED
@@ -111,6 +103,7 @@ config DEFAULT_IOSCHED
 	default "cfq" if DEFAULT_CFQ
 	default "noop" if DEFAULT_NOOP
 	default "maple" if DEFAULT_MAPLE
+    default "bfq" if DEFAULT_BFQ
 
 endmenu
 
