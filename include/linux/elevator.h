@@ -18,6 +18,12 @@ typedef void (elevator_merged_fn) (struct request_queue *, struct request *, int
 
 typedef int (elevator_allow_merge_fn) (struct request_queue *, struct request *, struct bio *);
 
+typedef int (elevator_allow_bio_merge_fn) (struct request_queue *,
+					   struct request *, struct bio *);
+
+typedef int (elevator_allow_rq_merge_fn) (struct request_queue *,
+struct request *, struct request *);
+
 typedef void (elevator_bio_merged_fn) (struct request_queue *,
 						struct request *, struct bio *);
 
@@ -47,6 +53,8 @@ struct elevator_ops
 	elevator_merged_fn *elevator_merged_fn;
 	elevator_merge_req_fn *elevator_merge_req_fn;
 	elevator_allow_merge_fn *elevator_allow_merge_fn;
+	elevator_allow_bio_merge_fn *elevator_allow_bio_merge_fn;
+	elevator_allow_rq_merge_fn *elevator_allow_rq_merge_fn;
 	elevator_bio_merged_fn *elevator_bio_merged_fn;
 
 	elevator_dispatch_fn *elevator_dispatch_fn;

@@ -548,13 +548,13 @@ static int persistent_ram_post_init(struct persistent_ram_zone *prz, u32 sig,
 	sig ^= PERSISTENT_RAM_SIG;
 
 	if (prz->buffer->sig == sig) {
-		if (buffer_size(prz) == 0) {
+		if (buffer_size(buffer) == 0) {
 			pr_debug("found existing empty buffer\n");
 			return 0;
 		}
 
-		if (buffer_size(prz) > prz->buffer_size ||
-		    buffer_start(prz) > buffer_size(prz))
+		if (buffer_size(buffer) > prz->buffer_size ||
+		    buffer_start(buffer) > buffer_size(buffer))
 			pr_info("found existing invalid buffer, size %zu, start %zu\n",
 				buffer_size(buffer), buffer_start(buffer));
 		else {
@@ -568,11 +568,13 @@ static int persistent_ram_post_init(struct persistent_ram_zone *prz, u32 sig,
 			 buffer->sig);
 	}
 
-	buffer->sig = sig;
+	/* Rewind missing or invalid memory area. */
+	prz->buffer->sig = sig;
 	persistent_ram_zap(prz, 0);
 
 	return 0;
 }
+
 
 void persistent_ram_free(struct persistent_ram_zone *prz)
 {
