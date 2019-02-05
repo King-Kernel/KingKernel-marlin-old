@@ -365,7 +365,6 @@ static int fb_notifier_cb(struct notifier_block *nb,
 		set_boost_bit(b, SCREEN_AWAKE);
 		update_stune_boost(b, state, DISPLAY_STUNE_BOOST,
 				   display_stune_boost, &b->display_stune_slot);
-		__cpu_input_boost_kick_max(b, CONFIG_WAKE_BOOST_DURATION_MS);
 #ifdef CONFIG_CPU_INPUT_BOOST_DEBUG
 		pr_info("kicked max wake boost due to unblank event\n");
 #endif
