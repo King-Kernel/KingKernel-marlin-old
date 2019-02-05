@@ -398,7 +398,7 @@ static int sst_byt_ipc_tx_message(struct sst_byt *byt, u64 header,
 	list_add_tail(&msg->list, &byt->tx_list);
 	spin_unlock_irqrestore(&byt->dsp->spinlock, flags);
 
-	queue_kthread_work(&byt->kworker, &byt->kwork);
+	kthread_queue_work(&byt->kworker, &byt->kwork);
 
 	if (wait)
 		return sst_byt_tx_wait_done(byt, msg, rx_data);
@@ -569,7 +569,7 @@ static irqreturn_t sst_byt_irq_thread(int irq, void *context)
 	spin_unlock_irqrestore(&sst->spinlock, flags);
 
 	/* continue to send any remaining messages... */
-	queue_kthread_work(&byt->kworker, &byt->kwork);
+	kthread_queue_work(&byt->kworker, &byt->kwork);
 
 	return IRQ_HANDLED;
 }
@@ -902,7 +902,7 @@ int sst_byt_dsp_init(struct device *dev, struct sst_pdata *pdata)
 		return -ENOMEM;
 
 	/* start the IPC message thread */
-	init_kthread_worker(&byt->kworker);
+	kthread_init_worker(&byt->kworker);
 	byt->tx_thread = kthread_run(kthread_worker_fn,
 				     &byt->kworker, "%s",
 				     dev_name(byt->dev));
@@ -911,7 +911,7 @@ int sst_byt_dsp_init(struct device *dev, struct sst_pdata *pdata)
 		dev_err(byt->dev, "error failed to create message TX task\n");
 		goto err_free_msg;
 	}
-	init_kthread_work(&byt->kwork, sst_byt_ipc_tx_msgs);
+	kthread_init_work(&byt->kwork, sst_byt_ipc_tx_msgs);
 
 	byt_dev.thread_context = byt;
 

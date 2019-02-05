@@ -132,7 +132,7 @@ EXPORT_SYMBOL(tty_port_free_xmit_buf);
  */
 void tty_port_destroy(struct tty_port *port)
 {
-	flush_kthread_work(&port->buf.work);
+	kthread_flush_work(&port->buf.work);
 	tty_buffer_free_all(port);
 }
 EXPORT_SYMBOL(tty_port_destroy);

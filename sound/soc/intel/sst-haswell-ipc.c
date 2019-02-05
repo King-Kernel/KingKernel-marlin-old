@@ -546,7 +546,7 @@ static int ipc_tx_message(struct sst_hsw *hsw, u32 header, void *tx_data,
 	list_add_tail(&msg->list, &hsw->tx_list);
 	spin_unlock_irqrestore(&hsw->dsp->spinlock, flags);
 
-	queue_kthread_work(&hsw->kworker, &hsw->kwork);
+	kthread_queue_work(&hsw->kworker, &hsw->kwork);
 
 	if (wait)
 		return tx_wait_done(hsw, msg, rx_data);
@@ -946,7 +946,7 @@ static irqreturn_t hsw_irq_thread(int irq, void *context)
 	spin_unlock_irqrestore(&sst->spinlock, flags);
 
 	/* continue to send any remaining messages... */
-	queue_kthread_work(&hsw->kworker, &hsw->kwork);
+	kthread_queue_work(&hsw->kworker, &hsw->kwork);
 
 	return IRQ_HANDLED;
 }
@@ -1760,7 +1760,7 @@ int sst_hsw_dsp_init(struct device *dev, struct sst_pdata *pdata)
 		return -ENOMEM;
 
 	/* start the IPC message thread */
-	init_kthread_worker(&hsw->kworker);
+	kthread_init_worker(&hsw->kworker);
 	hsw->tx_thread = kthread_run(kthread_worker_fn,
 					   &hsw->kworker, "%s",
 					   dev_name(hsw->dev));
@@ -1769,7 +1769,7 @@ int sst_hsw_dsp_init(struct device *dev, struct sst_pdata *pdata)
 		dev_err(hsw->dev, "error: failed to create message TX task\n");
 		goto err_free_msg;
 	}
-	init_kthread_work(&hsw->kwork, ipc_tx_msgs);
+	kthread_init_work(&hsw->kwork, ipc_tx_msgs);
 
 	hsw_dev.thread_context = hsw;
 

@@ -244,7 +244,7 @@ static void n_tty_set_room(struct tty_struct *tty)
 		 */
 		WARN_RATELIMIT(test_bit(TTY_LDISC_HALTED, &tty->flags),
 			       "scheduling buffer work for halted ldisc\n");
-		queue_kthread_work(&tty->port->worker, &tty->port->buf.work);
+		kthread_queue_work(&tty->port->worker, &tty->port->buf.work);
 	}
 }
 
