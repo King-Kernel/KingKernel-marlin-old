@@ -204,18 +204,37 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
 	return cpufreq_driver_resolve_freq(policy, freq);
 }
 
-static void sugov_get_util(unsigned long *util, unsigned long *max, int cpu)
+
+static inline bool use_pelt(void)
 {
+#ifdef CONFIG_SCHED_WALT
+	return (!sysctl_sched_use_walt_cpu_util || walt_disabled);
+#else
+	return true;
+#endif
+}
+
+static void sugov_get_util(unsigned long *util, unsigned long *max, u64 time)
+{
+	int cpu = smp_processor_id();
 	struct rq *rq = cpu_rq(cpu);
-	unsigned long cfs_max;
-	struct sugov_cpu *loadcpu = &per_cpu(sugov_cpu, cpu);
+	unsigned long max_cap, rt;
+	s64 delta;
 
-	cfs_max = arch_scale_cpu_capacity(NULL, cpu);
+	max_cap = arch_scale_cpu_capacity(NULL, cpu);
 
-	*util = min(rq->cfs.avg.util_avg, cfs_max);
-	*max = cfs_max;
+	sched_avg_update(rq);
+	delta = time - rq->age_stamp;
+	if (unlikely(delta < 0))
+		delta = 0;
+	rt = div64_u64(rq->rt_avg, sched_avg_period() + delta);
+	rt = (rt * max_cap) >> SCHED_CAPACITY_SHIFT;
 
 	*util = boosted_cpu_util(cpu);
+	if (likely(use_pelt()))
+		*util = min((*util + rt), max_cap);
+
+	*max = max_cap;
 }
 
 static void sugov_set_iowait_boost(struct sugov_cpu *sg_cpu, u64 time,
