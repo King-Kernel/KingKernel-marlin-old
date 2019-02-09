@@ -1,0 +1,5 @@
+# First-stage Proton Kernel init script by @kdrag0n	
+
+on property:sys.boot_completed=1
+	exec u:r:magisk:s0 root root -- /init.king_late.sh
+	exec u:r:magisk:s0 root root -- /init.Zipalign_sqlite.sh
