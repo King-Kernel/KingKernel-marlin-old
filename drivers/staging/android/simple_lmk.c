@@ -171,7 +171,7 @@ static cputime_t get_kswapd_cputime(void)
 
 static void simple_lmk_reclaim_work(struct work_struct *work)
 {
-	unsigned long mib_freed, resched_delay_jiffies = 1;
+	unsigned long mib_freed = 0;
 	cputime_t kswapd_time_now;
 	u64 delta_us;
 
@@ -183,6 +183,7 @@ static void simple_lmk_reclaim_work(struct work_struct *work)
 #else
 	if (delta_us / USEC_PER_MSEC < CONFIG_ANDROID_SIMPLE_LMK_KSWAPD_TIMEOUT)
 #endif
+
 		goto reschedule;
 	kswapd_start_time = kswapd_time_now;
 
@@ -193,9 +194,8 @@ static void simple_lmk_reclaim_work(struct work_struct *work)
 	if (mib_freed)
 		pr_info("kswapd: freed %lu MiB\n", mib_freed);
 
-	resched_delay_jiffies = KSWAPD_LMK_EXPIRES;
 reschedule:
-	queue_delayed_work(simple_lmk_wq, &reclaim_work, resched_delay_jiffies);
+	queue_delayed_work(simple_lmk_wq, &reclaim_work, KSWAPD_LMK_EXPIRES);
 }
 
 void simple_lmk_one_reclaim(void)
