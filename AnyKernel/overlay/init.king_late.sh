@@ -26,27 +26,27 @@ echo "0-3" > /dev/cpuset/top-app/cpus
 
 #Schedutil gov tweaks
 
-echo "850" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us
+echo "500" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/iowait_boost_enable
-echo "1275" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us
+echo "500" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/pl
 
 #cpu1
-echo "850" > /sys/devices/system/cpu/cpu1/cpufreq/schedutil/down_rate_limit_us
+echo "500" > /sys/devices/system/cpu/cpu1/cpufreq/schedutil/down_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu1/cpufreq/schedutil/iowait_boost_enable
-echo "1275" > /sys/devices/system/cpu/cpu1/cpufreq/schedutil/up_rate_limit_us
+echo "500" > /sys/devices/system/cpu/cpu1/cpufreq/schedutil/up_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu1/cpufreq/schedutil/pl
 
 #cpu2
-echo "850" > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/down_rate_limit_us
+echo "500" > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/down_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/iowait_boost_enable
-echo "1275" > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/up_rate_limit_us
+echo "500" > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/up_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/pl
 
 #cpu3
-echo "850" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/down_rate_limit_us
+echo "500" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/down_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/iowait_boost_enable
-echo "1275" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/up_rate_limit_us
+echo "500" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/up_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/pl
 
 #Default I/o sched cfq
@@ -56,19 +56,6 @@ echo "cfq" > /sys/block/sdc/queue/scheduler
 echo "cfq" > /sys/block/sdd/queue/scheduler
 echo "cfq" > /sys/block/sde/queue/scheduler
 echo "cfq" > /sys/block/sdf/queue/scheduler
-
-# Wide block based tuning for reduced lag and less possible amount of general IO scheduling based overhead (from pkgnex script)
-for i in /sys/block/*/queue; do
-  echo "0" > $i/add_random;
-  echo "0" > $i/io_poll;
-  echo "0" > $i/iostats;
-  echo "0" > $i/nomerges;
-  echo "32" > $i/nr_requests;
-  echo "128" > $i/read_ahead_kb;
-  echo "0" > $i/rotational;
-  echo "1" > $i/rq_affinity;
-  echo "write through" > $i/write_cache;
-done;
 
 # Fixup LEDs
 echo "170" > /sys/class/leds/blue/max_brightness
@@ -83,11 +70,6 @@ echo "1" > /sys/kernel/fast_charge/force_fast_charge
 #Enable audio high performance mode by default
 echo "1" > /sys/module/snd_soc_wcd9330/parameters/high_perf_mode
 
-#Fstrim for a final boost
-fstrim /data;
-fstrim /cache;
-fstrim /system;
-
 sleep 25;
 # Script log file location
 
@@ -100,7 +82,7 @@ then
   exit 0
 else
   echo "---------------------------------------------" | tee -a $LOG_FILE;
-  echo "03KingKernel v1.0 failed, please check your installation." | tee -a $LOG_FILE;
+  echo "KingKernel late script failed. Please check your installation..." | tee -a $LOG_FILE;
   exit 1
 fi
   
