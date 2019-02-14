@@ -4819,9 +4819,11 @@ int mdss_fb_do_ioctl(struct fb_info *info, unsigned int cmd,
 
     case MSMFB_ATOMIC_COMMIT:
         #ifdef CONFIG_CPU_INPUT_BOOST
-            if (time_before(jiffies, last_input_jiffies + msecs_to_jiffies(2500))) {
-                cpu_input_boost_kick_general(80);
+            if (should_kick_frame_boost()) {
+                cpu_input_boost_kick_general(64);
+	#ifdef CONFIG_DEVFREQ_BOOST
                 devfreq_boost_kick(DEVFREQ_MSM_CPUBW);
+	#endif
             }
         #endif
         ret = mdss_fb_atomic_commit_ioctl(info, argp, file);
