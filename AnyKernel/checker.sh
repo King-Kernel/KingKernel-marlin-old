@@ -5,14 +5,6 @@
 #Script removes itself afterwards once process is completed
 
 #
-# Wait for /data to be mounted
-#
-
-while ! mountpoint -q /data; do
-	sleep 1
-done
-
-#
 # Cleanup
 #
 
@@ -26,5 +18,5 @@ if ! grep -q KingKernel /proc/version; then
 
 	# Abort and do not apply anything
 	exit 0
-fi
+fi;
 

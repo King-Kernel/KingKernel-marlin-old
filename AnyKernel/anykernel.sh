@@ -67,7 +67,7 @@ else
     #use /system/bin instead of /system/xbin
     cp $bin/sqlite3 $bindir
 fi
-ui_print "- Installed sqlite to $xbindir"
+ui_print "  • Installed sqlite to $xbindir"
 
 mountpoint -q /data && {
 
