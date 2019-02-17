@@ -10,15 +10,11 @@ on property:sys.boot_completed=1
 	setprop persist.spectrum.kernel KingKernel
 
 # Profiles
-# Bump to execute each profile in a magisk service context since it's permissive
-on property:persist.king.profile=battery
-	exec u:r:magisk:s0 root root -- /init.king_unified.sh battery
+# Bump to execute each profile in a magisk service context since it's permissive (kingbri)
 
-on property:persist.king.profile=balanced
-	exec u:r:magisk:s0 root root -- /init.king_unified.sh balanced
-
-on property:persist.king.profile=performance
-	exec u:r:magisk:s0 root root -- /init.king_unified.sh performance
+# Make the exec command pass an arg
+on property:persist.king.profile=*
+	exec u:r:magisk:s0 root root -- /init.proton.sh ${persist.king.profile}
 
 # Profile bridges: Franco Kernel Manager
 # Update the Spectrum profile, that'll be our primary set

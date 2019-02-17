@@ -29,14 +29,10 @@ dump_boot;
 
 # begin ramdisk changes
 
-if [ "$(getprop ro.product.device)" == "marlin" ]; then
-  rm -r $TMPDIR/overlay/init.sailfish.rc
-fi
+#Change the custom ramdisk to the device hardware name
+mv $TMPDIR/overlay/init.king.rc $TMPDIR/overlay/init.$(getprop ro.hardware).rc
 
-if [ "$(getprop ro.product.device)" == "sailfish" ]; then
-  rm -r $TMPDIR/overlay/init.marlin.rc
-fi
-
+#Clear any old ramdisk files
 rm -fr $ramdisk/overlay
 
 if [ -d $ramdisk/.backup ]; then
@@ -44,7 +40,6 @@ if [ -d $ramdisk/.backup ]; then
   patch_cmdline "skip_override" "skip_override"
 
   mv $TMPDIR/overlay $ramdisk
-  cp /system_root/init.rc $ramdisk/overlay
   # set permissions/ownership for included ramdisk files
   chmod -R 750 $ramdisk/*;
   chown -R root:root $ramdisk/*;
