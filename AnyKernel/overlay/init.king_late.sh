@@ -16,13 +16,13 @@ echo "Y" > /sys/module/msm_thermal/parameters/enabled
 echo "1" > /sys/module/msm_thermal/core_control/enabled
 
 # A customized CPUSet profile for the first generation of Pixels (By xfirefly93) - with the goal of increasing both battery life, system responsivness and overall daily needed performance without any notable regressions, possible sacrifices and tradeoffs;
-echo "3" > /dev/cpuset/background/cpus
-echo "1,3" > /dev/cpuset/camera-daemon/cpus
-echo "0-1" > /dev/cpuset/foreground/cpus
-echo "2" > /dev/cpuset/kernel/cpus
-echo "2-3" > /dev/cpuset/restricted/cpus
-echo "2-3" > /dev/cpuset/system-background/cpus
-echo "0-3" > /dev/cpuset/top-app/cpus
+#echo "3" > /dev/cpuset/background/cpus
+#echo "1,3" > /dev/cpuset/camera-daemon/cpus
+#echo "0-1" > /dev/cpuset/foreground/cpus
+#echo "2" > /dev/cpuset/kernel/cpus
+#echo "2-3" > /dev/cpuset/restricted/cpus
+#echo "2-3" > /dev/cpuset/system-background/cpus
+#echo "0-3" > /dev/cpuset/top-app/cpus
 
 #Schedutil gov tweaks
 
@@ -70,7 +70,7 @@ echo "0" > /sys/block/sdf/queue/iostats
 
 #1028 readahead KB for sde and sdf io scheds
 echo "1028" > /sys/block/sde/queue/read_ahead_kb
-echo "1028" > /sys/block/sde/queue/read_ahead_kb
+echo "1028" > /sys/block/sdf/queue/read_ahead_kb
 
 # Fixup LEDs
 echo "170" > /sys/class/leds/blue/max_brightness
