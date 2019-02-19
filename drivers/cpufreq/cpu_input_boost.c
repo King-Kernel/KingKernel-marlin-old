@@ -143,7 +143,6 @@ bool cpu_input_boost_should_boost_frame(void)
 void cpu_input_boost_kick(void)
 {
 	struct boost_drv *b = boost_drv_g;
-    u32 state;
 
 	if (!b)
 		return;
@@ -284,7 +283,7 @@ static int fb_notifier_cb(struct notifier_block *nb,
 
 	/* Boost when the screen turns on and unboost when it turns off */
 	if (*blank == FB_BLANK_UNBLANK) {
-		;
+		set_boost_bit(b, SCREEN_AWAKE);
 	} else {
 		clear_boost_bit(b, SCREEN_AWAKE);
 		unboost_all_cpus(b);
