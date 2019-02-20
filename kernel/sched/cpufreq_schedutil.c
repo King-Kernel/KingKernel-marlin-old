@@ -18,6 +18,9 @@
 #include <linux/sched/sysctl.h>
 #include "sched.h"
 #include "tune.h"
+#ifdef CONFIG_SCHED_WALT
+#include "walt.h"
+#endif
 
 unsigned long boosted_cpu_util(int cpu);
 
