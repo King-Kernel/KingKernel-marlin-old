@@ -22,7 +22,7 @@ if [ "$prof" == "battery" ]; then
 	echo "307200" > /sys/module/cpu_input_boost/parameters/input_boost_freq_lp
 	echo "307200" > /sys/module/cpu_input_boost/parameters/input_boost_freq_hp
 	echo "307200" > /sys/module/cpu_input_boost/parameters/general_boost_freq_lp
-	echo "2500" > /sys/module/cpu_input_boost/parameters/frame_boost_timeout
+	echo "1750" > /sys/module/cpu_input_boost/parameters/frame_boost_timeout
 	echo "10" > /sys/module/cpu_input_boost/parameters/dynamic_stune_boost
 	echo "1" > /sys/module/cpu_input_boost/parameters/general_stune_boost
 	echo "---------------------------------------------" | tee -a $LOG_FILE;
