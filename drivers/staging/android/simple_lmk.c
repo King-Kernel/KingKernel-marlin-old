@@ -14,15 +14,33 @@
 #include <linux/simple_lmk.h>
 #include <linux/state_notifier.h>
 
+static __read_mostly unsigned int slmk_minfree = CONFIG_ANDROID_SIMPLE_LMK_MINFREE;
+static __read_mostly unsigned int kswapd_timeout = CONFIG_ANDROID_SIMPLE_LMK_KSWAPD_TIMEOUT;
+static __read_mostly unsigned int oom_timeout = CONFIG_ANDROID_SIMPLE_LMK_OOM_TIMEOUT;
+
+module_param(slmk_minfree, uint, 0644);
+module_param(kswapd_timeout, uint, 0644);
+module_param(oom_timeout, uint, 0644);
+
+
 /* Duration to boost CPU and DDR bus to the max per memory reclaim event */
 #define BOOST_DURATION_MS (250)
 
+#ifdef CONFIG_ANDROID_SIMPLE_LMK_DEBUG
+#define MIN_FREE_PAGES (slmk_minfree * SZ_1M / PAGE_SIZE)
+
+#define KSWAPD_LMK_EXPIRES \
+	msecs_to_jiffies(kswapd_timeout)
+#define OOM_LMK_EXPIRES \
+	msecs_to_jiffies(oom_timeout)
+#else
 #define MIN_FREE_PAGES (CONFIG_ANDROID_SIMPLE_LMK_MINFREE * SZ_1M / PAGE_SIZE)
 
 #define KSWAPD_LMK_EXPIRES \
 	msecs_to_jiffies(CONFIG_ANDROID_SIMPLE_LMK_KSWAPD_TIMEOUT)
 #define OOM_LMK_EXPIRES \
 	msecs_to_jiffies(CONFIG_ANDROID_SIMPLE_LMK_OOM_TIMEOUT)
+#endif
 
 enum {
 	DISABLED,
@@ -160,7 +178,11 @@ static void simple_lmk_reclaim_work(struct work_struct *work)
 	/* Check kswapd's actual system run-time */
 	kswapd_time_now = get_kswapd_cputime();
 	delta_us = cputime_to_usecs(kswapd_time_now - kswapd_start_time);
+#ifdef CONFIG_ANDROID_SIMPLE_LMK_DEBUG
+	if (delta_us / USEC_PER_MSEC < kswapd_timeout)
+#else
 	if (delta_us / USEC_PER_MSEC < CONFIG_ANDROID_SIMPLE_LMK_KSWAPD_TIMEOUT)
+#endif
 		goto reschedule;
 	kswapd_start_time = kswapd_time_now;
 
