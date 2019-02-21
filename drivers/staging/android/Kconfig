@@ -132,6 +132,14 @@ config ANDROID_SIMPLE_LMK_OOM_TIMEOUT
 	  Simple LMK caps the frequency of OOM-invoked memory reclaims to
 	  this value.
 
+config ANDROID_SIMPLE_LMK_DEBUG
+	bool "Expose SLMK tuneables to userspace"
+	default "N"
+	help
+	  This is made to please sultan because of userspace stuff, but
+	  in reality, SLMK values should not be tweaked by anyone except
+          the creator
+
 endif
 
 config SYNC
