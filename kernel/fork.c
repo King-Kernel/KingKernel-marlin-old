@@ -79,6 +79,7 @@
 #include <linux/cpufreq.h>
 #include <linux/cpu_input_boost.h>
 #include <linux/devfreq_boost.h>
+#include <linux/state_notifier.h>
 
 #include <asm/pgtable.h>
 #include <asm/pgalloc.h>
