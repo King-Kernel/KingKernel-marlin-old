@@ -837,11 +837,4 @@ config MSM_REMOTEQDSS
 
 source "drivers/soc/qcom/memshare/Kconfig"
 
-config STATE_NOTIFIER
-	bool "State Notifier"
-	default n
-	help
-	  A unified display state notifier for kernel drivers for easy porting
-	  between different devices.
-
 endif # ARCH_MSM
