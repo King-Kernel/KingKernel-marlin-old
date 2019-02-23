@@ -12,6 +12,7 @@ echo "Late tweaks started" | tee -a $LOG_FILE;
 #Immediate executions for boot
 
 #Enable core_control
+echo "Y" > /sys/module/msm_thermal/parameters/enabled
 echo "1" > /sys/module/msm_thermal/core_control/enabled
 
 # A customized CPUSet profile for the first generation of Pixels (By xfirefly93) - with the goal of increasing both battery life, system responsivness and overall daily needed performance without any notable regressions, possible sacrifices and tradeoffs;
