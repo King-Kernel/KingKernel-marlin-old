@@ -40,6 +40,7 @@ static __read_mostly int general_stune_boost = CONFIG_GENERAL_BOOST_STUNE_LEVEL;
 module_param_named(dynamic_stune_boost, input_stune_boost, int, 0644);
 module_param(max_stune_boost, int, 0644);
 module_param(general_stune_boost, int, 0644);
+module_param(suspend_stune_boost, int, 0644);
 #endif
 
 /* Available bits for boost_drv state */
