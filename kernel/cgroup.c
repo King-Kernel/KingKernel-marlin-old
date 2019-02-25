@@ -2470,8 +2470,8 @@ retry_find_task:
 	if (!ret && !threadgroup && !state_suspended &&
 		!memcmp(of->kn->parent->name, "top-app", sizeof("top-app")) &&
 		is_zygote_pid(tsk->parent->pid)) {
-		cpu_input_boost_kick_max(500);
-		devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 500);
+		cpu_input_boost_kick_max(300);
+		devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 300);
 	}
 
 	put_task_struct(tsk);
