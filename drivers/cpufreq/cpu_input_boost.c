@@ -187,8 +187,10 @@ void cpu_input_boost_kick(void)
 	if (!b)
 		return;
 
-	if (likely(input_boost_duration))
-		queue_work(b->wq, &b->input_boost);
+	if (!(get_boost_state(b) & SCREEN_AWAKE))
+		return;
+
+	queue_work(b->wq, &b->input_boost);
 }
 
 static void __cpu_input_boost_kick_max(struct boost_drv *b,
@@ -215,6 +217,9 @@ void cpu_input_boost_kick_max(unsigned int duration_ms)
 	struct boost_drv *b = boost_drv_g;
 
 	if (!b)
+		return;
+
+	if (!(get_boost_state(b) & SCREEN_AWAKE))
 		return;
 
 	__cpu_input_boost_kick_max(b, duration_ms);
