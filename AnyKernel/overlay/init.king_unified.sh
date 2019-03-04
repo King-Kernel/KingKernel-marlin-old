@@ -59,7 +59,6 @@ elif [ "$prof" == "performance" ]; then
 	echo "2048" > /sys/block/sdf/queue/read_ahead_kb
 	echo "844200" > /sys/module/cpu_input_boost/parameters/input_boost_freq_lp
 	echo "614000" > /sys/module/cpu_input_boost/parameters/input_boost_freq_hp
-	echo "307200" > /sys/module/cpu_input_boost/parameters/general_boost_freq_lp
 	echo "748000" > /sys/module/cpu_input_boost/parameters/general_boost_freq_lp
 	echo "15000" > /sys/module/cpu_input_boost/parameters/frame_boost_timeout
 	echo "25" > /sys/module/cpu_input_boost/parameters/general_stune_boost\
