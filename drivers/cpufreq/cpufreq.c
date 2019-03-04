@@ -694,6 +694,10 @@ static ssize_t store_##file_name					\
 	if (&policy->object == &policy->min)				\
 		return count;						\
 									\
+	if (IS_ENABLED(CONFIG_MSM_THERMAL_SIMPLE) &&			\
+		&policy->object == &policy->max)			\
+		return count;						\
+									\
 	new_policy.min = new_policy.user_policy.min;			\
 	new_policy.max = new_policy.user_policy.max;			\
 									\
