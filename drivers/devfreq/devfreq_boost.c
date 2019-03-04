@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * Copyright (C) 2018 Sultan Alsawaf <sultan@kerneltoast.com>.
+ * Copyright (C) 2018-2019 Sultan Alsawaf <sultan@kerneltoast.com>.
  */
 
 #define pr_fmt(fmt) "devfreq_boost: " fmt
@@ -109,16 +109,6 @@ void devfreq_register_boost_device(enum df_device device, struct devfreq *df)
 	spin_lock_irqsave(&b->lock, flags);
 	b->df = df;
 	spin_unlock_irqrestore(&b->lock, flags);
-}
-
-struct boost_dev *devfreq_get_boost_dev(enum df_device device)
-{
-	struct df_boost_drv *d = df_boost_drv_g;
-
-	if (!d)
-		return NULL;
-
-	return d->devices + device;
 }
 
 static unsigned long devfreq_abs_min_freq(struct boost_dev *b)
