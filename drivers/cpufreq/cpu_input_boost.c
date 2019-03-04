@@ -52,10 +52,11 @@ module_param(general_suspend_stune_boost, int, 0644);
 #endif
 
 /* Available bits for boost_drv state */
-#define INPUT_BOOST		BIT(0)
-#define MAX_BOOST		BIT(1)
-#define GENERAL_BOOST		BIT(2)
-#define DISPLAY_BG_STUNE_BOOST	BIT(3)
+#define SCREEN_AWAKE		BIT(0)
+#define INPUT_BOOST		BIT(1)
+#define MAX_BOOST		BIT(2)
+#define GENERAL_BOOST		BIT(3)
+#define DISPLAY_BG_STUNE_BOOST	BIT(4)
 
 struct boost_drv {
 	struct workqueue_struct *wq;
@@ -377,6 +378,7 @@ static int fb_notifier_cb(struct notifier_block *nb,
 
 	/* Boost when the screen turns on and unboost when it turns off */
 	if (*blank == FB_BLANK_UNBLANK) {
+		set_boost_bit(b, SCREEN_AWAKE);
 		if (b->ta_stune_boost_default != INT_MIN)
 			set_stune_boost(ST_TA, b->ta_stune_boost_default, NULL);
 		if (b->fg_stune_boost_default != INT_MIN)
@@ -390,6 +392,7 @@ static int fb_notifier_cb(struct notifier_block *nb,
 		update_stune_boost(b, &b->display_bg_stune_active, ST_BG,
 			           general_suspend_stune_boost, &b->display_bg_stune_slot);
 	} else {
+		clear_boost_bit(b, SCREEN_AWAKE);
 		clear_stune_boost(b, &b->display_bg_stune_active, ST_BG,
 				  b->display_bg_stune_slot);
 		unboost_all_cpus(b);
@@ -416,6 +419,9 @@ static void cpu_input_boost_input_event(struct input_handle *handle,
 	u32 state;
 
 	state = get_boost_state(b);
+
+	if (!(state & SCREEN_AWAKE))
+		return;
 
 	if (likely(input_boost_duration))
 		queue_work(b->wq, &b->input_boost);
