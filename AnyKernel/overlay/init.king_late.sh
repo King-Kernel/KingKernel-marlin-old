@@ -11,17 +11,6 @@ echo "Late tweaks started" | tee -a $LOG_FILE;
 
 #Immediate executions for boot
 
-# echo "Y" > /sys/module/msm_thermal/parameters/enabled
-
-# A customized CPUSet profile for the first generation of Pixels (By xfirefly93) - with the goal of increasing both battery life, system responsivness and overall daily needed performance without any notable regressions, possible sacrifices and tradeoffs;
-#echo "3" > /dev/cpuset/background/cpus
-#echo "1,3" > /dev/cpuset/camera-daemon/cpus
-#echo "0-1" > /dev/cpuset/foreground/cpus
-#echo "2" > /dev/cpuset/kernel/cpus
-#echo "2-3" > /dev/cpuset/restricted/cpus
-#echo "2-3" > /dev/cpuset/system-background/cpus
-#echo "0-3" > /dev/cpuset/top-app/cpus
-
 #Schedutil gov tweaks
 
 echo "500" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us
