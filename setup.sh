@@ -19,7 +19,7 @@ prefix_gcc32=arm-linux-androideabi-
 
 # Number of parallel jobs to run
 # Do not remove, set to 1 for no parallelism.
-jobs=5
+jobs=$(nproc --all)
 
 # Do not edit below this point
 # ----------------------------
