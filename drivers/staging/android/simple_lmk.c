@@ -180,8 +180,8 @@ static unsigned long do_lmk_reclaim(unsigned long pages_needed)
 	int i;
 
 	if (!state_suspended) {
-		cpu_input_boost_kick_max(45);
-		devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 60);
+		cpu_input_boost_kick_max(BOOST_DURATION_MS);
+		devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, BOOST_DURATION_MS);
 	}
 
 	for (i = 1; i < ARRAY_SIZE(adj_prio); i++) {

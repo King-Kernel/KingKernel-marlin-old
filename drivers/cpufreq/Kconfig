@@ -466,7 +466,6 @@ config SUSPEND_GENERAL_BOOST_STUNE_LEVEL
 	  influence system-wide CPU frequency selection. Negative values are
 	  encouraged for battery. A value of 0 disables SchedTune boosting
 	  for this level.
-
 endif
 
 comment "CPU frequency scaling drivers"
