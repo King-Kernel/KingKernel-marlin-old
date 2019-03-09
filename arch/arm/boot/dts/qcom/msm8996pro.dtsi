@@ -1145,9 +1145,9 @@
 			qcom,gold-khz = <825600>;
 			qcom,trip-deg = <70000>;
 		};
-	};
+	}; */
 };
-*/
+
 /* GPU overrides */
 &msm_gpu {
 	/* Updated chip ID */
