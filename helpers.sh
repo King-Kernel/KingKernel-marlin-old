@@ -44,6 +44,13 @@ kmake() {
     make "${MAKEFLAGS[@]}" "$@"
 }
 
+# Move kernel image to AnyKernel dir
+moveimg() {
+    rm -rf AnyKernel/Image.lz4-dtb
+    cp out/arch/arm64/boot/Image.lz4-dtb AnyKernel/Image.lz4-dtb
+    echo "Copied image file"
+}
+
 _RELEASE=0
 
 # Create a flashable zip of the current kernel image
