@@ -1968,10 +1968,6 @@ struct task_struct {
     
     /* CPU-bound kernel thread */
 	bool kthread_per_cpu;
-
-#ifdef CONFIG_ANDROID_SIMPLE_LMK
-	bool lmk_sigkill_sent;
-#endif
 };
 
 /* Future-safe accessor for struct task_struct's cpus_allowed. */
