@@ -4820,7 +4820,7 @@ int mdss_fb_do_ioctl(struct fb_info *info, unsigned int cmd,
     case MSMFB_ATOMIC_COMMIT:
         #ifdef CONFIG_CPU_INPUT_BOOST
             if (cpu_input_boost_should_boost_frame()) {
-                cpu_input_boost_kick_general(64);
+                cpu_input_boost_kick();
 	#ifdef CONFIG_DEVFREQ_BOOST
                 devfreq_boost_kick(DEVFREQ_MSM_CPUBW);
 	#endif
