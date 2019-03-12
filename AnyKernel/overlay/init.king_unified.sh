@@ -21,10 +21,8 @@ if [ "$prof" == "battery" ]; then
 	echo "512" > /sys/block/sdf/queue/read_ahead_kb
 	echo "307200" > /sys/module/cpu_input_boost/parameters/input_boost_freq_lp
 	echo "307200" > /sys/module/cpu_input_boost/parameters/input_boost_freq_hp
-	echo "307200" > /sys/module/cpu_input_boost/parameters/general_boost_freq_lp
 	echo "1750" > /sys/module/cpu_input_boost/parameters/frame_boost_timeout
 	echo "10" > /sys/module/cpu_input_boost/parameters/dynamic_stune_boost
-	echo "1" > /sys/module/cpu_input_boost/parameters/general_stune_boost
 	echo "---------------------------------------------" | tee -a $LOG_FILE;
         echo "Battery executed" | tee -a $LOG_FILE;
 elif [ "$prof" == "balanced" ]; then 
@@ -40,10 +38,8 @@ elif [ "$prof" == "balanced" ]; then
 	echo "1028" > /sys/block/sdf/queue/read_ahead_kb
 	echo "614000" > /sys/module/cpu_input_boost/parameters/input_boost_freq_lp
 	echo "404200" > /sys/module/cpu_input_boost/parameters/input_boost_freq_hp
-	echo "537000" > /sys/module/cpu_input_boost/parameters/general_boost_freq_lp
 	echo "3250" > /sys/module/cpu_input_boost/parameters/frame_boost_timeout
 	echo "20" > /sys/module/cpu_input_boost/parameters/dynamic_stune_boost
-	echo "10" > /sys/module/cpu_input_boost/parameters/general_stune_boost
 	echo "---------------------------------------------" | tee -a $LOG_FILE;
         echo "Balanced executed" | tee -a $LOG_FILE;
 elif [ "$prof" == "performance" ]; then 
@@ -59,9 +55,7 @@ elif [ "$prof" == "performance" ]; then
 	echo "2048" > /sys/block/sdf/queue/read_ahead_kb
 	echo "844200" > /sys/module/cpu_input_boost/parameters/input_boost_freq_lp
 	echo "614000" > /sys/module/cpu_input_boost/parameters/input_boost_freq_hp
-	echo "748000" > /sys/module/cpu_input_boost/parameters/general_boost_freq_lp
 	echo "15000" > /sys/module/cpu_input_boost/parameters/frame_boost_timeout
-	echo "25" > /sys/module/cpu_input_boost/parameters/general_stune_boost\
 	echo "50" > /sys/module/cpu_input_boost/parameters/dynamic_stune_boost
 	echo "---------------------------------------------" | tee -a $LOG_FILE;
         echo "Performance executed" | tee -a $LOG_FILE;
