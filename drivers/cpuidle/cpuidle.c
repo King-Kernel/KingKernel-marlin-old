@@ -99,7 +99,7 @@ void cpuidle_use_deepest_state(bool enable)
 	struct cpuidle_device *dev;
 
 	preempt_disable();
-	dev = cpuidle_get_device();
+	dev = __this_cpu_read(cpuidle_devices);
 	if (dev)
 		dev->use_deepest_state = enable;
 	preempt_enable();
