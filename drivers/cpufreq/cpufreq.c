@@ -17,6 +17,7 @@
 
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
+#include <linux/binfmts.h>
 #include <linux/cpu.h>
 #include <linux/cpufreq.h>
 #include <linux/delay.h>
@@ -691,11 +692,13 @@ static ssize_t store_##file_name					\
 	if (ret)							\
 		return -EINVAL;						\
 									\
-	if (&policy->object == &policy->min)				\
+	if (IS_ENABLED(CONFIG_CPU_INPUT_BOOST) &&			\
+	    &policy->object == &policy->min)				\
 		return count;						\
 									\
 	if (IS_ENABLED(CONFIG_MSM_THERMAL_SIMPLE) &&			\
-		&policy->object == &policy->max)			\
+	    &policy->object == &policy->max &&				\
+	    comm_should_block_write(current->comm))			\
 		return count;						\
 									\
 	new_policy.min = new_policy.user_policy.min;			\
