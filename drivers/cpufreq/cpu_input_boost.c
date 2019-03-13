@@ -36,21 +36,20 @@ module_param(frame_boost_timeout, int, 0644);
 #ifdef CONFIG_DYNAMIC_STUNE_BOOST
 static __read_mostly int input_stune_boost = CONFIG_INPUT_STUNE_BOOST;
 static __read_mostly int max_stune_boost = CONFIG_MAX_STUNE_BOOST;
-static __read_mostly int general_stune_boost = CONFIG_GENERAL_STUNE_BOOST;
 static __read_mostly int target_suspend_stune_boost = CONFIG_SUSPEND_TARGET_BOOST_STUNE_LEVEL;
 static __read_mostly int general_suspend_stune_boost = CONFIG_SUSPEND_GENERAL_BOOST_STUNE_LEVEL;
 
 module_param_named(dynamic_stune_boost, input_stune_boost, int, 0644);
 module_param(max_stune_boost, int, 0644);
-module_param(general_stune_boost, int, 0644);
 module_param(target_suspend_stune_boost, int, 0644);
 module_param(general_suspend_stune_boost, int, 0644);
 #endif
 
 /* Available bits for boost_drv state */
-#define INPUT_BOOST		BIT(0)
-#define MAX_BOOST		BIT(1)
-#define DISPLAY_BG_STUNE_BOOST	BIT(2)
+#define SCREEN_AWAKE		BIT(0)
+#define INPUT_BOOST		BIT(1)
+#define MAX_BOOST		BIT(2)
+#define DISPLAY_BG_STUNE_BOOST	BIT(3)
 
 struct boost_drv {
 	struct workqueue_struct *wq;
@@ -63,6 +62,7 @@ struct boost_drv {
 	atomic64_t max_boost_expires;
 	atomic_t max_boost_dur;
 	atomic_t state;
+
 	bool input_stune_active;
 	int input_stune_slot;
  	bool max_stune_active;
@@ -164,7 +164,8 @@ bool cpu_input_boost_should_boost_frame(void)
 
 static void __cpu_input_boost_kick(struct boost_drv *b)
 {
-	state = get_boost_state(b);
+	if (!(get_boost_state(b) & SCREEN_AWAKE))
+		return;
 
 	if (likely(input_boost_duration))
 		queue_work(b->wq, &b->input_boost);
@@ -186,6 +187,7 @@ static void __cpu_input_boost_kick_max(struct boost_drv *b,
 				       unsigned int duration_ms)
 {
 	unsigned long curr_expires, new_expires;
+
 
 	if (!(get_boost_state(b) & SCREEN_AWAKE))
 		return;
@@ -316,6 +318,8 @@ static int fb_notifier_cb(struct notifier_block *nb,
 
 	/* Boost when the screen turns on and unboost when it turns off */
 	if (*blank == FB_BLANK_UNBLANK) {
+		set_boost_bit(b, SCREEN_AWAKE);
+		suspend_cpu_kick(b, true);
 		if (b->ta_stune_boost_default != INT_MIN)
 			set_stune_boost(ST_TA, b->ta_stune_boost_default, NULL);
 		if (b->fg_stune_boost_default != INT_MIN)
@@ -329,6 +333,8 @@ static int fb_notifier_cb(struct notifier_block *nb,
 		update_stune_boost(b, &b->display_bg_stune_active, ST_BG,
 			           general_suspend_stune_boost, &b->display_bg_stune_slot);
 	} else {
+		clear_boost_bit(b, SCREEN_AWAKE);
+		suspend_cpu_kick(b, false);
 		clear_stune_boost(b, &b->display_bg_stune_active, ST_BG,
 				  b->display_bg_stune_slot);
 		unboost_all_cpus(b);
