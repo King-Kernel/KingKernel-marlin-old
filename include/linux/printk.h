@@ -475,4 +475,6 @@ static inline void print_hex_dump_bytes(const char *prefix_str, int prefix_type,
 		       groupsize, buf, len, ascii)
 #endif /* defined(CONFIG_DYNAMIC_DEBUG) */
 
+extern void set_printk_offset(s64 offset);
+
 #endif
