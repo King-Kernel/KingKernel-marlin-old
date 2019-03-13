@@ -770,6 +770,9 @@ boost_write(struct cgroup_subsys_state *css, struct cftype *cft,
 	unsigned threshold_idx;
 	int boost_pct;
 
+	if (comm_should_block_write(current->comm))
+		return 0;
+
 	if (boost < -100 || boost > 100)
 		return -EINVAL;
 #ifdef CONFIG_STUNE_PERFD_DEBUG
