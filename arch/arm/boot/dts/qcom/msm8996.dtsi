@@ -21,7 +21,7 @@
 	interrupt-parent = <&intc>;
 
 	chosen {
-		bootargs = "quiet noirqdebug cpuidle_sysfs_switch";
+		bootargs = "quiet rcupdate.rcu_normal_after_boot=1 noirqdebug cpuidle_sysfs_switch";
 	};
 
 	aliases {
