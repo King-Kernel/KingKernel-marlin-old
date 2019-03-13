@@ -319,7 +319,6 @@ static int fb_notifier_cb(struct notifier_block *nb,
 	/* Boost when the screen turns on and unboost when it turns off */
 	if (*blank == FB_BLANK_UNBLANK) {
 		set_boost_bit(b, SCREEN_AWAKE);
-		suspend_cpu_kick(b, true);
 		if (b->ta_stune_boost_default != INT_MIN)
 			set_stune_boost(ST_TA, b->ta_stune_boost_default, NULL);
 		if (b->fg_stune_boost_default != INT_MIN)
@@ -334,7 +333,6 @@ static int fb_notifier_cb(struct notifier_block *nb,
 			           general_suspend_stune_boost, &b->display_bg_stune_slot);
 	} else {
 		clear_boost_bit(b, SCREEN_AWAKE);
-		suspend_cpu_kick(b, false);
 		clear_stune_boost(b, &b->display_bg_stune_active, ST_BG,
 				  b->display_bg_stune_slot);
 		unboost_all_cpus(b);
