@@ -13163,8 +13163,6 @@ void hdd_wlan_exit(hdd_context_t *pHddCtx)
       VOS_ASSERT( VOS_IS_STATUS_SUCCESS( vosStatus ) );
    }
    /* Destroy the wake lock */
-   vos_wake_lock_destroy(&pHddCtx->rx_wake_lock);
-   /* Destroy the wake lock */
    vos_wake_lock_destroy(&pHddCtx->sap_wake_lock);
 
    hdd_hostapd_channel_wakelock_deinit(pHddCtx);
@@ -15384,10 +15382,7 @@ int hdd_wlan_startup(struct device *dev, v_VOID_t *hif_sc)
    reg_netdev_notifier_done = TRUE;
 #endif
 
-   /* Initialize the wake lcok */
-   vos_wake_lock_init(&pHddCtx->rx_wake_lock,
-           "qcom_rx_wakelock");
-   /* Initialize the wake lcok */
+   /* Initialize the wake lock */
    vos_wake_lock_init(&pHddCtx->sap_wake_lock,
            "qcom_sap_wakelock");
 
