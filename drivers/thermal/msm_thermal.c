@@ -119,7 +119,7 @@
 
 static struct msm_thermal_data msm_thermal_info;
 static struct delayed_work check_temp_work, retry_hotplug_work;
-static bool core_control_enabled;
+static bool core_control_enabled = true;
 static uint32_t cpus_offlined;
 static cpumask_var_t cpus_previously_online;
 static DEFINE_MUTEX(core_control_mutex);
@@ -132,7 +132,7 @@ static struct completion hotplug_notify_complete;
 static struct completion freq_mitigation_complete;
 static struct completion thermal_monitor_complete;
 
-static int enabled;
+static int enabled = 1;
 static int polling_enabled;
 static int rails_cnt;
 static int sensor_cnt;
@@ -4735,7 +4735,7 @@ static int __ref set_enabled(const char *val, const struct kernel_param *kp)
 {
 	int ret = 0;
 
-	ret = param_set_bool(val, kp);
+	ret = param_set_bool("Y", kp);
 	if (!enabled)
 		interrupt_mode_init();
 	else
