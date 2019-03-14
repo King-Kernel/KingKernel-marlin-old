@@ -1016,7 +1016,7 @@
 	/* qcom,msm-thermal-simple {
 		compatible = "qcom,msm-thermal-simple";
 		qcom,thermal-vadc = <&pm8994_vadc>;
-		qcom,adc-channel = <0x4f>;
+		qcom,adc-channel = <0x4c>;
 		qcom,poll-ms = <3000>;
 		qcom,start-delay = <60>;
 
