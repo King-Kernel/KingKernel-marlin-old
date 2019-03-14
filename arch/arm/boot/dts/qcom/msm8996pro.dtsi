@@ -1013,7 +1013,7 @@
 		};
 	};
 
-	/* qcom,msm-thermal-simple {
+	qcom,msm-thermal-simple {
 		compatible = "qcom,msm-thermal-simple";
 		qcom,thermal-vadc = <&pm8994_vadc>;
 		qcom,adc-channel = <0x4c>;
