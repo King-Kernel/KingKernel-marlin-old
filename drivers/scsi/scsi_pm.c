@@ -283,14 +283,6 @@ static int scsi_runtime_suspend(struct device *dev)
 
 static int sdev_runtime_resume(struct device *dev)
 {
-<<<<<<< HEAD
-    struct scsi_device *sdev = to_scsi_device(dev);
-    const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
-    int err = 0;
-
-    if (!sdev->request_queue->dev)
-        return scsi_dev_type_resume(dev, do_scsi_runtime_resume);
-=======
 	struct scsi_device *sdev = to_scsi_device(dev);
 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
 	int err = 0;
@@ -302,7 +294,6 @@ static int sdev_runtime_resume(struct device *dev)
 	if (pm && pm->runtime_resume)
 		err = pm->runtime_resume(dev);
 	blk_post_runtime_resume(sdev->request_queue, err);
->>>>>>> android-q-preview-1_r0.1
 
     if (pm && pm->runtime_resume) {
         blk_pre_runtime_resume(sdev->request_queue);
