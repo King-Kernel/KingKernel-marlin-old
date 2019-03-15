@@ -1,7 +1,7 @@
 # Toolchain paths
 
 # Path to the root of the Clang toolchain
-tc_clang=$HOME/toolchains/clang-9.0
+tc_clang=$HOME/toolchains/clang-9.0.1
 
 # Path to the root of the 64-bit GCC toolchain
 tc_gcc=$HOME/toolchains/aarch64-linux-android-4.9
