@@ -256,7 +256,7 @@ static int uid_time_in_state_seq_show(struct seq_file *m, void *v)
 	if (v == uid_hash_table) {
 		seq_puts(m, "uid:");
 		for (i = 0; i < all_freq_table->table_size; ++i)
-			seq_put_decimal_ull(m, " ",
+			seq_put_decimal_ull(m, ' ',
 					    all_freq_table->freq_table[i]);
 		seq_putc(m, '\n');
 	}
@@ -265,14 +265,14 @@ static int uid_time_in_state_seq_show(struct seq_file *m, void *v)
 
 	hlist_for_each_entry_rcu(uid_entry, (struct hlist_head *)v, hash) {
 		if (uid_entry->max_states) {
-			seq_put_decimal_ull(m, "", uid_entry->uid);
+			seq_put_decimal_ull(m, ' ', uid_entry->uid);
 			seq_putc(m, ':');
 		}
 
 		for (i = 0; i < uid_entry->max_states; ++i) {
 			u64 time;
 			time = cputime_to_clock_t(uid_entry->time_in_state[i]);
-			seq_put_decimal_ull(m, " ", time);
+			seq_put_decimal_ull(m, ' ', time);
 		}
 		if (uid_entry->max_states)
 			seq_putc(m, '\n');
