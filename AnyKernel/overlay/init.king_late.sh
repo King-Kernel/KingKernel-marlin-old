@@ -13,28 +13,16 @@ echo "Late tweaks started" | tee -a $LOG_FILE;
 
 #Schedutil gov tweaks
 
-echo "500" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/iowait_boost_enable
-echo "500" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us
-echo "0" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/pl
 
 #cpu1
-echo "500" > /sys/devices/system/cpu/cpu1/cpufreq/schedutil/down_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu1/cpufreq/schedutil/iowait_boost_enable
-echo "500" > /sys/devices/system/cpu/cpu1/cpufreq/schedutil/up_rate_limit_us
-echo "0" > /sys/devices/system/cpu/cpu1/cpufreq/schedutil/pl
 
 #cpu2
-echo "500" > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/down_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/iowait_boost_enable
-echo "500" > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/up_rate_limit_us
-echo "0" > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/pl
 
 #cpu3
-echo "500" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/down_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/iowait_boost_enable
-echo "500" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/up_rate_limit_us
-echo "0" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/pl
 
 #Default I/o sched cfq
 echo "cfq" > /sys/block/sda/queue/scheduler
