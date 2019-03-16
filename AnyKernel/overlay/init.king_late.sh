@@ -47,18 +47,6 @@ echo "cfq" > /sys/block/sdf/queue/scheduler
 #Change swappiness
 echo "20" > /proc/sys/vm/swappiness
 
-#Disable I/o stat for all queues
-echo "0" > /sys/block/sda/queue/iostats
-echo "0" > /sys/block/sdb/queue/iostats
-echo "0" > /sys/block/sdc/queue/iostats
-echo "0" > /sys/block/sdd/queue/iostats
-echo "0" > /sys/block/sde/queue/iostats
-echo "0" > /sys/block/sdf/queue/iostats
-
-#1028 readahead KB for sde and sdf io scheds
-echo "1028" > /sys/block/sde/queue/read_ahead_kb
-echo "1028" > /sys/block/sdf/queue/read_ahead_kb
-
 # Fixup LEDs
 echo "170" > /sys/class/leds/blue/max_brightness
 echo "170" > /sys/class/leds/green/max_brightness
@@ -68,9 +56,6 @@ echo "170" > /sys/class/leds/red/max_brightness
 
 # Force enable fast charge
 echo "1" > /sys/kernel/fast_charge/force_fast_charge
-
-#Enable audio high performance mode by default
-echo "1" > /sys/module/snd_soc_wcd9330/parameters/high_perf_mode
 
 sleep 25;
 # Script log file location
