@@ -11,6 +11,10 @@ echo "Late tweaks started" | tee -a $LOG_FILE;
 
 #Immediate executions for boot
 
+#Disable core_control and enable cpu3 if it's offline
+echo "0" > /sys/module/msm_thermal/core_control/enabled
+echo "1" > /sys/devices/system/cpu/cpu3/online
+
 #Schedutil gov tweaks
 
 echo "0" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/iowait_boost_enable
