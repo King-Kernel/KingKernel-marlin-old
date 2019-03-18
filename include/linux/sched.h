@@ -1965,9 +1965,6 @@ struct task_struct {
 #endif
 	atomic64_t *concurrent_active_time;
 	atomic64_t *concurrent_policy_time;
-    
-    /* CPU-bound kernel thread */
-	bool kthread_per_cpu;
 };
 
 /* Future-safe accessor for struct task_struct's cpus_allowed. */
