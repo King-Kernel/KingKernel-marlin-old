@@ -20,7 +20,7 @@
 #include <linux/ftrace.h>
 #include <linux/mm.h>
 #include <linux/msm_adreno_devfreq.h>
-#include <linux/state_notifier.h>
+#include <linux/display_state.h>
 #include <asm/cacheflush.h>
 #include <soc/qcom/scm.h>
 #include "governor.h"
@@ -410,7 +410,7 @@ static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq,
 	 * Force to use & record as min freq when system has
 	 * entered pm-suspend or screen-off state.
 	 */
-	if (state_suspended) {
+	if (!is_display_on()) {
 		*freq = devfreq->profile->freq_table[devfreq->profile->max_state - 1];
 		return 0;
 	}
