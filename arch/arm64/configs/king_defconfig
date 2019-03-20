@@ -3929,7 +3929,6 @@ CONFIG_ARM_SMMU=y
 # SOC (System On Chip) specific Drivers
 #
 CONFIG_PM_DEVFREQ=y
-CONFIG_STATE_NOTIFIER=y
 
 #
 # DEVFREQ Governors
