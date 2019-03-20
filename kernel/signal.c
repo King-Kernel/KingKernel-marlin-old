@@ -36,7 +36,7 @@
 #include <linux/compiler.h>
 #include <linux/cpu_input_boost.h>
 #include <linux/devfreq_boost.h>
-#include <linux/state_notifier.h>
+#include <linux/display_state.h>
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/signal.h>
@@ -1400,7 +1400,7 @@ retry:
 						   &rt_param);
 			sched_setaffinity(p->pid, cpu_perf_mask);
 
-			if (!state_suspended) {
+			if (is_display_on()) {
 				cpu_input_boost_kick_max(250);
 				devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW,
 							250);

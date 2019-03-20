@@ -28,7 +28,7 @@
 #include <linux/binfmts.h>
 #include <linux/mman.h>
 #include <linux/mmu_notifier.h>
-#include <linux/state_notifier.h>
+#include <linux/display_state.h>
 #include <linux/fs.h>
 #include <linux/mm.h>
 #include <linux/vmacache.h>
@@ -1693,7 +1693,7 @@ long do_fork(unsigned long clone_flags,
 
 #ifdef CONFIG_CPU_INPUT_BOOST
 	/* Boost CPU to the max for 32 ms when userspace launches an app */
-	if (is_zygote_pid(current->pid) && !state_suspended &&
+	if (is_zygote_pid(current->pid) && is_display_on() &&
 		time_before(jiffies, last_input_jiffies + msecs_to_jiffies(75))) {
 		cpu_input_boost_kick_max(32);
 		devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 32);

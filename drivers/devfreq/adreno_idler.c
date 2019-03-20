@@ -31,7 +31,7 @@
 #include <linux/module.h>
 #include <linux/devfreq.h>
 #include <linux/state_notifier.h>
-#include <linux/msm_adreno_devfreq.h>
+#include <linux/display_state.h>
 
 #define ADRENO_IDLER_MAJOR_VERSION 1
 #define ADRENO_IDLER_MINOR_VERSION 1
@@ -83,7 +83,7 @@ int adreno_idler(struct devfreq_dev_status stats, struct devfreq *devfreq,
 			idlecount--;
 			return 1;
 		}
-	} else if (state_suspended) {
+	} else if (!is_display_on()) {
 		/* GPU shouldn't be used for much while display is off, so ramp down the frequency */
 		*freq = devfreq->profile->freq_table[devfreq->profile->max_state - 1];
 		return 1;
