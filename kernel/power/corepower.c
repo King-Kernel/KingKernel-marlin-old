@@ -11,7 +11,7 @@
 #include <linux/cpuidle.h>
 #include <linux/input.h>
 #include <linux/moduleparam.h>
-#include <linux/msm_drm_notify.h>
+#include <linux/fb.h>
 #include <linux/slab.h>
 #include <soc/qcom/lpm_levels.h>
 
@@ -136,13 +136,13 @@ module_param_cb(cluster_force_deep_idle, &bool_param_ops,
 		&cluster_force_deep_idle, 0644);
 
 /* Base */
-static int msm_drm_notifier_cb(struct notifier_block *nb,
+static int fb_notifier_cb(struct notifier_block *nb,
 			       unsigned long event, void *data)
 {
-	struct msm_drm_notifier *evdata = data;
+	struct fb_event *evdata = data;
 	unsigned int blank;
 
-	if (event != MSM_DRM_EVENT_BLANK && event != MSM_DRM_EARLY_EVENT_BLANK)
+	if (event != FB_EVENT_BLANK && event != FB_EARLY_EVENT_BLANK)
 		return NOTIFY_DONE;
 
 	if (!evdata || !evdata->data)
@@ -151,13 +151,12 @@ static int msm_drm_notifier_cb(struct notifier_block *nb,
 	blank = *(unsigned int *)evdata->data;
 
 	switch (blank) {
-	case MSM_DRM_BLANK_POWERDOWN: /* Off */
-	case MSM_DRM_BLANK_LP: /* AOD */
-		if (event == MSM_DRM_EARLY_EVENT_BLANK)
+	case FB_BLANK_POWERDOWN: /* Off */
+		if (event == FB_EARLY_EVENT_BLANK)
 			update_state(STATE_SLEEP, false);
 		break;
-	case MSM_DRM_BLANK_UNBLANK: /* On */
-		if (event == MSM_DRM_EVENT_BLANK)
+	case FB_BLANK_UNBLANK: /* On */
+		if (event == FB_EVENT_BLANK)
 			update_state(STATE_AWAKE, false);
 		break;
 	}
@@ -166,7 +165,7 @@ static int msm_drm_notifier_cb(struct notifier_block *nb,
 }
 
 static struct notifier_block display_state_nb __ro_after_init = {
-	.notifier_call = msm_drm_notifier_cb,
+	.notifier_call = fb_notifier_cb,
 };
 
 static void corepower_input_event(struct input_handle *handle,
@@ -250,9 +249,9 @@ static int __init corepower_init(void)
 		goto err_destroy_wq;
 	}
 
-	ret = msm_drm_register_client(&display_state_nb);
+	ret = fb_register_client(&display_state_nb);
 	if (ret)
-		pr_err("Failed to register msm_drm notifier, err: %d\n", ret);
+		pr_err("Failed to register fb notifier, err: %d\n", ret);
 
 	return 0;
 
