@@ -106,6 +106,10 @@ struct lpm_debug {
 struct lpm_cluster *lpm_root_node;
 
 static DEFINE_PER_CPU(struct lpm_cluster*, cpu_cluster);
+
+static bool cluster_use_deepest_state;
+module_param(cluster_use_deepest_state, bool, 0664);
+
 static bool suspend_in_progress;
 static struct hrtimer lpm_hrtimer;
 static struct lpm_debug *lpm_debug;
@@ -163,6 +167,11 @@ void lpm_suspend_wake_time(uint64_t wakeup_time)
 		suspend_wake_time = wakeup_time;
 }
 EXPORT_SYMBOL(lpm_suspend_wake_time);
+
+void lpm_cluster_use_deepest_state(bool enable)
+{
+	cluster_use_deepest_state = enable;
+}
 
 static uint32_t least_cluster_latency(struct lpm_cluster *cluster,
 					struct latency_level *lat_level)
@@ -565,6 +574,24 @@ static uint64_t get_cluster_sleep_time(struct lpm_cluster *cluster,
 		return ktime_to_us(ktime_sub(next_event, ktime_get()));
 	else
 		return 0;
+}
+
+static int cluster_select_deepest(struct lpm_cluster *cluster)
+{
+	int i;
+
+	for (i = cluster->nlevels - 1; i >= 0; i--) {
+		struct lpm_cluster_level *level = &cluster->levels[i];
+
+		if (level->notify_rpm) {
+			if (level->notify_rpm && msm_rpm_waiting_for_ack())
+				continue;
+		}
+
+		break;
+	}
+
+	return i;
 }
 
 static int cluster_select(struct lpm_cluster *cluster, bool from_idle)
