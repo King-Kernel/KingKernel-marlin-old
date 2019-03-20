@@ -30,7 +30,6 @@
 
 #include <linux/module.h>
 #include <linux/devfreq.h>
-#include <linux/state_notifier.h>
 #include <linux/display_state.h>
 
 #define ADRENO_IDLER_MAJOR_VERSION 1

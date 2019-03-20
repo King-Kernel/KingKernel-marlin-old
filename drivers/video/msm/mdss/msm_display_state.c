@@ -38,7 +38,7 @@ static int fb_notifier_cb(struct notifier_block *nb,
 		if (event == FB_EARLY_EVENT_BLANK)
 			display_on = false;
 		break;
-	case MSM_DRM_BLANK_UNBLANK:
+	case FB_BLANK_UNBLANK:
 		if (event == FB_EVENT_BLANK)
 			display_on = true;
 		break;
