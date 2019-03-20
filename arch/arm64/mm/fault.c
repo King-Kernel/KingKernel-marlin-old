@@ -596,16 +596,3 @@ void cpu_enable_pan(void *__unused)
 	config_sctlr_el1(SCTLR_EL1_SPAN, 0);
 }
 #endif /* CONFIG_ARM64_PAN */
-
-#ifdef CONFIG_ARM64_UAO
-/*
- * Kernel threads have fs=KERNEL_DS by default, and don't need to call
- * set_fs(), devtmpfs in particular relies on this behaviour.
- * We need to enable the feature at runtime (instead of adding it to
- * PSR_MODE_EL1h) as the feature may not be implemented by the cpu.
- */
-void cpu_enable_uao(void *__unused)
-{
-	asm(SET_PSTATE_UAO(1));
-}
-#endif /* CONFIG_ARM64_UAO */
