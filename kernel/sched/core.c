@@ -3291,7 +3291,7 @@ void __noreturn do_task_dead(void)
 	/* Tell freezer to ignore us: */
 	current->flags |= PF_NOFREEZE;
 
-	__schedule(false);
+	__schedule();
 	BUG();
 	/* Avoid "noreturn function does return".  */
 	for (;;)
