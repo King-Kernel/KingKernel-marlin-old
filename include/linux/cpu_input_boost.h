@@ -15,6 +15,7 @@ void cpu_input_boost_kick_max(unsigned int duration_ms);
 void cpu_input_boost_kick_general(unsigned int duration_ms);
 
 bool cpu_input_boost_should_boost_frame(void);
+
 #else
 static inline void cpu_input_boost_kick(void)
 {
