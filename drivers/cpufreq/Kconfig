@@ -404,30 +404,6 @@ config MAX_STUNE_BOOST
 	  SchedTune boost value for max boost. This alters the perceived load
 	  of process groups in order to bias core selection as well as CPU
 	  frequency selection. A value of 0 disables this functionality.
-
-config SUSPEND_TARGET_BOOST_STUNE_LEVEL
-	int "Suspended schedtune boost level specific classes"
-	depends on DYNAMIC_STUNE_BOOST
-	default "-30"
-	help
-	  Suspended boost level for the EAS SchedTune boosting system. This
-	  artifically decreases perceived load of certain processes in order
-	  to de-prioritize and decrease their usage of big cores as well as
-	  influence system-wide CPU frequency selection. Negative values are
-	  encouraged for battery. A value of 0 disables SchedTune boosting
-	  for this level.
-
-config SUSPEND_GENERAL_BOOST_STUNE_LEVEL
-	int "Suspended schedtune boost level a general spectrum"
-	depends on DYNAMIC_STUNE_BOOST
-	default "-20"
-	help
-	  Suspended boost level for the EAS SchedTune boosting system. This
-	  artifically decreases perceived load of certain processes in order
-	  to de-prioritize and decrease their usage of big cores as well as
-	  influence system-wide CPU frequency selection. Negative values are
-	  encouraged for battery. A value of 0 disables SchedTune boosting
-	  for this level.
 endif
 
 config CPU_FREQ_GOV_SCHEDUTIL
