@@ -1614,6 +1614,11 @@ struct task_struct {
 	unsigned memcg_kmem_skip_account:1;
 #endif
 
+#ifdef CONFIG_CGROUPS
+	/* disallow userland-initiated cgroup migration */
+	unsigned no_cgroup_migration:1;
+#endif
+
 	unsigned long atomic_flags; /* Flags needing atomic access. */
 
 	pid_t pid;
