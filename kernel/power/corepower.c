@@ -37,7 +37,6 @@ module_param(wake_timeout, short, 0644);
 
 static bool cpu_force_deep_idle __read_mostly = true;
 static bool cluster_force_deep_idle __read_mostly = true;
-static __read_mostly int suspend_stune_boost = CONFIG_SUSPEND_STUNE_BOOST;
 
 /* Core */
 static enum power_state get_current_state(void)
@@ -169,7 +168,6 @@ static int fb_notifier_cb(struct notifier_block *nb, unsigned long event,
 {
 	struct fb_event *evdata = data;
 	unsigned int blank;
-	int root_stune_boost_default = INT_MIN;
 
 	if (event != FB_EVENT_BLANK && event != FB_EARLY_EVENT_BLANK)
 		return NOTIFY_DONE;
@@ -183,14 +181,10 @@ static int fb_notifier_cb(struct notifier_block *nb, unsigned long event,
 	case FB_BLANK_POWERDOWN: /* Off */
 		if (event == FB_EARLY_EVENT_BLANK)
 			update_state(STATE_SLEEP, false);
-			set_stune_boost(ST_ROOT, suspend_stune_boost,
-					&root_stune_boost_default);
 		break;
 	case FB_BLANK_UNBLANK: /* On */
 		if (event == FB_EVENT_BLANK)
 			update_state(STATE_AWAKE, false);
-						if (root_stune_boost_default != INT_MIN)
-				set_stune_boost(ST_ROOT, root_stune_boost_default, NULL);
 		break;
 	}
 
