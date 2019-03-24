@@ -30,6 +30,7 @@ enum power_state {
 static atomic_t current_state;
 static atomic_t next_state;
 static struct workqueue_struct *power_state_wq;
+int root_stune_boost_default;
 
 static bool enabled __read_mostly = true;
 static short wake_timeout __read_mostly = CONFIG_COREPOWER_WAKE_TIMEOUT;
@@ -60,6 +61,14 @@ static void state_update_worker(struct work_struct *work)
 		goto skip_update;
 
 	intensive = is_state_intensive(state);
+
+	/* Set suspend stune boost */
+	if (!is_display_on())
+		set_stune_boost(ST_ROOT, suspend_stune_boost,
+				&root_stune_boost_default);
+	/* Unset suspend stune boost */
+	if (is_display_on() && root_stune_boost_default != INT_MIN)
+		set_stune_boost(ST_ROOT, root_stune_boost_default, NULL);
 
 	/* Do nothing if we are already in this state, unless forced */
 	if (state == get_current_state())
