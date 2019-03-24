@@ -7,6 +7,7 @@
 
 #include <linux/cpu.h>
 #include <linux/cpufreq.h>
+#include <linux/display_state.h>
 #include <linux/fb.h>
 #include <linux/input.h>
 #include <linux/moduleparam.h>
@@ -37,9 +38,8 @@ module_param(max_stune_boost, int, 0644);
 #endif
 
 /* Available bits for boost_drv state */
-#define SCREEN_AWAKE		BIT(0)
-#define INPUT_BOOST		BIT(1)
-#define MAX_BOOST		BIT(2)
+#define INPUT_BOOST		BIT(0)
+#define MAX_BOOST		BIT(1)
 
 struct boost_drv {
 	struct workqueue_struct *wq;
@@ -146,13 +146,11 @@ bool cpu_input_boost_should_boost_frame(void)
 
 static void __cpu_input_boost_kick(struct boost_drv *b)
 {
-	if (!(get_boost_state(b) & SCREEN_AWAKE))
+	if (!is_display_on())
 		return;
 
 	if (likely(input_boost_duration))
 		queue_work(b->wq, &b->input_boost);
-
-	last_input_jiffies = jiffies;
 }
 
 void cpu_input_boost_kick(void)
@@ -171,7 +169,7 @@ static void __cpu_input_boost_kick_max(struct boost_drv *b,
 	unsigned long curr_expires, new_expires;
 
 
-	if (!(get_boost_state(b) & SCREEN_AWAKE))
+	if (!is_display_on())
 		return;
 
 	do {
@@ -297,16 +295,9 @@ static int fb_notifier_cb(struct notifier_block *nb,
 	if (action != FB_EARLY_EVENT_BLANK)
 		return NOTIFY_OK;
 
-	/* Boost when the screen turns on and unboost when it turns off */
-	if (*blank == FB_BLANK_UNBLANK) {
-		set_boost_bit(b, SCREEN_AWAKE);
-	} else {
-		clear_boost_bit(b, SCREEN_AWAKE);
+	/* Unboost when the screen turns off */
+	if (*blank != FB_BLANK_UNBLANK) 
 		unboost_all_cpus(b);
-#ifdef CONFIG_CPU_INPUT_BOOST_DEBUG
-		pr_info("cleared all boosts due to blank event\n");
-#endif
-	}
 
 	return NOTIFY_OK;
 }
@@ -318,6 +309,8 @@ static void cpu_input_boost_input_event(struct input_handle *handle,
 	struct boost_drv *b = handle->handler->private;
 
 	__cpu_input_boost_kick(b);
+
+	last_input_jiffies = jiffies;
 }
 
 static int cpu_input_boost_input_connect(struct input_handler *handler,
