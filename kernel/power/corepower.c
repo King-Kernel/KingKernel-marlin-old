@@ -33,12 +33,16 @@ static enum power_state current_state;
 static struct workqueue_struct *power_state_wq;
 static DEFINE_SPINLOCK(state_lock);
 
+int root_stune_boost_default;
 static bool enabled __read_mostly = true;
 static short wake_timeout __read_mostly = CONFIG_COREPOWER_WAKE_TIMEOUT;
 module_param(wake_timeout, short, 0644);
 
+static bool suspend_boost_enable __read_mostly = true;
 static bool cpu_force_deep_idle __read_mostly = true;
 static bool cluster_force_deep_idle __read_mostly = true;
+static int suspend_stune_boost __read_mostly = CONFIG_SUSPEND_STUNE_BOOST;
+module_param(suspend_stune_boost, int, 0644);
 
 /* Core */
 static enum power_state set_next_state(enum power_state state)
@@ -82,6 +86,14 @@ static void state_update_worker(struct work_struct *work)
 	state = next_state;
 	spin_unlock(&state_lock);
 	intensive = is_state_intensive(state);
+
+	/* Set suspend stune boost */
+	if (!intensive && suspend_boost_enable)
+		set_stune_boost(ST_ROOT, suspend_stune_boost,
+				&root_stune_boost_default);
+	/* Unset suspend stune boost */
+	if (intensive && root_stune_boost_default != INT_MIN && suspend_boost_enable)
+		set_stune_boost(ST_ROOT, root_stune_boost_default, NULL);
 
 	/* Do nothing if we are already in this state, unless forced */
 	if (state == current_state)
@@ -186,6 +198,8 @@ module_param_cb(cpu_force_deep_idle, &bool_param_ops, &cpu_force_deep_idle,
 		0644);
 module_param_cb(cluster_force_deep_idle, &bool_param_ops,
 		&cluster_force_deep_idle, 0644);
+module_param_cb(suspend_boost_enable, &bool_param_ops,
+		&suspend_boost_enable, 0644);
 
 /* Base */
 static int fb_notifier_cb(struct notifier_block *nb, unsigned long action,
