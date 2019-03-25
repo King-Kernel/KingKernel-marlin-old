@@ -3,7 +3,6 @@
  * Simple display state tracker
  *
  * Copyright (C) 2019 Danny Lin <danny@kdrag0n.dev>.
- * Copyright (C) 2019 Brian Dashore (kingbri) <bdashore3@gmail.com>
  */
 
 #define pr_fmt(fmt) "display_state: " fmt
@@ -57,7 +56,7 @@ static int __init display_state_init(void)
 
 	ret = fb_register_client(&display_state_nb);
 	if (ret)
-		pr_err("Failed to register msm_drm notifier, err: %d\n", ret);
+		pr_err("Failed to register fb notifier, err: %d\n", ret);
 
 	return ret;
 }
