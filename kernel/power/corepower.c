@@ -12,6 +12,7 @@
 #include <linux/display_state.h>
 #include <linux/input.h>
 #include <linux/moduleparam.h>
+#include <linux/spinlock.h>
 #include <linux/fb.h>
 #include <linux/slab.h>
 #include <soc/qcom/lpm_levels.h>
@@ -21,15 +22,16 @@
 #define ST_ROOT "/"
 
 enum power_state {
-	STATE_UNKNOWN = 0,
+	STATE_UNKNOWN,
 	STATE_AWAKE,
 	STATE_WAKING,
-	STATE_SLEEP,
+	STATE_SLEEP
 };
 
-static atomic_t current_state;
-static atomic_t next_state;
+static enum power_state next_state;
+static enum power_state current_state;
 static struct workqueue_struct *power_state_wq;
+static DEFINE_SPINLOCK(state_lock);
 
 static bool enabled __read_mostly = true;
 static short wake_timeout __read_mostly = CONFIG_COREPOWER_WAKE_TIMEOUT;
@@ -39,29 +41,50 @@ static bool cpu_force_deep_idle __read_mostly = true;
 static bool cluster_force_deep_idle __read_mostly = true;
 
 /* Core */
+static enum power_state set_next_state(enum power_state state)
+{
+	unsigned long flags;
+
+	spin_lock_irqsave(&state_lock, flags);
+	next_state = state;
+	spin_unlock_irqrestore(&state_lock, flags);
+
+	return state;
+}
+
 static enum power_state get_current_state(void)
 {
-	return atomic_read(&current_state);
+	enum power_state state;
+	unsigned long flags;
+
+	spin_lock_irqsave(&state_lock, flags);
+	state = current_state;
+	spin_unlock_irqrestore(&state_lock, flags);
+
+	return state;
 }
 
 static bool is_state_intensive(enum power_state state)
 {
-	return state == STATE_AWAKE || state == STATE_WAKING;
+	return state != STATE_SLEEP;
 }
 
 static void state_update_worker(struct work_struct *work)
 {
-	enum power_state state = atomic_read(&next_state);
+	enum power_state state;
 	bool intensive;
 	int ret;
 
 	if (!enabled)
 		goto skip_update;
 
+	spin_lock(&state_lock);
+	state = next_state;
+	spin_unlock(&state_lock);
 	intensive = is_state_intensive(state);
 
 	/* Do nothing if we are already in this state, unless forced */
-	if (state == get_current_state())
+	if (state == current_state)
 		goto skip_update;
 
 	/* Force use of the deepest CPU idle state available */
@@ -79,14 +102,16 @@ static void state_update_worker(struct work_struct *work)
 		lpm_cluster_use_deepest_state(!intensive);
 
 skip_update:
-	atomic_set(&current_state, state);
-	atomic_set(&next_state, STATE_UNKNOWN);
+	spin_lock(&state_lock);
+	current_state = state;
+	next_state = STATE_UNKNOWN;
+	spin_unlock(&state_lock);
 }
 static DECLARE_WORK(state_update_work, state_update_worker);
 
 static void update_state(enum power_state target_state, bool sync)
 {
-	atomic_set(&next_state, target_state);
+	set_next_state(target_state);
 	queue_work(power_state_wq, &state_update_work);
 
 	if (sync)
@@ -130,7 +155,7 @@ static int param_bool_set(const char *buf, const struct kernel_param *kp)
 
 static const struct kernel_param_ops bool_param_ops = {
 	.set = param_bool_set,
-	.get = param_get_bool,
+	.get = param_get_bool
 };
 
 static int param_uint_set(const char *buf, const struct kernel_param *kp)
@@ -153,7 +178,7 @@ static int param_uint_set(const char *buf, const struct kernel_param *kp)
 
 static const struct kernel_param_ops uint_param_ops = {
 	.set = param_uint_set,
-	.get = param_get_uint,
+	.get = param_get_uint
 };
 
 module_param_cb(enabled, &bool_param_ops, &enabled, 0644);
@@ -163,13 +188,13 @@ module_param_cb(cluster_force_deep_idle, &bool_param_ops,
 		&cluster_force_deep_idle, 0644);
 
 /* Base */
-static int fb_notifier_cb(struct notifier_block *nb, unsigned long event,
+static int fb_notifier_cb(struct notifier_block *nb, unsigned long action,
 			       void *data)
 {
 	struct fb_event *evdata = data;
 	unsigned int blank;
 
-	if (event != FB_EVENT_BLANK && event != FB_EARLY_EVENT_BLANK)
+	if (action != FB_EARLY_EVENT_BLANK)
 		return NOTIFY_DONE;
 
 	if (!evdata || !evdata->data)
@@ -179,12 +204,10 @@ static int fb_notifier_cb(struct notifier_block *nb, unsigned long event,
 
 	switch (blank) {
 	case FB_BLANK_POWERDOWN: /* Off */
-		if (event == FB_EARLY_EVENT_BLANK)
-			update_state(STATE_SLEEP, false);
+		update_state(STATE_SLEEP, false);
 		break;
 	case FB_BLANK_UNBLANK: /* On */
-		if (event == FB_EVENT_BLANK)
-			update_state(STATE_AWAKE, false);
+		update_state(STATE_AWAKE, false);
 		break;
 	}
 
@@ -192,14 +215,14 @@ static int fb_notifier_cb(struct notifier_block *nb, unsigned long event,
 }
 
 static struct notifier_block display_state_nb __ro_after_init = {
-	.notifier_call = fb_notifier_cb,
+	.notifier_call = fb_notifier_cb
 };
 
 static void corepower_input_event(struct input_handle *handle,
 				  unsigned int type, unsigned int code,
 				  int value)
 {
-	if (code == KEY_POWER && value == 1 && !is_display_on() &&
+	if (value == 1 && !is_display_on() &&
 	    get_current_state() == STATE_SLEEP)
 		corepower_wake();
 }
@@ -248,9 +271,9 @@ static const struct input_device_id corepower_input_ids[] = {
 	{
 		.flags = INPUT_DEVICE_ID_MATCH_EVBIT,
 		.evbit = { BIT_MASK(EV_KEY) },
-		.keybit = { [BIT_WORD(KEY_POWER)] = BIT_MASK(KEY_POWER) },
+		.keybit = { [BIT_WORD(KEY_POWER)] = BIT_MASK(KEY_POWER) }
 	},
-	{}
+	{ }
 };
 
 static struct input_handler corepower_input_handler = {
@@ -266,7 +289,7 @@ static int __init corepower_init(void)
 	int ret;
 
 	power_state_wq =
-		alloc_workqueue("corepower_wq", WQ_HIGHPRI | WQ_UNBOUND, 0);
+		alloc_workqueue("corepower_wq", WQ_HIGHPRI | WQ_UNBOUND, 1);
 	if (!power_state_wq)
 		return -ENOMEM;
 
@@ -277,11 +300,15 @@ static int __init corepower_init(void)
 	}
 
 	ret = fb_register_client(&display_state_nb);
-	if (ret)
+	if (ret) {
 		pr_err("Failed to register fb notifier, err: %d\n", ret);
+		goto err_unreg_input;
+	}
 
 	return 0;
 
+err_unreg_input:
+	input_unregister_handler(&corepower_input_handler);
 err_destroy_wq:
 	destroy_workqueue(power_state_wq);
 	return ret;
