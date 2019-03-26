@@ -1279,6 +1279,17 @@ config SCHED_TUNE
 
 	  If unsure, say N.
 
+config STUNE_ASSIST
+	bool "Helper for setting up stune values from kernel"
+	depends on CGROUP_SCHEDTUNE
+	depends on ANDROID
+	help
+	  This option allows you to control which default settings you want
+	  to use for schedtune without need for ramdisk modifications
+	  (e.g. prefer_idle and boost values).
+
+	  Say N if unsure.
+
 config SYSFS_DEPRECATED
 	bool "Enable deprecated sysfs features to support old userspace tools"
 	depends on SYSFS
