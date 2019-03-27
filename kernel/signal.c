@@ -34,6 +34,9 @@
 #include <linux/compat.h>
 #include <linux/cn_proc.h>
 #include <linux/compiler.h>
+#include <linux/cpu_input_boost.h>
+#include <linux/devfreq_boost.h>
+#include <linux/display_state.h>
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/signal.h>
@@ -1380,6 +1383,11 @@ int __kill_pgrp_info(int sig, struct siginfo *info, struct pid *pgrp)
 
 int kill_pid_info(int sig, struct siginfo *info, struct pid *pid)
 {
+#ifdef CONFIG_MEMCG
+	static const struct sched_param rt_param = {
+		.sched_priority = MAX_RT_PRIO - 1
+	};
+#endif
 	int error = -ESRCH;
 	struct task_struct *p;
 
@@ -1387,7 +1395,35 @@ int kill_pid_info(int sig, struct siginfo *info, struct pid *pid)
 retry:
 	p = pid_task(pid, PIDTYPE_PID);
 	if (p) {
+#ifdef CONFIG_MEMCG
+			bool is_lmkd = false;
+
+			/* Accelerate lmkd task killing */
+			if (sig == SIGKILL && is_lmkd_pid(current->pid)) {
+				is_lmkd = true;
+				info = SEND_SIG_PRIV;
+				preempt_disable();
+
+				sched_setscheduler_nocheck(p, SCHED_FIFO,
+							   &rt_param);
+				set_cpus_allowed_ptr(p, cpu_perf_mask);
+
+				if (is_display_on()) {
+					cpu_input_boost_kick_max(250);
+					devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW,
+							       250);
+				}
+			}
+#endif
+
 		error = group_send_sig_info(sig, info, p);
+
+#ifdef CONFIG_MEMCG
+			if (is_lmkd) {
+				preempt_enable();
+			}
+#endif
+
 		if (unlikely(error == -ESRCH))
 			/*
 			 * The task was unhashed in between, try again.
