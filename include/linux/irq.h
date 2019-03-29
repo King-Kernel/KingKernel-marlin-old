@@ -98,6 +98,7 @@ enum {
 	IRQ_PER_CPU_DEVID	= (1 << 17),
 	IRQ_IS_POLLED		= (1 << 18),
 	IRQ_DISABLE_UNLAZY	= (1 << 19),
+	IRQD_AFFINITY_MANAGED	= (1 << 20),
 };
 
 #define IRQF_MODIFY_MASK	\
@@ -287,6 +288,11 @@ static inline void irqd_set_chained_irq_inprogress(struct irq_data *d)
 static inline void irqd_clr_chained_irq_inprogress(struct irq_data *d)
 {
 	d->state_use_accessors &= ~IRQD_IRQ_INPROGRESS;
+}
+
+static inline bool irqd_affinity_is_managed(struct irq_data *d)
+{
+	return d->state_use_accessors & IRQD_AFFINITY_MANAGED;
 }
 
 static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
