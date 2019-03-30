@@ -222,3 +222,14 @@ utree() {
     git subtree pull --prefix drivers/staging/qca-wifi-host-cmn qca-wfi-host-cmn $1 # QCA Wi-Fi common files
     git subtree pull --prefix drivers/staging/fw-api wlan-fw-api $1 # QCA Wi-Fi firmware API
 }
+
+# Create a link to a commit on GitHub
+glink() {
+    echo "https://github.com/kdrag0n/proton_bluecross/commit/$1"
+}
+
+# Retrieve the kernel version from a flashable zip package
+zver()
+{
+    unzip -p "$1" Image.lz4-dtb | lz4 -dc | strings | grep "Linux version 4"
+}
