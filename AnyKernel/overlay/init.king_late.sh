@@ -17,15 +17,19 @@ echo "1" > /sys/devices/system/cpu/cpu3/online
 
 #Schedutil gov tweaks
 
+echo "500" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/iowait_boost_enable
 
 #cpu1
+echo "500" > /sys/devices/system/cpu/cpu1/cpufreq/schedutil/up_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu1/cpufreq/schedutil/iowait_boost_enable
 
 #cpu2
+echo "500" > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/up_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/iowait_boost_enable
 
 #cpu3
+echo "500" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/up_rate_limit_us
 echo "0" > /sys/devices/system/cpu/cpu3/cpufreq/schedutil/iowait_boost_enable
 
 #Default I/o sched cfq

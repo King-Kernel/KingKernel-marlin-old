@@ -94,42 +94,6 @@ chmod 755 $KEYCHECK
 #Change the custom ramdisk to the device hardware name
 mv $TMPDIR/overlay/init.king.rc $TMPDIR/overlay/init.$(getprop ro.hardware).rc
 
-#Sqlite keycheck logic
-mount -o rw,remount -t auto /system >/dev/null
-
-ui_print " "
-if keytest; then
-    FUNCTION=chooseport
-else
-    FUNCTION=chooseportold
-    ui_print "** Volume button programming **"
-    ui_print " "
-    ui_print "** Press Vol UP again **"
-    $FUNCTION "UP"
-    ui_print "**  Press Vol DOWN **"
-    $FUNCTION "DOWN"
-fi
-ui_print "There are Zipalign and SQlite tweaks in KingKernel"
-ui_print "These can enhance battery life and make the device run smoother"
-ui_print "However, apps have a possibility to stop working with sqlite tweaks"
-ui_print "Please indicate whether you want them"
-ui_print " "
-ui_print "   Vol(+) = Yes"
-ui_print "   Vol(-) = No"
-ui_print " "
-if $FUNCTION; then
-    ui_print " Cool! Installing Sqlite tweaks... "
-    ui_print " "
-    set_bindir
-    ui_print " "
-else
-    ui_print " Skipping Sqlite Tweaks..."
-    #Remove if there's an old installation of sqlite3 and remove script from overlay
-    rm -rf /system/xbin/sqlite3
-    rm -rf $TMPDIR/overlay/init.Zipalign_sqlite.sh
-    ui_print " "
-fi;
-
 #Clear any old ramdisk files
 rm -fr $ramdisk/overlay
 if [ -d $ramdisk/.backup ]; then
