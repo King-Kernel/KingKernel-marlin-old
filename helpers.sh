@@ -75,7 +75,7 @@ mkzip() {
     popd -q
 }
 
-# Create a flashable release zip, ensuring the compiled kernel is up to date
+# Produce an incremental kernel build and package it for release
 rel() {
     _RELEASE=1
 
@@ -96,6 +96,11 @@ rel() {
     mv "$kroot/out/.devversion" "$kroot/out/.version"
 
     _RELEASE=0
+}
+
+# Produce a clean kernel build and package it for release
+crel() {
+    kmake clean && rel "$@"
 }
 
 # Reset the version (compile number)
