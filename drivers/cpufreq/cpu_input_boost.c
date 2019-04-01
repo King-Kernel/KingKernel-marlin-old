@@ -148,7 +148,6 @@ static void __cpu_input_boost_kick(struct boost_drv *b)
 {
 	if (!is_display_on())
 		return;
-		pr_info("didn't boost\n");
 
 	if (likely(input_boost_duration))
 		queue_work(b->wq, &b->input_boost);
