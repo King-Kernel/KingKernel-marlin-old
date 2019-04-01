@@ -277,7 +277,7 @@ static int cpu_notifier_cb(struct notifier_block *nb,
 	state = get_boost_state(b);
 
 	/* Unboost when the screen is off */
-	if (!display_state_on()) {
+	if (!is_display_on()) {
 		policy->min = policy->cpuinfo.min_freq;
 		return NOTIFY_OK;
 	}
@@ -295,8 +295,7 @@ static int cpu_notifier_cb(struct notifier_block *nb,
 	if (state & INPUT_BOOST)
 		policy->min = get_input_boost_freq(policy);
 	else
-		min_freq = get_min_freq(b, policy->cpu);
-		policy->min = max(policy->cpuinfo.min_freq, min_freq);
+		policy->min = policy->cpuinfo.min_freq;
 
 	return NOTIFY_OK;
 }
@@ -456,7 +455,7 @@ static int __init cpu_input_boost_init(void)
 	return 0;
 
 unregister_fb_notif:
-	fb_unregister_client(&b->fb_drm_notif);
+	fb_unregister_client(&b->fb_notif);
 unregister_handler:
 	input_unregister_handler(&cpu_input_boost_input_handler);
 unregister_cpu_notif:
