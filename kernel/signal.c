@@ -36,7 +36,6 @@
 #include <linux/compiler.h>
 #include <linux/cpu_input_boost.h>
 #include <linux/devfreq_boost.h>
-#include <linux/display_state.h>
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/signal.h>
@@ -1362,10 +1361,8 @@ int group_send_sig_info(int sig, struct siginfo *info, struct task_struct *p)
 		/* Accelerate lmkd SIGKILL handling */
 		if (sig == SIGKILL && is_lmkd_pid(current->pid)) {
 			/* Boost CPU and DDR bus to the max */
-			if (is_display_on()) {
-				cpu_input_boost_kick_max(200);
-				devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 200);
-			}
+			cpu_input_boost_kick_max(200);
+			devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 200);
 
 			preempt_disable();
 
