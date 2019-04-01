@@ -209,6 +209,9 @@ void cpu_input_boost_kick_max(unsigned int duration_ms)
 	if (!b)
 		return;
 
+	if (!is_display_on())
+		return;
+
 	__cpu_input_boost_kick_max(b, duration_ms);
 }
 
