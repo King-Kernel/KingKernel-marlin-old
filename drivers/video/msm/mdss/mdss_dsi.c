@@ -26,7 +26,6 @@
 #include <linux/uaccess.h>
 #include <linux/msm-bus.h>
 #include <linux/pm_qos.h>
-#include <linux/corepower.h>
 
 #include "mdss.h"
 #include "mdss_panel.h"
@@ -1737,8 +1736,6 @@ static void mdss_dsi_display_wake(struct mdss_dsi_ctrl_pdata *ctrl_pdata)
 	/* Make sure the thread is started since it's needed right now */
 	mdss_dsi_start_wake_thread(ctrl_pdata);
 	ctrl_pdata->wake_thread = NULL;
-
-	corepower_wake();
 
 	atomic_set(&ctrl_pdata->needs_wake, 1);
 	wake_up(&ctrl_pdata->wake_waitq);
