@@ -24,30 +24,18 @@ static int fb_notifier_cb(struct notifier_block *nb,
 	struct fb_event *evdata = data;
 	unsigned int blank;
 
-	if (event != FB_EVENT_BLANK && event != FB_EARLY_EVENT_BLANK)
-		return NOTIFY_DONE;
-
 	if (!evdata || !evdata->data)
 		return NOTIFY_DONE;
 
 	blank = *(unsigned int *)evdata->data;
-
-	switch (blank) {
-	case FB_BLANK_POWERDOWN:
-		if (event == FB_EARLY_EVENT_BLANK)
-			display_on = false;
-		break;
-	case FB_BLANK_UNBLANK:
-		if (event == FB_EVENT_BLANK)
-			display_on = true;
-		break;
-	}
+	display_on = blank == FB_BLANK_UNBLANK;
 
 	return NOTIFY_OK;
 }
 
 static struct notifier_block display_state_nb __ro_after_init = {
 	.notifier_call = fb_notifier_cb,
+	.priority = INT_MAX - 2,
 };
 
 static int __init display_state_init(void)
