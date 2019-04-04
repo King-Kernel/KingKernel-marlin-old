@@ -330,8 +330,10 @@ config CPU_FREQ_GOV_BLU_SCHEDUTIL
 	  be called cpufreq_blu_schedutil.
 
 	  If in doubt, say N.
+
 config CPU_INPUT_BOOST
 	bool "CPU Input Boost"
+	depends on FB_MSM_MDSS
 	help
 	  Boosts the CPU on touchscreen and touchpad input, and allows for
 	  boosting on other custom events, mainly which is intended to be for
