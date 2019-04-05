@@ -19,8 +19,6 @@ unsigned long last_input_jiffies;
 
 static __read_mostly unsigned int input_boost_freq_lp = CONFIG_INPUT_BOOST_FREQ_LP;
 static __read_mostly unsigned int input_boost_freq_hp = CONFIG_INPUT_BOOST_FREQ_PERF;
-static __read_mostly unsigned int max_boost_freq_lp = CONFIG_MAX_BOOST_FREQ_LP;
-static __read_mostly unsigned int max_boost_freq_hp = CONFIG_MAX_BOOST_FREQ_PERF;
 static __read_mostly unsigned int input_boost_return_freq_lp = CONFIG_REMOVE_INPUT_BOOST_FREQ_LP;
 static __read_mostly unsigned int input_boost_return_freq_hp = CONFIG_REMOVE_INPUT_BOOST_FREQ_PERF;
 static __read_mostly unsigned short input_boost_duration = CONFIG_INPUT_BOOST_DURATION_MS;
@@ -70,29 +68,13 @@ struct boost_drv {
 
 static struct boost_drv *boost_drv_g __read_mostly;
 
-static u32 get_input_boost_freq(struct cpufreq_policy *policy)
+static u32 get_boost_freq(struct boost_drv *b, u32 cpu)
 {
 
-	u32 freq;
+	if (cpumask_test_cpu(cpu, cpu_lp_mask))
+		return input_boost_freq_lp;
 
-	if (cpumask_test_cpu(policy->cpu, cpu_lp_mask))
-		freq = input_boost_freq_lp;
-	else
-		freq = input_boost_freq_hp;
-
-	return min(freq, policy->max);
-}
-
-static u32 get_max_boost_freq(struct cpufreq_policy *policy)
-{
-	u32 freq;
-
-	if (cpumask_test_cpu(policy->cpu, cpu_lp_mask))
-		freq = max_boost_freq_lp;
-	else
-		freq = max_boost_freq_hp;
-
-	return min(freq, policy->max);
+	return input_boost_freq_hp;
 }
 
 static u32 get_min_freq(struct boost_drv *b, u32 cpu)
@@ -268,7 +250,7 @@ static int cpu_notifier_cb(struct notifier_block *nb,
 {
 	struct boost_drv *b = container_of(nb, typeof(*b), cpu_notif);
 	struct cpufreq_policy *policy = data;
-	u32 min_freq, state;
+	u32 boost_freq, min_freq, state;
 
 	if (action != CPUFREQ_ADJUST)
 		return NOTIFY_OK;
@@ -283,7 +265,7 @@ static int cpu_notifier_cb(struct notifier_block *nb,
 
 	/* Boost CPU to max frequency for max boost */
 	if (state & MAX_BOOST) {
-		policy->min = get_max_boost_freq(policy);
+		policy->min = policy->max;
 		return NOTIFY_OK;
 	}
 
@@ -291,11 +273,13 @@ static int cpu_notifier_cb(struct notifier_block *nb,
 	 * Boost to policy->max if the boost frequency is higher. When
 	 * unboosting, set policy->min to the absolute min freq for the CPU.
 	 */
-	if (state & INPUT_BOOST)
-		policy->min = get_input_boost_freq(policy);
-	else
+	if (state & INPUT_BOOST) {
+		boost_freq = get_boost_freq(b, policy->cpu);
+		policy->min = min(policy->max, boost_freq);
+	} else {
 		min_freq = get_min_freq(b, policy->cpu);
 		policy->min = max(policy->cpuinfo.min_freq, min_freq);
+	}
 
 	return NOTIFY_OK;
 }
