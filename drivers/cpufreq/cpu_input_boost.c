@@ -331,10 +331,6 @@ static void cpu_input_boost_input_event(struct input_handle *handle,
 
 	__cpu_input_boost_kick(b);
 
-	if (type == EV_KEY && code == KEY_POWER && value == 1 &&
-	    !is_display_on())
-		__cpu_input_boost_kick_wake(b);
-
 	b->last_input_jiffies = jiffies;
 }
 
