@@ -35,8 +35,6 @@ static unsigned int max_boost_freq_hp __read_mostly =
 
 static unsigned short input_boost_duration __read_mostly =
 	CONFIG_INPUT_BOOST_DURATION_MS;
-static unsigned short wake_boost_duration __read_mostly =
-	CONFIG_WAKE_BOOST_DURATION_MS;
 
 module_param(input_boost_freq_lp, uint, 0644);
 module_param(input_boost_freq_hp, uint, 0644);
@@ -46,7 +44,6 @@ module_param(max_boost_freq_lp, uint, 0644);
 module_param(max_boost_freq_hp, uint, 0644);
 
 module_param(input_boost_duration, short, 0644);
-module_param(wake_boost_duration, short, 0644);
 
 #ifdef CONFIG_DYNAMIC_STUNE_BOOST
 static __read_mostly int stune_boost = CONFIG_TA_STUNE_BOOST;
@@ -56,7 +53,6 @@ module_param_named(dynamic_stune_boost, stune_boost, int, 0644);
 /* Available bits for boost state */
 #define INPUT_BOOST		BIT(0)
 #define MAX_BOOST		BIT(1)
-#define WAKE_BOOST		BIT(2)
 
 struct boost_drv {
 	struct delayed_work input_unboost;
@@ -224,22 +220,6 @@ void cpu_input_boost_kick_max(unsigned int duration_ms)
 	__cpu_input_boost_kick_max(b, duration_ms);
 }
 
-void __cpu_input_boost_kick_wake(struct boost_drv *b)
-{
-	set_boost_bit(b, WAKE_BOOST);
-	__cpu_input_boost_kick_max(b, wake_boost_duration);
-}
-
-void cpu_input_boost_kick_wake(void)
-{
-	struct boost_drv *b = boost_drv_g;
-
-	if (!b)
-		return;
-
-	__cpu_input_boost_kick_wake(b);
-}
-
 static void input_unboost_worker(struct work_struct *work)
 {
 	struct boost_drv *b = container_of(to_delayed_work(work),
@@ -254,7 +234,7 @@ static void max_unboost_worker(struct work_struct *work)
 	struct boost_drv *b = container_of(to_delayed_work(work),
 					   typeof(*b), max_unboost);
 
-	clear_boost_bit(b, MAX_BOOST | WAKE_BOOST);
+	clear_boost_bit(b, MAX_BOOST);
 	wake_up(&b->boost_waitq);
 }
 
@@ -293,13 +273,6 @@ static int cpu_notifier_cb(struct notifier_block *nb,
 		return NOTIFY_OK;
 
 	state = get_boost_state(b);
-
-	/* Boost CPU to max frequency on wake, regardless of screen state */
-	if (state & WAKE_BOOST) {
-		policy->min = get_max_boost_freq(policy);
-		update_stune_boost(b, stune_boost);
-		return NOTIFY_OK;
-	}
 
 	/* Unboost when the screen is off */
 	if (!is_display_on()) {
@@ -342,9 +315,7 @@ static int fb_notifier_cb(struct notifier_block *nb,
 		return NOTIFY_OK;
 
 	/* Boost when the screen turns on and unboost when it turns off */
-	if (*blank == FB_BLANK_UNBLANK) {
-		__cpu_input_boost_kick_wake(b);
-	else
+	if (*blank != FB_BLANK_UNBLANK) {
 		wake_up(&b->boost_waitq);
 
 	return NOTIFY_OK;
