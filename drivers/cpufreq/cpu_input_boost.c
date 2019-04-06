@@ -10,7 +10,6 @@
 #include <linux/cpu.h>
 #include <linux/cpufreq.h>
 #include <linux/fb.h>
-#include <linux/display_state.h>
 #include <linux/input.h>
 #include <linux/kthread.h>
 #include <linux/moduleparam.h>
@@ -53,8 +52,9 @@ module_param_named(dynamic_stune_boost, stune_boost, int, 0644);
 #endif
 
 /* Available bits for boost state */
-#define INPUT_BOOST		BIT(0)
-#define MAX_BOOST		BIT(1)
+#define SCREEN_OFF		BIT(0)
+#define INPUT_BOOST		BIT(1)
+#define MAX_BOOST		BIT(2)
 
 struct boost_drv {
 	struct delayed_work input_unboost;
@@ -166,7 +166,7 @@ static void clear_stune_boost(struct boost_drv *b)
 
 static void __cpu_input_boost_kick(struct boost_drv *b)
 {
-	if (!is_display_on())
+	if (get_boost_state(b) & SCREEN_OFF)
 		return;
 
 	if (!input_boost_duration)
@@ -216,7 +216,7 @@ void cpu_input_boost_kick_max(unsigned int duration_ms)
 	if (!b)
 		return;
 
-	if (!is_display_on())
+	if (get_boost_state(b) & SCREEN_OFF)
 		return;
 
 	__cpu_input_boost_kick_max(b, duration_ms);
@@ -277,7 +277,7 @@ static int cpu_notifier_cb(struct notifier_block *nb,
 	state = get_boost_state(b);
 
 	/* Unboost when the screen is off */
-	if (!is_display_on()) {
+	if (state & SCREEN_OFF) {
 		policy->min = get_min_freq(policy);
 		clear_stune_boost(b);
 		return NOTIFY_OK;
@@ -317,8 +317,12 @@ static int fb_notifier_cb(struct notifier_block *nb,
 		return NOTIFY_OK;
 
 	/* Boost when the screen turns on and unboost when it turns off */
-	if (*blank != FB_BLANK_UNBLANK)
+	if (*blank == FB_BLANK_UNBLANK) {
+		clear_boost_bit(b, SCREEN_OFF);
+	} else {
+		set_boost_bit(b, SCREEN_OFF);
 		wake_up(&b->boost_waitq);
+	}
 
 	return NOTIFY_OK;
 }
