@@ -92,7 +92,7 @@ bool is_boost_comm(char *comm)
 {
 	return !strcmp(current->comm, "init") ||
 	       !strcmp(current->comm, "NodeLooperThrea") ||
-	       !strcmp(current->comm, "power@1.3-servi");
+	       !strcmp(current->comm, "perfd");
 }
 
 void __register_binfmt(struct linux_binfmt * fmt, int insert)
