@@ -75,3 +75,12 @@ config KLAPSE
     default n
     ---help---
     A simple rgb dynamic lapsing module similar to LineageOS' livedisplay
+
+config MDSS_FRAME_BOOST_TIMEOUT
+	int "Post-input frame boost timeout"
+	depends on CPU_INPUT_BOOST
+	default "3250"
+	help
+	  The timeout in milliseconds during which we boost the CPU and DDR bus
+	  when a new frame is committed to a MDSS based display, counting from when the
+	  last input event was received.
