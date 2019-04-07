@@ -698,7 +698,7 @@ static ssize_t store_##file_name					\
 									\
 	if (IS_ENABLED(CONFIG_MSM_THERMAL_SIMPLE) &&			\
 	    &policy->object == &policy->max &&				\
-	    is_boost_comm(current->comm))			\
+ 	    tsk_is_booster(current))					\
 		return count;						\
 									\
 	new_policy.min = new_policy.user_policy.min;			\
