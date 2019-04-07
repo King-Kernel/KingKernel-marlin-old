@@ -7,16 +7,35 @@
 
 #define pr_fmt(fmt) "display_state: " fmt
 
+#include <linux/kobject.h>
+#include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/fb.h>
+#include <linux/sysfs.h>
 
-static bool display_on = true;
-module_param(display_on, bool, 0444);
+static struct kobject *module_kobj;
+static bool display_on __read_mostly = true;
 
 bool is_display_on(void)
 {
 	return display_on;
 }
+
+static ssize_t display_state_show(struct kobject *kobj,
+				  struct kobj_attribute *attr, char *buf)
+{
+	return snprintf(buf, PAGE_SIZE, "%u\n", display_on);
+}
+static struct kobj_attribute display_state_attr = __ATTR_RO(display_state);
+
+static struct attribute *attrs[] = {
+	&display_state_attr.attr,
+	NULL
+};
+
+static const struct attribute_group attr_group = {
+	.attrs = attrs,
+};
 
 static int fb_notifier_cb(struct notifier_block *nb,
 			       unsigned long event, void *data)
@@ -43,9 +62,30 @@ static int __init display_state_init(void)
 	int ret;
 
 	ret = fb_register_client(&display_state_nb);
-	if (ret)
+	if (ret) {
 		pr_err("Failed to register fb notifier, err: %d\n", ret);
+		return ret;
+	}
 
+	module_kobj = kset_find_obj(module_kset, KBUILD_MODNAME);
+	if (!module_kobj) {
+		pr_err("Failed to locate module kobject\n");
+		ret = -ENOENT;
+		goto err_unreg_fb_notif;
+	}
+
+	ret = sysfs_create_group(module_kobj, &attr_group);
+	if (ret) {
+		pr_err("Failed to create sysfs group, err: %d\n", ret);
+		goto err_put_kobj;
+	}
+
+	return 0;
+
+err_unreg_fb_notif:
+	fb_unregister_client(&display_state_nb);
+err_put_kobj:
+	kobject_put(module_kobj);
 	return ret;
 }
 late_initcall(display_state_init);
