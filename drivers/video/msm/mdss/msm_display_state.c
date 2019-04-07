@@ -41,13 +41,17 @@ static int fb_notifier_cb(struct notifier_block *nb,
 			       unsigned long event, void *data)
 {
 	struct fb_event *evdata = data;
+	bool display_on_old;
 	unsigned int blank;
 
 	if (!evdata || !evdata->data)
 		return NOTIFY_DONE;
 
 	blank = *(unsigned int *)evdata->data;
+	display_on_old = display_on;
 	display_on = blank == FB_BLANK_UNBLANK;
+	if (display_on != display_on_old)
+		sysfs_notify(module_kobj, NULL, display_state_attr.attr.name);
 
 	return NOTIFY_OK;
 }
