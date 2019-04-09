@@ -31,8 +31,8 @@ prof="$1"
 case "$prof" in
   'battery')
 	swappiness 20
-	down_rate_limit 1000
-	up_rate_limit 500
+	down_rate_limit 12000
+	up_rate_limit 10000
 	stune_boost 5
 	cib_duration 30
 	cib_boost_lp 307200
@@ -43,8 +43,8 @@ case "$prof" in
 	;;
   'balanced')
 	swappiness 20
-	down_rate_limit 500
-	up_rate_limit 500
+	down_rate_limit 20000
+	up_rate_limit 10000
 	stune_boost 10
 	cib_duration 64
 	cib_boost_lp 537600
@@ -55,8 +55,8 @@ case "$prof" in
 	;;
   'performance')
 	swappiness 100
-	down_rate_limit 500
-	up_rate_limit 1000
+	down_rate_limit 25000
+	up_rate_limit 10000
 	stune_boost 50
 	cib_duration 125
 	cib_boost_lp 844200
