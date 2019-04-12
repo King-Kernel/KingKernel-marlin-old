@@ -1345,7 +1345,6 @@ struct sighand_struct *__lock_task_sighand(struct task_struct *tsk,
 
 static int do_lmkd_kill(struct task_struct *p)
 {
-	struct task_struct *vp;
 	int ret;
 
 	/* Boost CPU and DDR bus to the max */
@@ -1354,17 +1353,10 @@ static int do_lmkd_kill(struct task_struct *p)
 
 	preempt_disable();
 	get_task_struct(p);
-	vp = find_lock_task_mm(p);
-	if (vp)
-		get_task_struct(vp);
 
 	/* Bypass the signal queue when killing */
 	ret = do_send_sig_info(SIGKILL, SEND_SIG_FORCED, p, true);
 	if (ret) {
-		if (vp) {
-			task_unlock(vp);
-			put_task_struct(vp);
-		}
 		put_task_struct(p);
 		preempt_enable();
 		return ret;
