@@ -3959,8 +3959,6 @@ static void *ipc_router_create_log_ctx(char *name)
 
 	sub_log_ctx = kmalloc(sizeof(struct ipc_rtr_log_ctx),
 				GFP_KERNEL);
-
-context if disabled
 	if (!sub_log_ctx)
 		return NULL;
 	sub_log_ctx->log_ctx = ipc_log_context_create(
