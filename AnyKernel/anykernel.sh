@@ -11,6 +11,7 @@ do.cleanup=1
 do.cleanuponabort=0
 device.name1=marlin
 device.name2=sailfish
+supported.versions=
 '; } # end properties
 
 # shell variables
