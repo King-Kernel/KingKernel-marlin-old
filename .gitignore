@@ -85,3 +85,6 @@ signing_key.x509
 x509.genkey
 # Kconfig presets
 all.config
+
+# Object directory
+out/
