@@ -124,7 +124,7 @@ static inline bool tsk_is_booster(struct task_struct *tsk)
 
 	get_task_comm(comm, tsk);
 	return !strcmp(comm, "init") || !strcmp(comm, "NodeLooperThrea") ||
-	       !strcmp(comm, "perfd");
+	       !strcmp(comm, "perfd") || !strcmp(comm, "power@1.2-servi");
 }
 
 #endif /* _LINUX_BINFMTS_H */
