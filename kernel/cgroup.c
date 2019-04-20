@@ -57,9 +57,6 @@
 #include <linux/vmalloc.h> /* TODO: replace with more sophisticated array */
 #include <linux/kthread.h>
 #include <linux/delay.h>
-#include <linux/binfmts.h>
-#include <linux/cpu_input_boost.h>
-#include <linux/devfreq_boost.h>
 
 #include <linux/atomic.h>
 
@@ -2465,14 +2462,6 @@ retry_find_task:
 	ret = cgroup_attach_task(cgrp, tsk, threadgroup);
 
 	threadgroup_unlock(tsk);
-
-	/* This covers boosting for app launches and app transitions */
-	if (!ret && !threadgroup && !strcmp(of->kn->parent->name, "top-app") &&
-	    is_zygote_pid(tsk->parent->pid)) {
-		cpu_input_boost_kick_max(300);
-		devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 300);
-	}
-
 	put_task_struct(tsk);
 out_unlock_cgroup:
 	cgroup_kn_unlock(of->kn);
