@@ -132,7 +132,7 @@ static struct completion hotplug_notify_complete;
 static struct completion freq_mitigation_complete;
 static struct completion thermal_monitor_complete;
 
-static int enabled = 1;
+static int enabled;
 static int polling_enabled;
 static int rails_cnt;
 static int sensor_cnt;
@@ -4737,7 +4737,7 @@ static int __ref set_enabled(const char *val, const struct kernel_param *kp)
 {
 	int ret = 0;
 
-	ret = param_set_bool("Y", kp);
+	ret = param_set_bool(val, kp);
 	if (!enabled)
 		interrupt_mode_init();
 	else
