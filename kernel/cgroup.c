@@ -2468,8 +2468,10 @@ retry_find_task:
 
 	/* This covers boosting for app launches and app transitions */
 	if (!ret && !threadgroup && !strcmp(of->kn->parent->name, "top-app") &&
-	    is_zygote_pid(tsk->parent->pid))
-		cpu_input_boost_kick_max(600);
+	    is_zygote_pid(tsk->parent->pid)) {
+		cpu_input_boost_kick_max(300);
+		devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 300);
+	}
 
 	put_task_struct(tsk);
 out_unlock_cgroup:
