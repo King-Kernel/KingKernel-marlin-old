@@ -46,11 +46,6 @@ module_param(max_boost_freq_hp, uint, 0644);
 
 module_param(input_boost_duration, short, 0644);
 
-#ifdef CONFIG_DYNAMIC_STUNE_BOOST
-static __read_mostly int stune_boost = CONFIG_TA_STUNE_BOOST;
-module_param_named(dynamic_stune_boost, stune_boost, int, 0644);
-#endif
-
 enum {
 	SCREEN_OFF,
 	INPUT_BOOST,
@@ -66,11 +61,6 @@ struct boost_drv {
 	atomic_long_t max_boost_expires;
 	unsigned long state;
 	unsigned long last_input_jiffies;
-
-#ifdef CONFIG_DYNAMIC_STUNE_BOOST
-	bool stune_active;
-	int stune_slot;
-#endif
 };
 
 static void input_unboost_worker(struct work_struct *work);
@@ -140,24 +130,6 @@ bool cpu_input_boost_within_input(unsigned long timeout_ms)
 	return time_before(jiffies, b->last_input_jiffies +
 			   msecs_to_jiffies(timeout_ms));
 }
-
-static void update_stune_boost(struct boost_drv *b, int value)
-{
-#ifdef CONFIG_DYNAMIC_STUNE_BOOST
-	if (value && !b->stune_active)
-		b->stune_active = !do_stune_boost("top-app", value,
-						  &b->stune_slot);
-#endif
-}
-
-static void clear_stune_boost(struct boost_drv *b)
-{
-#ifdef CONFIG_DYNAMIC_STUNE_BOOST
-	if (b->stune_active)
-		b->stune_active = reset_stune_boost("top-app", b->stune_slot);
-#endif
-}
-
 static void __cpu_input_boost_kick(struct boost_drv *b)
 {
 	if (test_bit(SCREEN_OFF, &b->state))
@@ -229,7 +201,7 @@ static void max_unboost_worker(struct work_struct *work)
 	wake_up(&b->boost_waitq);
 }
 
-static int cpu_thread(void *data)
+static int cpu_boost_thread(void *data)
 {
 	static const struct sched_param sched_max_rt_prio = {
 		.sched_priority = MAX_RT_PRIO - 1
@@ -269,18 +241,12 @@ static int cpu_notifier_cb(struct notifier_block *nb, unsigned long action,
 	/* Unboost when the screen is off */
 	if (test_bit(SCREEN_OFF, &b->state)) {
 		policy->min = get_min_freq(policy);
-#ifdef CONFIG_DYNAMIC_STUNE_BOOST
-		clear_stune_boost(b);
-#endif
 		return NOTIFY_OK;
 	}
 
 	/* Boost CPU to max frequency for max boost */
 	if (test_bit(MAX_BOOST, &b->state)) {
 		policy->min = get_max_boost_freq(policy);
-#ifdef CONFIG_DYNAMIC_STUNE_BOOST
-		update_stune_boost(b, stune_boost);
-#endif
 		return NOTIFY_OK;
 	}
 
@@ -288,17 +254,10 @@ static int cpu_notifier_cb(struct notifier_block *nb, unsigned long action,
 	 * Boost to policy->max if the boost frequency is higher. When
 	 * unboosting, set policy->min to the absolute min freq for the CPU.
 	 */
-	if (test_bit(INPUT_BOOST, &b->state)) {
+	if (test_bit(INPUT_BOOST, &b->state))
 		policy->min = get_input_boost_freq(policy);
-#ifdef CONFIG_DYNAMIC_STUNE_BOOST
-		update_stune_boost(b, stune_boost);
-#endif
-	} else {
+	else
 		policy->min = get_min_freq(policy);
-#ifdef CONFIG_DYNAMIC_STUNE_BOOST
-		clear_stune_boost(b);
-#endif
-	}
 
 	return NOTIFY_OK;
 }
@@ -436,7 +395,7 @@ static int __init cpu_input_boost_init(void)
 		goto unregister_handler;
 	}
 
-	thread = kthread_run_perf_critical(cpu_thread, b, "cpu_boostd");
+	thread = kthread_run_perf_critical(cpu_boost_thread, b, "cpu_boostd");
 	if (IS_ERR(thread)) {
 		ret = PTR_ERR(thread);
 		pr_err("Failed to start CPU boost thread, err: %d\n", ret);
