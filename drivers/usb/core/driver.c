@@ -510,9 +510,6 @@ int usb_driver_claim_interface(struct usb_driver *driver,
 	if (!iface)
 		return -ENODEV;
 
-	if (!iface)
-		return -ENODEV;
-
 	dev = &iface->dev;
 	if (dev->driver)
 		return -EBUSY;
