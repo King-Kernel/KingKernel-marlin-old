@@ -86,8 +86,10 @@
 bool backlight_dimmer = true;
 module_param(backlight_dimmer, bool, 0644);
 
+#ifdef CONFIG_CPU_INPUT_BOOST
 static int frame_boost_timeout __read_mostly = CONFIG_MDSS_FRAME_BOOST_TIMEOUT;
 module_param(frame_boost_timeout, int, 0644);
+#endif
 
 static struct fb_info *fbi_list[MAX_FBI_LIST];
 static int fbi_list_index;
@@ -4836,7 +4838,9 @@ int mdss_fb_do_ioctl(struct fb_info *info, unsigned int cmd,
 		break;
 
     case MSMFB_ATOMIC_COMMIT:
-		mdss_kick_frame_boost(frame_boost_timeout);
+#ifdef CONFIG_CPU_INPUT_BOOST
+	mdss_kick_frame_boost(frame_boost_timeout);
+#endif
         ret = mdss_fb_atomic_commit_ioctl(info, argp, file);
         break;
 
