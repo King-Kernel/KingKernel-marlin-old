@@ -119,7 +119,7 @@ static ssize_t show_use_deepest_state(struct device *dev,
 				      struct device_attribute *attr,
 				      char *buf)
 {
-	struct cpuidle_device *idle_dev = __this_cpu_read(cpuidle_devices);
+	struct cpuidle_device *idle_dev = cpuidle_get_device();
 
 	return sprintf(buf, "%u\n", idle_dev->use_deepest_state);
 }
