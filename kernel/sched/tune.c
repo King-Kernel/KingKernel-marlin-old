@@ -811,8 +811,6 @@ static void write_default_values(struct cgroup_subsys_state *css)
 		if (!memcmp(cg_name, stune_groups[i], sizeof(*stune_groups[i]))) {
 			boost_write(css, NULL, boost_values[i]);
 			prefer_idle_write(css, NULL, prefer_idle_values[i]);
-			pr_info("%s: setting %s to %i and %i\n",
-			__func__, stune_groups[i], boost_values[i], prefer_idle_values[i]);
 		}
 	}
 }
@@ -835,7 +833,7 @@ schedtune_css_alloc(struct cgroup_subsys_state *parent_css)
 
 	/* Allow only a limited number of boosting groups */
 #ifdef CONFIG_STUNE_ASSIST
-	for (idx = 0; idx < BOOSTGROUPS_COUNT; ++idx) {
+	for (idx = 1; idx < BOOSTGROUPS_COUNT; ++idx) {
 		if (!allocated_group[idx])
 			break;
 		write_default_values(&allocated_group[idx]->css);
