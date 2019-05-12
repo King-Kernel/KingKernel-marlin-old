@@ -798,10 +798,10 @@ static void write_default_values(struct cgroup_subsys_state *css)
 {
 	u8 i;
 	char cg_name[11];
-	const int boost_values[4] = { 5, 5, 0, -30 };
-	const bool prefer_idle_values[4] = { 0, 1, 1, 0 };
+	const int boost_values[5] = { 0, 1, 0, 0, 0 };
+	const bool prefer_idle_values[5] = { 0, 1, 1, 0, 0 };
 	const char *stune_groups[] =
-	{ "/", "top-app", "foreground", "background" };
+	{ "/", "top-app", "foreground", "background", "rt" };
 
 	/* Get the name of a group that was parsed */
 	cgroup_name(css->cgroup, cg_name, sizeof(cg_name));

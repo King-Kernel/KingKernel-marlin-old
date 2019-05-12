@@ -51,6 +51,14 @@ moveimg() {
     echo "Copied image file"
 }
 
+# Move kernel image to AnyKernel dir
+movevbox() {
+    rm -rf $HOME/VBOX/Image.lz4-dtb
+    echo "Removed old image"
+    cp out/arch/arm64/boot/Image.lz4-dtb $HOME/VBOX/Image.lz4-dtb
+    echo "Copied new image file, boot from windows"
+}
+
 _RELEASE=0
 
 # Create a flashable zip of the current kernel image
