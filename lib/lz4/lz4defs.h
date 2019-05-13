@@ -75,11 +75,51 @@ typedef uintptr_t uptrval;
 #define WILDCOPYLENGTH 8
 #define LASTLITERALS 5
 #define MFLIMIT (WILDCOPYLENGTH + MINMATCH)
+/*
+ * ensure it's possible to write 2 x wildcopyLength
+ * without overflowing output buffer
+ */
+#define BYTE	u8
+typedef struct _U16_S { u16 v; } U16_S;
+typedef struct _U32_S { u32 v; } U32_S;
+typedef struct _U64_S { u64 v; } U64_S;
+#if defined(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS)
 
-/* Increase this value ==> compression run slower on incompressible data */
-#define LZ4_SKIPTRIGGER 6
+#define A16(x) (((U16_S *)(x))->v)
+#define A32(x) (((U32_S *)(x))->v)
+#define A64(x) (((U64_S *)(x))->v)
 
-#define HASH_UNIT sizeof(size_t)
+#define PUT4(s, d) (A32(d) = A32(s))
+#define PUT8(s, d) (A64(d) = A64(s))
+
+#define LZ4_READ_LITTLEENDIAN_16(d, s, p)	\
+	(d = s - A16(p))
+
+#define LZ4_WRITE_LITTLEENDIAN_16(p, v)	\
+	do {	\
+		A16(p) = v; \
+		p += 2; \
+	} while (0)
+#else /* CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS */
+
+#define A64(x) get_unaligned((u64 *)&(((U16_S *)(x))->v))
+#define A32(x) get_unaligned((u32 *)&(((U16_S *)(x))->v))
+#define A16(x) get_unaligned((u16 *)&(((U16_S *)(x))->v))
+
+#define PUT4(s, d) \
+	put_unaligned(get_unaligned((const u32 *) s), (u32 *) d)
+#define PUT8(s, d) \
+	put_unaligned(get_unaligned((const u64 *) s), (u64 *) d)
+
+#define LZ4_READ_LITTLEENDIAN_16(d, s, p)	\
+	(d = s - get_unaligned_le16(p))
+
+#define LZ4_WRITE_LITTLEENDIAN_16(p, v)			\
+	do {						\
+		put_unaligned_le16(v, (u16 *)(p));	\
+		p += 2;					\
+	} while (0)
+#endif
 
 #define KB (1 << 10)
 #define MB (1 << 20)
@@ -222,6 +262,8 @@ typedef enum { noDict = 0, withPrefix64k, usingExtDict } dict_directive;
 typedef enum { noDictIssue = 0, dictSmall } dictIssue_directive;
 
 typedef enum { endOnOutputSize = 0, endOnInputSize = 1 } endCondition_directive;
-typedef enum { full = 0, partial = 1 } earlyEnd_directive;
+typedef enum { decode_full_block = 0, partial_decode = 1 } earlyEnd_directive;
+
+#define LZ4_STATIC_ASSERT(c)	BUILD_BUG_ON(!(c))
 
 #endif
