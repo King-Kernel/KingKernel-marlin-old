@@ -167,6 +167,8 @@ static FORCE_INLINE const BYTE *LZ4_getPosition(
 
 	return LZ4_getPositionOnHash(h, tableBase, tableType, srcBase);
 }
+
+
 /*
  * LZ4_compress_generic() :
  * inlined, to ensure branches are decided at compilation time
@@ -954,7 +956,7 @@ int lz4_compress(const unsigned char *src, size_t src_len, unsigned char *dst,
 	else
 		return 0;
 }
-EXPORT_SYMBOL(LZ4_compress_fast_continue);
+EXPORT_SYMBOL(lz4_compress);
 
 MODULE_LICENSE("Dual BSD/GPL");
 MODULE_DESCRIPTION("LZ4 compressor");
