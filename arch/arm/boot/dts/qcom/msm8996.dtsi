@@ -157,7 +157,7 @@
 		energy-costs {
 			CPU_COST_0: core-cost0 {
 				busy-cost-data = <
-					648 1031
+					721 1134
 					758 1162
 				>;
 				idle-cost-data = <
@@ -166,7 +166,7 @@
 			};
 			CPU_COST_1: core-cost1 {
 				busy-cost-data = <
-					905 931
+					978 998
 					1024 1024
 				>;
 				idle-cost-data = <
@@ -175,8 +175,8 @@
 			};
 			CLUSTER_COST_0: cluster-cost0 {
 				busy-cost-data = <
-					648 42
-					758 52
+					721 49
+					758 41
 				>;
 				idle-cost-data = <
 					0
@@ -186,7 +186,7 @@
 			CLUSTER_COST_1: cluster-cost1 {
 				busy-cost-data = <
 					978 81
-					1024 96
+					1024 90
 				>;
 				idle-cost-data = <
 					0
