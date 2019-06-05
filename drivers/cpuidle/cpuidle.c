@@ -35,9 +35,6 @@ static int enabled_devices;
 static int off __read_mostly;
 static int initialized __read_mostly;
 
-static void cpuidle_set_idle_cpu(unsigned int cpu);
-static void cpuidle_clear_idle_cpu(unsigned int cpu);
-
 int cpuidle_disabled(void)
 {
 	return off;
@@ -175,10 +172,8 @@ int cpuidle_enter_state(struct cpuidle_device *dev, struct cpuidle_driver *drv,
 	trace_cpu_idle_rcuidle(index, dev->cpu);
 	time_start = ktime_get();
 
-	cpuidle_set_idle_cpu(dev->cpu);
 	entered_state = target_state->enter(dev, drv, index);
-	cpuidle_clear_idle_cpu(dev->cpu);
-	
+
 	time_end = ktime_get();
 	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, dev->cpu);
 
@@ -583,20 +578,10 @@ int cpuidle_register(struct cpuidle_driver *drv,
 EXPORT_SYMBOL_GPL(cpuidle_register);
 
 #ifdef CONFIG_SMP
-static atomic_t idle_cpu_mask = ATOMIC_INIT(0);
 
-#if NR_CPUS > 32
-#error idle_cpu_mask not big enough for NR_CPUS
-#endif
-
-static void cpuidle_set_idle_cpu(unsigned int cpu)
+static void smp_callback(void *v)
 {
-	atomic_or(BIT(cpu), &idle_cpu_mask);
-}
-
-static void cpuidle_clear_idle_cpu(unsigned int cpu)
-{
-	atomic_andnot(BIT(cpu), &idle_cpu_mask);
+	/* we already woke the CPU up, nothing more to do */
 }
 
 /*
@@ -608,19 +593,13 @@ static void cpuidle_clear_idle_cpu(unsigned int cpu)
 static int cpuidle_latency_notify(struct notifier_block *b,
 		unsigned long l, void *v)
 {
-	static unsigned long prev_latency = ULONG_MAX;
+	const struct cpumask *cpus;
 
-	if (l < prev_latency) {
-		unsigned long idle_cpus = atomic_read(&idle_cpu_mask);
-		struct cpumask *update_mask = to_cpumask(&idle_cpus);
+	cpus = v ?: cpu_online_mask;
 
-		cpumask_and(update_mask, update_mask, v);
-
-		/* Notifier is called with preemption disabled */
-		arch_send_call_function_ipi_mask(update_mask);
-	}
-
-	prev_latency = l;
+	preempt_disable();
+	smp_call_function_many(cpus, smp_callback, NULL, 1);
+	preempt_enable();
 
 	return NOTIFY_OK;
 }
@@ -635,14 +614,6 @@ static inline void latency_notifier_init(struct notifier_block *n)
 }
 
 #else /* CONFIG_SMP */
-
-static void cpuidle_set_idle_cpu(unsigned int cpu)
-{
-}
-
-static void cpuidle_clear_idle_cpu(unsigned int cpu)
-{
-}
 
 #define latency_notifier_init(x) do { } while (0)
 
