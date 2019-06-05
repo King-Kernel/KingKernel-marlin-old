@@ -1361,7 +1361,7 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
 		if (new->flags & IRQF_PERF_CRITICAL)
 			setup_perf_irq_locked(desc);
 		else
-			setup_affinity(desc, mask);
+			setup_affinity(irq, desc, mask);
 
 	} else if (new->flags & IRQF_TRIGGER_MASK) {
 		unsigned int nmsk = new->flags & IRQF_TRIGGER_MASK;
