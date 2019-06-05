@@ -186,7 +186,6 @@ config ANDROID_SIMPLE_LMK_MINFREE
 	default 100
 	help
 	  Simple LMK will try to free at least this much memory per reclaim.
-
 endif
 
 source "drivers/staging/android/ion/Kconfig"
