@@ -22,6 +22,7 @@
 #include <linux/irqreturn.h>
 #include <linux/irqdomain.h>
 #include <linux/mdss_io_util.h>
+#include <linux/pm_qos.h>
 
 #include <linux/msm-bus.h>
 #include <linux/file.h>
@@ -512,6 +513,10 @@ struct mdss_data_type {
 	u32 bcolor1;
 	u32 bcolor2;
 	struct mdss_scaler_block *scaler_off;
+
+	struct pm_qos_request pm_irq_req;
+	struct work_struct pm_unset_work;
+	bool pm_irq_set;
 };
 
 extern struct mdss_data_type *mdss_res;
