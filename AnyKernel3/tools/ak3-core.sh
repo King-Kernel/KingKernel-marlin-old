@@ -162,7 +162,7 @@ repack_ramdisk() {
   case $ramdisk_compression in
     auto|"") comp=$(ls $split_img/ramdisk.cpio.* 2>/dev/null | grep -v 'mtk' | rev | cut -d. -f1 | rev);;
     none|cpio) comp="";;
-    gz) comp=gzip;;
+    gz) comp=$bin/pigz -p 8;;
     lzo) comp=lzop;;
     bz2) comp=bzip2;;
     lz4-l) comp=lz4_legacy;;
