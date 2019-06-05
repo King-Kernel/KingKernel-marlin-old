@@ -314,6 +314,8 @@ flash_boot() {
   elif [ "$(wc -c < boot-new.img)" -gt "$(wc -c < boot.img)" ]; then
     abort "New image larger than boot partition. Aborting...";
   fi;
+
+  ui_print "  • Flashing new image"
   if [ -f "$bin/flash_erase" -a -f "$bin/nandwrite" ]; then
     $bin/flash_erase $block 0 0;
     $bin/nandwrite -p $block boot-new.img;
@@ -361,6 +363,7 @@ flash_dtbo() {
 }
 ### write_boot (repack ramdisk then build, sign and write image and dtbo)
 write_boot() {
+  ui_print "  • Repacking ramdisk"
   repack_ramdisk;
   flash_boot;
   flash_dtbo;
