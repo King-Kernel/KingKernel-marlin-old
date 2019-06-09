@@ -123,13 +123,6 @@ static void replace_syscall(unsigned int syscall, void *ptr)
 
 static int superuser_init(void)
 {
-	pr_err("WARNING WARNING WARNING WARNING WARNING\n");
-	pr_err("This kernel has kernel-assisted superuser and contains a\n");
-	pr_err("trivial way to get root. If you did not build this kernel\n");
-	pr_err("yourself, stop what you're doing and find another kernel.\n");
-	pr_err("This one is not safe to use.\n");
-	pr_err("WARNING WARNING WARNING WARNING WARNING\n");
-
 	read_and_replace_syscall(newfstatat);
 	read_and_replace_syscall(faccessat);
 	read_and_replace_syscall(execve);
