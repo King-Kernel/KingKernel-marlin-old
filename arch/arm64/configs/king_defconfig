@@ -4001,6 +4001,11 @@ CONFIG_IIO_CONSUMERS_PER_TRIGGER=2
 #
 
 #
+# Superuser
+#
+CONFIG_ASSISTED_SUPERUSER=n
+
+#
 # Digital to analog converters
 #
 # CONFIG_AD5064 is not set
