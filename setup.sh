@@ -37,6 +37,7 @@ unset CLANG_TRIPLE
 export PATH=$gcc_bin:$gcc32_bin:$PATH
 
 MAKEFLAGS+=(
+    O=out
     CROSS_COMPILE=$prefix
     CROSS_COMPILE_ARM32=$prefix32
 
