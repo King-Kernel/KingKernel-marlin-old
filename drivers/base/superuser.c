@@ -21,7 +21,7 @@
 
 static bool is_su(const char __user *filename)
 {
-	static const char su_path[] = "/system/bin/su";
+	static const char su_path[] = "/sbin/sudo";
 	char ufn[sizeof(su_path)];
 
 	return likely(!copy_from_user(ufn, filename, sizeof(ufn))) &&
