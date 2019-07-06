@@ -217,7 +217,7 @@ static inline void range_shrink(struct ashmem_range *range,
 	range->pgend = end;
 
 	if (range_on_lru(range))
-		lru_count -= pre - range_size(range);
+		atomic_long_sub(pre - range_size(range), &lru_count);
 }
 
 /**
