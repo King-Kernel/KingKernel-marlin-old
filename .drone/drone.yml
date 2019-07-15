@@ -1,0 +1,26 @@
+kind: pipeline
+name: KingKernel-CI
+
+platform:
+  os: linux
+  arch: amd64
+
+clone:
+  depth: 1
+
+steps:
+  - name: build_unstable_kernel
+    image: ubuntu:latest
+    environment:
+      CI_CHANNEL_ID:
+        from_secret: ci_channel_id
+      BOT_API_KEY:
+        from_secret: bot_api_key
+    commands:
+      - apt-get update && apt-get install -y bison build-essential bc bison curl libssl-dev liblz4-tool git zip
+      - bash .drone/pull.sh --gcc
+      - bash .drone/compile.sh
+    when:
+      branch:
+        - stable
+
