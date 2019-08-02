@@ -454,7 +454,7 @@ function ktest() {
 
 		unzip -p /data/local/tmp/kernel.zip META-INF/com/google/android/update-binary | \\
 		/system/bin/sh /proc/self/fd/0 "" "" /data/local/tmp/kernel.zip && \\
-		/system/bin/svc power reboot
+		{ /system/bin/svc power reboot || reboot; }
 		END
 	else
 		# Device is in recovery (assuming TWRP)
@@ -487,7 +487,7 @@ function sktest() {
 
 	unzip -p "$target_fn" META-INF/com/google/android/update-binary | \\
 	/system/bin/sh /proc/self/fd/0 "" "" "\$(readlink -f "$target_fn")" && \
-	{ /system/bin/svc power reboot & exit; }
+	{ { /system/bin/svc power reboot || reboot; } & exit; }
 	END
 }
 
