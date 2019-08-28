@@ -9,13 +9,11 @@
 #include <linux/fb.h>
 #include <linux/input.h>
 #include <linux/kthread.h>
-#include <linux/slab.h>
 
 enum {
 	SCREEN_OFF,
 	INPUT_BOOST,
-	MAX_BOOST,
-	WAKE_BOOST
+	MAX_BOOST
 };
 
 struct boost_dev {
@@ -99,29 +97,8 @@ static void __devfreq_boost_kick_max(struct boost_dev *b,
 void devfreq_boost_kick_max(enum df_device device, unsigned int duration_ms)
 {
 	struct df_boost_drv *d = &df_boost_drv_g;
-	struct boost_dev *b = d->devices + device;
 
-	if (test_bit(SCREEN_OFF, &b->state))
-		return;
-
-	__devfreq_boost_kick_max(b, duration_ms);
-}
-
-static void __devfreq_boost_kick_wake(struct boost_dev *b)
-{
-	if (!test_bit(SCREEN_OFF, &b->state))
-		return;
-
-	set_bit(WAKE_BOOST, &b->state);
-	__devfreq_boost_kick_max(b,
-				 CONFIG_DEVFREQ_WAKE_BOOST_DURATION_MS);
-}
-
-void devfreq_boost_kick_wake(enum df_device device)
-{
-	struct df_boost_drv *d = &df_boost_drv_g;
-
-	__devfreq_boost_kick_wake(d->devices + device);
+	__devfreq_boost_kick_max(d->devices + device, duration_ms);
 }
 
 void devfreq_register_boost_device(enum df_device device, struct devfreq *df)
@@ -214,7 +191,8 @@ static int fb_notifier_cb(struct notifier_block *nb, unsigned long action,
 
 		if (*blank == FB_BLANK_UNBLANK) {
 			clear_bit(SCREEN_OFF, &b->state);
-			__devfreq_boost_kick_wake(b);
+			__devfreq_boost_kick_max(b,
+				CONFIG_DEVFREQ_WAKE_BOOST_DURATION_MS);
 		} else {
 			set_bit(SCREEN_OFF, &b->state);
 			wake_up(&b->boost_waitq);
@@ -318,7 +296,7 @@ static int __init devfreq_boost_init(void)
 		struct boost_dev *b = d->devices + i;
 
 		thread[i] = kthread_run_perf_critical(devfreq_boost_thread, b,
-						      "devfreq_boostd/%d", i);
+					"devfreq_boostd/%d", i);
 		if (IS_ERR(thread[i])) {
 			ret = PTR_ERR(thread[i]);
 			pr_err("Failed to create kthread, err: %d\n", ret);

@@ -4844,6 +4844,9 @@ int mdss_fb_do_ioctl(struct fb_info *info, unsigned int cmd,
 #ifdef CONFIG_CPU_INPUT_BOOST
 	mdss_kick_frame_boost(frame_boost_timeout);
 #endif
+#ifdef CONFIG_DEVFREQ_BOOST
+	devfreq_boost_kick(DEVFREQ_MSM_CPUBW);
+#endif
         ret = mdss_fb_atomic_commit_ioctl(info, argp, file);
         break;
 
