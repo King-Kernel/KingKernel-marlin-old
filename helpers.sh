@@ -145,7 +145,7 @@ function mkzip() {
 	# Copy device tree blobs and remove extraneous files
 	rm -fr "$kroot/AnyKernel3/dtbs"
 	mkdir "$kroot/AnyKernel3/dtbs"
-	cp "$kroot/out/arch/$arch/boot/dts/htc/." "$kroot/AnyKernel3/dtbs/"
+	cp -r "$kroot/out/arch/$arch/boot/dts/htc/." "$kroot/AnyKernel3/dtbs/"
 	rm -fr "$kroot/AnyKernel3/dtbs/*.tmp"
 	rm -fr "$kroot/AnyKernel3/dtbs/modules.order"
 }
